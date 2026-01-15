@@ -18,8 +18,10 @@ claude-skills/
 │       │   └── plugin.json      # Plugin metadata (name, version, author)
 │       └── skills/
 │           └── {skill-name}/    # Skill definition
-│               ├── SKILL.md     # Skill instructions and metadata
-│               └── scripts/     # Supporting scripts (optional)
+│               ├── SKILL.md     # Skill instructions and metadata (required)
+│               ├── scripts/     # Executable code (optional)
+│               ├── references/  # Documentation loaded on-demand (optional)
+│               └── assets/      # Static resources like templates, icons (optional)
 ├── CLAUDE.md                    # This file
 └── README.md                    # Repository documentation
 ```
@@ -115,17 +117,20 @@ Create `plugins/{plugin-name}/skills/{skill-name}/SKILL.md`:
 ```markdown
 ---
 name: {skill-name}
-description: Detailed description including trigger phrases and use cases.
-arguments:
-  - name: arg_name
-    description: What this argument does
-    required: false
+description: What the skill does and when to use it. Use third person. Include trigger phrases like "Use when..." or "Triggers on requests like...".
+license: Apache-2.0
+compatibility: python 3.8+
+metadata:
+  author: your-name
+  version: "1.0.0"
 ---
 
 # {Skill Title}
 
-Skill documentation and usage instructions...
+Skill instructions and documentation...
 ```
+
+See the **SKILL.md Specification** section below for field constraints and best practices.
 
 ### Step 4: Register in Marketplace
 
@@ -152,6 +157,95 @@ Add to `.claude/settings.local.json`:
 }
 ```
 
+## SKILL.md Specification
+
+Based on the official [Agent Skills Specification](https://agentskills.io/specification).
+
+### Required Frontmatter Fields
+
+| Field | Constraints |
+|-------|-------------|
+| `name` | Max 64 chars. Lowercase letters, numbers, hyphens only. Must match parent directory name. Cannot contain "anthropic" or "claude". |
+| `description` | Max 1024 chars. Non-empty. Must be in **third person**. Should describe what the skill does AND when to use it (triggers). |
+
+### Optional Frontmatter Fields
+
+| Field | Purpose |
+|-------|---------|
+| `license` | License name (e.g., `Apache-2.0`) or path to bundled license file |
+| `compatibility` | Max 500 chars. Environment requirements (python version, packages, etc.) |
+| `metadata` | Key-value mapping for author, version, and custom properties |
+| `allowed-tools` | Space-delimited list of pre-approved tools (experimental) |
+
+### Description Best Practices
+
+The description is the **primary triggering mechanism**. Claude uses it to decide when to activate a skill from potentially 100+ available skills.
+
+**Good description:**
+```yaml
+description: Extract text and tables from PDF files, fill forms, merge documents. Use when working with PDF files or when the user mentions PDFs, forms, or document extraction.
+```
+
+**Bad description:**
+```yaml
+description: Helps with documents
+```
+
+### Directory Structure
+
+```
+skill-name/
+├── SKILL.md          # Required - skill instructions and metadata
+├── scripts/          # Executable code (Python, Bash, etc.)
+├── references/       # Documentation loaded on-demand
+└── assets/           # Static resources (templates, icons, fonts)
+```
+
+- **scripts/**: Code Claude can run without loading into context. Token-efficient.
+- **references/**: Detailed docs Claude reads only when needed. Keep one level deep from SKILL.md.
+- **assets/**: Files for output (not loaded into context).
+
+## Best Practices
+
+Based on official [Anthropic skill authoring guidelines](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices).
+
+### Conciseness is Key
+
+Claude is already smart. Only add context Claude doesn't already have.
+
+- Challenge each piece: "Does Claude really need this?"
+- Prefer concise examples over verbose explanations
+- Keep SKILL.md body **under 500 lines**
+
+### Progressive Disclosure
+
+Skills use 3-tier loading to minimize context usage:
+
+1. **Metadata** (~100 tokens): `name` and `description` loaded at startup
+2. **SKILL.md body** (<5000 tokens): Loaded when skill triggers
+3. **Bundled resources** (as needed): Loaded on-demand from scripts/, references/, assets/
+
+### Writing Instructions
+
+- Use **imperative/infinitive form** (e.g., "Extract text..." not "This extracts text...")
+- Keep file references **one level deep** from SKILL.md
+- Structure files >100 lines with a **table of contents**
+- Avoid time-sensitive information
+
+### Scripts Guidelines
+
+- Bundle scripts for **deterministic operations** that Claude would otherwise rewrite
+- Scripts should **solve problems, not punt** to Claude
+- Document all "magic numbers" with comments explaining the value
+- Include helpful error messages that guide resolution
+
+### Testing
+
+Test skills with all models you plan to use:
+- **Haiku**: Does the skill provide enough guidance?
+- **Sonnet**: Is the skill clear and efficient?
+- **Opus**: Does the skill avoid over-explaining?
+
 ## Version Management
 
 When updating a skill version, update these files:
@@ -163,7 +257,13 @@ When updating a skill version, update these files:
 
 ## Conventions
 
-- **Skill names**: lowercase, hyphenated (e.g., `openrouter`, `code-review`)
+- **Skill names**: lowercase, hyphenated (e.g., `openrouter`, `code-review`). Max 64 chars.
 - **Plugin names**: typically match skill name for single-skill plugins
 - **API keys**: `SKILL_{SKILLNAME_UPPERCASE}_API_KEY`
-- **Scripts**: Place in `scripts/` subdirectory, prefer single-file with minimal dependencies
+- **Scripts**: Place in `scripts/` subdirectory
+  - Prefer single-file with minimal dependencies
+  - Use `#!/usr/bin/env python3` shebang for portability
+  - Include docstrings explaining purpose and usage
+  - Handle errors gracefully with helpful messages
+- **References**: Place in `references/` subdirectory for detailed documentation
+- **Assets**: Place in `assets/` subdirectory for templates, icons, and static files
