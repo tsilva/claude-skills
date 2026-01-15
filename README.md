@@ -11,6 +11,8 @@
 <p align="center">
   <a href="https://claude.ai/code"><img src="https://img.shields.io/badge/Built%20with-Claude%20Code-DA7857?logo=anthropic" alt="Claude Code"></a>
   <a href="https://github.com/tsilva/claude-skills"><img src="https://img.shields.io/badge/GitHub-tsilva%2Fclaude--skills-blue?logo=github" alt="GitHub"></a>
+  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white" alt="Python"></a>
+  <a href="https://openrouter.ai"><img src="https://img.shields.io/badge/Powered%20by-OpenRouter-6366f1" alt="OpenRouter"></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
 </p>
 
@@ -18,7 +20,9 @@
 
 ## Overview
 
-A modular collection of Claude Code skills, each providing specialized capabilities through the plugin system. Each skill is an independent plugin with its own versioning.
+A modular collection of Claude Code skills, each providing specialized capabilities through the plugin system. Skills extend Claude Code's functionality to interact with external AI models, generate professional documentation, and automate common development tasks.
+
+Each skill is packaged as an independent plugin with its own versioning, making it easy to install only what you need. The repository follows a clean architecture with minimal dependencies.
 
 ## Available Skills
 
@@ -58,7 +62,7 @@ cd claude-skills
   <img src="https://img.shields.io/badge/Models-300%2B-purple" alt="300+ Models">
 </p>
 
-Gateway to 300+ AI models through a unified API.
+Gateway to 300+ AI models through a unified API. Call any model from OpenAI, Anthropic, Google, Meta, Mistral, and many more with a single interface.
 
 #### Setup
 
@@ -70,7 +74,7 @@ export SKILL_OPENROUTER_API_KEY="sk-or-..."  # Get key at https://openrouter.ai/
 
 | Feature | Description |
 |---------|-------------|
-| **Text Completion** | Call any model (GPT-4, Claude, Gemini, Llama, Mistral, etc.) |
+| **Text Completion** | Call any model (GPT-5.2, Claude, Gemini, Llama, Mistral, etc.) |
 | **Image Generation** | Generate images with Flux, Gemini Flash, and other image models |
 | **Model Discovery** | Search and filter models by capability (vision, tools, long context) |
 | **Model Chaining** | Chain models together for complex tasks |
@@ -138,7 +142,7 @@ response = client.chat_simple("anthropic/claude-sonnet-4.5", "Hello!")
   <img src="https://img.shields.io/badge/OpenRouter-Integration-6366f1" alt="OpenRouter Integration">
 </p>
 
-Create stunning, modern README files that make your projects stand out.
+Create stunning, modern README files that make your projects stand out. Automatically analyzes your project and generates professional documentation following GitHub best practices.
 
 #### Features
 
@@ -192,42 +196,61 @@ python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
 ```
 claude-skills/
 ├── plugins/
-│   ├── openrouter/              # OpenRouter plugin
+│   ├── openrouter/                    # OpenRouter plugin
 │   │   ├── .claude-plugin/
-│   │   │   └── plugin.json
+│   │   │   └── plugin.json            # Plugin metadata (v1.0.4)
 │   │   └── skills/
 │   │       └── openrouter/
-│   │           ├── SKILL.md
+│   │           ├── SKILL.md           # Skill documentation
 │   │           └── scripts/
-│   │               └── openrouter_client.py
-│   └── readme-generator/        # README Generator plugin
+│   │               └── openrouter_client.py  # Python client (253 LOC)
+│   └── readme-generator/              # README Generator plugin
 │       ├── .claude-plugin/
-│       │   └── plugin.json
+│       │   └── plugin.json            # Plugin metadata (v1.0.0)
 │       └── skills/
 │           └── readme-generator/
-│               └── SKILL.md
+│               └── SKILL.md           # Skill documentation
 ├── .claude-plugin/
-│   └── marketplace.json         # Lists all plugins
+│   └── marketplace.json               # Lists all available plugins
 ├── assets/
-│   └── logo.png
-├── CLAUDE.md                    # Developer guidance
-└── README.md                    # This file
+│   └── logo.png                       # Repository logo
+├── CLAUDE.md                          # Developer guidance
+└── README.md                          # This file
 ```
 
 ## Adding New Skills
 
-See [CLAUDE.md](CLAUDE.md#adding-a-new-skill) for detailed instructions on adding new skills to this repository.
+See [CLAUDE.md](CLAUDE.md#adding-a-new-skill) for detailed instructions on creating and adding new skills to this repository.
+
+## Reporting Issues
+
+Found a bug or have a suggestion? Please report it:
+
+[GitHub Issues](https://github.com/tsilva/claude-skills/issues)
+
+When reporting issues, include:
+
+- Description of the problem or suggestion
+- Steps to reproduce (for bugs)
+- Expected vs actual behavior
+- Environment details (Python version, OS)
 
 ## Contributing
 
 1. Fork the repository
-2. Create a feature branch
+2. Create a feature branch (`git checkout -b feature/new-skill`)
 3. Add your skill following the structure in CLAUDE.md
 4. Submit a pull request
 
 ## License
 
 MIT License - see [LICENSE](LICENSE) for details.
+
+## Acknowledgements
+
+- **[Claude Code](https://claude.ai/code)** by Anthropic - AI-powered development environment
+- **[OpenRouter](https://openrouter.ai)** - Unified API for 300+ AI models
+- **[shields.io](https://shields.io)** - Badge generation service
 
 ---
 
