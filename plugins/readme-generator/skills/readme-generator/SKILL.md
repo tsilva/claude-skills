@@ -1,19 +1,19 @@
 ---
 name: readme-generator
-description: This skill creates or updates a README.md file in the GitHub home directory of the current project. The README.md file it generates will conform to GitHub best practices, including badges, project overview, site metrics, getting started instructions, and comprehensive documentation.
-arguments:
-  - name: focus
-    description: Optional focus area (e.g., "api", "cli", "library") to tailor the README style
-    required: false
+description: Creates or updates README.md files following GitHub best practices with badges, visual hierarchy, and comprehensive documentation. Use when asked to "create a README", "generate documentation", "write a README for this project", or when starting a new project that needs documentation.
+license: Apache-2.0
+metadata:
+  author: tsilva
+  version: "1.0.0"
 ---
 
 # README Generator
 
-Create stunning, modern README files that make your projects stand out.
+Create stunning, modern README files that make projects stand out.
 
 ## Overview
 
-This skill generates professional README.md files following GitHub best practices and modern design patterns. It analyzes your codebase to create comprehensive, visually appealing documentation.
+Generates professional README.md files following GitHub best practices and modern design patterns. Analyzes your codebase to create comprehensive, visually appealing documentation.
 
 ## Features
 
@@ -40,7 +40,7 @@ This skill generates professional README.md files following GitHub best practice
 
 ## Logo Generation
 
-This skill can generate a custom logo for your project using the **OpenRouter skill**.
+Generate a custom logo for your project using the **OpenRouter skill**.
 
 ### How to Generate a Logo
 
@@ -138,11 +138,9 @@ License information and link.
 </p>
 ```
 
-## Usage
+## Workflow
 
-When invoked, this skill will:
-
-1. **Analyze your project** - scan for package.json, Cargo.toml, pyproject.toml, go.mod, etc.
+1. **Analyze project** - scan for package.json, Cargo.toml, pyproject.toml, go.mod, etc.
 2. **Detect project type** - CLI, library, web app, API, etc.
 3. **Extract metadata** - name, description, version, author, license
 4. **Generate README.md** - create or update the file in the project root

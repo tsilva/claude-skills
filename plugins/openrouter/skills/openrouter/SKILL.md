@@ -1,25 +1,16 @@
 ---
 name: openrouter
-description: Invoke 300+ AI models via OpenRouter API. Use when Claude Code needs to call external models (GPT-5.2, Gemini 3, Llama, Mistral, etc.) for text completion, image generation, or model discovery. Triggers on requests like "use OpenRouter to...", "call GPT-5 to...", "generate an image with Gemini", or when delegating tasks to other AI models.
-arguments:
-  - name: output_path
-    description: Absolute path for saving generated images (e.g., /path/to/image.png)
-    required: false
+description: Invokes 300+ AI models via OpenRouter API for text completion, image generation, and model discovery. Use when delegating tasks to external models (GPT-5.2, Gemini 3, Llama, Mistral, etc.). Triggers on "use OpenRouter to...", "call GPT-5 to...", "generate an image with Gemini", or similar requests for external AI models.
+license: Apache-2.0
+compatibility: python 3.8+, requests library
+metadata:
+  author: tsilva
+  version: "1.0.4"
 ---
 
 # OpenRouter
 
 Gateway to 300+ AI models through a unified API. Requires `SKILL_OPENROUTER_API_KEY` environment variable.
-
-## Skill Arguments
-
-When invoking this skill, you can pass an `output_path` argument to specify where generated images should be saved:
-
-```
-/openrouter --output_path /absolute/path/to/output.png
-```
-
-**Important:** Always use absolute paths for image output to ensure files are saved to the intended location.
 
 ## Setup
 
