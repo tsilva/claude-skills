@@ -1,0 +1,14 @@
+{
+  "name": "agent-skill-openrouter",
+  "owner": {
+    "name": "tsilva"
+  },
+  "plugins": [
+    {
+      "name": "openrouter",
+      "source": "./plugins/openrouter",
+      "description": "Access 300+ AI models via OpenRouter API for multi-step workflows",
+      "version": "1.0.0"
+    }
+  ]
+}
