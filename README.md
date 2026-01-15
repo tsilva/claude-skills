@@ -25,6 +25,7 @@ A modular collection of Claude Code skills, each providing specialized capabilit
 | Skill | Description | Version |
 |-------|-------------|---------|
 | [OpenRouter](#openrouter) | Access 300+ AI models via OpenRouter API | 1.0.4 |
+| [README Generator](#readme-generator) | Create cutting-edge README files with AI-generated logos | 1.0.0 |
 
 ## Installation
 
@@ -130,19 +131,81 @@ response = client.chat_simple("anthropic/claude-sonnet-4.5", "Hello!")
 
 ---
 
+### README Generator
+
+<p>
+  <img src="https://img.shields.io/badge/Version-1.0.0-green" alt="Version">
+  <img src="https://img.shields.io/badge/OpenRouter-Integration-6366f1" alt="OpenRouter Integration">
+</p>
+
+Create stunning, modern README files that make your projects stand out.
+
+#### Features
+
+| Feature | Description |
+|---------|-------------|
+| **Smart Analysis** | Auto-detects project type, language, framework, and package manager |
+| **Modern Design** | Centered hero sections, badge collections, visual hierarchy |
+| **Logo Generation** | Generate custom logos using OpenRouter's image models |
+| **Best Practices** | Follows GitHub README conventions and accessibility standards |
+| **Flexible Output** | CLI tools, libraries, web apps, APIs - adapts to your project |
+
+#### Logo Generation with OpenRouter
+
+Generate a custom logo for your project using AI:
+
+```bash
+# Generate a logo using Gemini
+python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
+  "google/gemini-3-pro-image-preview" \
+  "A minimalist logo for MyProject: [describe concept]. Clean vector style, GitHub-ready, no text." \
+  --output /path/to/project/assets/logo.png
+
+# Or use Flux for higher quality
+python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
+  "black-forest-labs/flux.2-pro" \
+  "Modern tech logo for MyProject. Minimalist, dark/light mode compatible." \
+  --output /path/to/project/assets/logo.png
+```
+
+#### README Structure Generated
+
+```
+- Centered logo + title + tagline
+- Badge row (build, version, license)
+- Overview section
+- Features list
+- Quick Start (< 2 min setup)
+- Installation (multi-platform)
+- Usage examples
+- API reference (if applicable)
+- Contributing guidelines
+- License
+```
+
+[Full README Generator documentation](plugins/readme-generator/skills/readme-generator/SKILL.md)
+
+---
+
 ## Repository Structure
 
 ```
 claude-skills/
 ├── plugins/
-│   └── openrouter/              # OpenRouter plugin
+│   ├── openrouter/              # OpenRouter plugin
+│   │   ├── .claude-plugin/
+│   │   │   └── plugin.json
+│   │   └── skills/
+│   │       └── openrouter/
+│   │           ├── SKILL.md
+│   │           └── scripts/
+│   │               └── openrouter_client.py
+│   └── readme-generator/        # README Generator plugin
 │       ├── .claude-plugin/
 │       │   └── plugin.json
 │       └── skills/
-│           └── openrouter/
-│               ├── SKILL.md
-│               └── scripts/
-│                   └── openrouter_client.py
+│           └── readme-generator/
+│               └── SKILL.md
 ├── .claude-plugin/
 │   └── marketplace.json         # Lists all plugins
 ├── assets/

@@ -64,6 +64,28 @@ python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py find "s
 - Automatic retry logic handles transient errors (429, 502, 503) with exponential backoff
 - Image generation uses the chat completions endpoint with `modalities: ["image", "text"]`
 
+### README Generator
+
+Creates cutting-edge README files with modern design patterns and optional AI-generated logos.
+
+**Key files:**
+- `plugins/readme-generator/skills/readme-generator/SKILL.md` - Skill definition
+- `plugins/readme-generator/.claude-plugin/plugin.json` - Plugin metadata
+
+**Features:**
+- Smart project analysis (auto-detects language, framework, package manager)
+- Modern README structure with centered hero, badges, and visual hierarchy
+- Logo generation integration with OpenRouter image models
+- Best practices for GitHub READMEs (accessibility, mobile-friendly, scannable)
+
+**Logo generation with OpenRouter:**
+```bash
+python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
+  "google/gemini-3-pro-image-preview" \
+  "A minimalist logo for [PROJECT]: [concept]. Clean vector style, no text." \
+  --output /absolute/path/assets/logo.png
+```
+
 ## Adding a New Skill
 
 ### Step 1: Create Plugin Structure
