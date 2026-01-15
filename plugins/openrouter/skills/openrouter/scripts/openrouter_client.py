@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-OpenRouter API Client for Claude Code multi-step workflows.
+OpenRouter API Client for Claude Code.
 
 Usage:
     python openrouter_client.py chat MODEL "Your prompt here" [OPTIONS]

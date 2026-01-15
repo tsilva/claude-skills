@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Claude Code plugin that provides access to 300+ AI models via the OpenRouter API. It enables multi-step workflows by allowing Claude Code to delegate tasks to external models (GPT-5, Gemini, Llama, Mistral, Flux, etc.) for text completion, image generation, and model discovery.
+This is a Claude Code plugin that provides access to 300+ AI models via the OpenRouter API. It allows Claude Code to call external models (GPT-5, Gemini, Llama, Mistral, Flux, etc.) for text completion, image generation, and model discovery.
 
 ## Architecture
 

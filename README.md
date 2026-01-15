@@ -25,7 +25,7 @@
 
 ## Overview
 
-A Claude Code plugin that provides seamless access to **300+ AI models** via the [OpenRouter](https://openrouter.ai) API. This skill enables multi-step workflows by allowing Claude Code to delegate tasks to specialized models including GPT-4, Gemini, Llama, Mistral, Flux, and many more.
+A Claude Code plugin that provides seamless access to **300+ AI models** via the [OpenRouter](https://openrouter.ai) API. It allows Claude Code to call external models including GPT-4, Gemini, Llama, Mistral, Flux, and many more.
 
 Whether you need to generate images, leverage specialized coding models, or compare outputs from multiple AI providers, this plugin provides a unified interface for all your AI model needs directly within Claude Code.
 
@@ -36,7 +36,7 @@ Whether you need to generate images, leverage specialized coding models, or comp
 | **Text Completion** | Call any model (GPT-4, Claude, Gemini, Llama, Mistral, etc.) |
 | **Image Generation** | Generate images with Flux, Gemini Flash, and other image models |
 | **Model Discovery** | Search and filter models by capability (vision, tools, long context) |
-| **Multi-Step Workflows** | Chain models together for complex tasks |
+| **Model Chaining** | Chain models together for complex tasks |
 | **Automatic Retries** | Built-in retry logic for rate limits and transient errors |
 
 ## Installation
@@ -106,7 +106,7 @@ python scripts/openrouter_client.py find "search term"
 | Image gen | `google/gemini-3-pro-image-preview` | Fast, cheap |
 | Image gen | `black-forest-labs/flux.2-pro` | High quality |
 
-## Multi-Step Workflow Patterns
+## Usage Patterns
 
 ### Sequential Model Chain
 

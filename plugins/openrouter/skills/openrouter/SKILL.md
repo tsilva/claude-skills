@@ -1,6 +1,6 @@
 ---
 name: openrouter
-description: Invoke 300+ AI models via OpenRouter API for multi-step workflows. Use when Claude Code needs to call external models (GPT-5.2, Gemini 3, Llama, Mistral, etc.) for text completion, image generation, or model discovery. Triggers on requests like "use OpenRouter to...", "call GPT-5 to...", "generate an image with Gemini", or when delegating tasks to other AI models.
+description: Invoke 300+ AI models via OpenRouter API. Use when Claude Code needs to call external models (GPT-5.2, Gemini 3, Llama, Mistral, etc.) for text completion, image generation, or model discovery. Triggers on requests like "use OpenRouter to...", "call GPT-5 to...", "generate an image with Gemini", or when delegating tasks to other AI models.
 arguments:
   - name: output_path
     description: Absolute path for saving generated images (e.g., /path/to/image.png)
@@ -56,7 +56,7 @@ python scripts/openrouter_client.py find "search term"
 | Image gen | `google/gemini-3-pro-image-preview` | Fast, cheap |
 | Image gen | `black-forest-labs/flux.2-pro` | High quality |
 
-## Multi-Step Workflow Patterns
+## Usage Patterns
 
 ### Pattern 1: Sequential Model Chain
 Call multiple models in sequence, passing outputs forward:
