@@ -1,0 +1,8 @@
+{
+  "name": "repo-logo-generator",
+  "description": "Generate contextual logos for GitHub repositories by analyzing README content and project metadata.",
+  "version": "1.0.1",
+  "author": {
+    "name": "tsilva"
+  }
+}

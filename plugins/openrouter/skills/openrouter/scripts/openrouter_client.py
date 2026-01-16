@@ -114,7 +114,8 @@ class OpenRouterClient:
             "model": model,
             "messages": [{"role": "user", "content": prompt}],
             "modalities": ["image", "text"],
-            "image_config": {"aspect_ratio": aspect_ratio, "image_size": size}
+            "image_config": {"aspect_ratio": aspect_ratio, "image_size": size},
+            "n": 1
         }
 
         result = self._request("POST", "chat/completions", payload)
