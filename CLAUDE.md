@@ -248,10 +248,10 @@ Test skills with all models you plan to use:
 
 ## Version Management
 
-When updating a skill version, update these files:
+**Whenever a skill is updated, you MUST bump the version number.** Update these files:
 1. `plugins/{plugin-name}/.claude-plugin/plugin.json` - version field
 2. `.claude-plugin/marketplace.json` - version field for that plugin
-3. `README.md` - version in skills table
+3. `README.md` - **review and update if needed** (version in skills table, feature descriptions, usage examples)
 
 **Important:** Keep versions synchronized between `plugin.json` and `marketplace.json`.
 
