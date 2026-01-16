@@ -1,7 +1,7 @@
 ---
 name: openrouter
 description: Invokes 300+ AI models via OpenRouter API for text completion, image generation, and model discovery. Use when delegating tasks to external models (GPT-5.2, Gemini 3, Llama, Mistral, etc.). Triggers on "use OpenRouter to...", "call GPT-5 to...", "generate an image with Gemini", or similar requests for external AI models.
-license: Apache-2.0
+license: MIT
 compatibility: python 3.8+, requests library
 metadata:
   author: tsilva

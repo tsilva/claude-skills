@@ -118,7 +118,7 @@ Create `plugins/{plugin-name}/skills/{skill-name}/SKILL.md`:
 ---
 name: {skill-name}
 description: What the skill does and when to use it. Use third person. Include trigger phrases like "Use when..." or "Triggers on requests like...".
-license: Apache-2.0
+license: MIT
 compatibility: python 3.8+
 metadata:
   author: your-name
@@ -172,7 +172,7 @@ Based on the official [Agent Skills Specification](https://agentskills.io/specif
 
 | Field | Purpose |
 |-------|---------|
-| `license` | License name (e.g., `Apache-2.0`) or path to bundled license file |
+| `license` | Must be `MIT` for all skills in this repository |
 | `compatibility` | Max 500 chars. Environment requirements (python version, packages, etc.) |
 | `metadata` | Key-value mapping for author, version, and custom properties |
 | `allowed-tools` | Space-delimited list of pre-approved tools (experimental) |
@@ -248,12 +248,17 @@ Test skills with all models you plan to use:
 
 ## Version Management
 
-**Whenever a skill is updated, you MUST bump the version number.** Update these files:
-1. `plugins/{plugin-name}/.claude-plugin/plugin.json` - version field
-2. `.claude-plugin/marketplace.json` - version field for that plugin
-3. `README.md` - **review and update if needed** (version in skills table, feature descriptions, usage examples)
+**Every time a SKILL.md file is modified, you MUST bump the version in ALL three locations:**
 
-**Important:** Keep versions synchronized between `plugin.json` and `marketplace.json`.
+1. `plugins/{plugin-name}/skills/{skill-name}/SKILL.md` - `metadata.version` in frontmatter
+2. `plugins/{plugin-name}/.claude-plugin/plugin.json` - `version` field
+3. `.claude-plugin/marketplace.json` - `version` field for that plugin
+
+**Why:** The version number is how skill updates are detected. If you don't bump the version, changes won't be picked up.
+
+Also review and update `README.md` if needed (version in skills table, feature descriptions, usage examples).
+
+**Critical:** All three version numbers MUST be identical. Before committing, verify synchronization.
 
 ## Conventions
 
