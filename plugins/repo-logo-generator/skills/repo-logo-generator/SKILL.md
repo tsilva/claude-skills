@@ -5,7 +5,7 @@ license: MIT
 compatibility: python 3.8+, requests
 metadata:
   author: tsilva
-  version: "2.0.1"
+  version: "2.0.2"
 ---
 
 # Repo Logo Generator
@@ -27,7 +27,8 @@ Use this template, filling in the project context:
 
 ```
 A minimalist logo for {PROJECT_NAME}: {VISUAL_METAPHOR}.
-Clean vector style on pure white background. No text, no letters, no words.
+Clean vector style on GitHub dark theme background (#0d1117, very dark blue-gray).
+Bright, light-colored icon for high contrast. No text, no letters, no words.
 Single centered icon, geometric shapes, works at 64x64px.
 ```
 
@@ -54,12 +55,15 @@ Select the appropriate metaphor based on what the project does:
 | Security | Shield, lock, key |
 | Default | Abstract geometric shape |
 
+**Color guidance:** Use bright whites, light blues (#58a6ff), greens (#3fb950), oranges (#d29922), or purples (#a371f7) for icon elements. These GitHub accent colors provide excellent contrast against the dark #0d1117 background.
+
 ## Technical Requirements
 
 Logos must meet these criteria:
 - **No text**: Readable at 16x16 to 256x256
 - **Centered**: Works in circular and square crops
-- **Background neutral**: Pure white background (works on light/dark modes)
+- **Dark background**: GitHub dark theme (#0d1117) for seamless README integration
+- **High contrast**: Bright/light icon colors against dark background
 - **Clean style**: Minimalist vector, not photorealistic
 - **Single focal point**: One clear visual element
 
@@ -78,7 +82,7 @@ For a CLI tool called "fastgrep" that searches files quickly:
 ```bash
 python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
   "google/gemini-3-pro-image-preview" \
-  "A minimalist logo for fastgrep: A magnifying glass with speed lines forming a geometric pattern. Clean vector style on pure white background. No text, no letters, no words. Single centered icon, geometric shapes, works at 64x64px." \
+  "A minimalist logo for fastgrep: A magnifying glass with speed lines forming a geometric pattern. Clean vector style on GitHub dark theme background (#0d1117, very dark blue-gray). Bright, light-colored icon for high contrast. No text, no letters, no words. Single centered icon, geometric shapes, works at 64x64px." \
   --output /Users/me/fastgrep/assets/logo.png
 ```
 
