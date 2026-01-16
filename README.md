@@ -1,46 +1,46 @@
-<p align="center">
-  <img src="logo.png" alt="Claude Skills Logo" width="200" height="200">
-</p>
+<div align="center">
+  <img src="logo.png" alt="Claude Skills" width="200"/>
 
-<h1 align="center">Claude Skills</h1>
+  [![Claude Code](https://img.shields.io/badge/Claude_Code-Compatible-DA7856?style=flat&logo=anthropic)](https://claude.ai/code)
+  [![Python 3.8+](https://img.shields.io/badge/Python-3.8+-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org/)
+  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat)](LICENSE)
+  [![GitHub Stars](https://img.shields.io/github/stars/tsilva/claude-skills?style=flat)](https://github.com/tsilva/claude-skills/stargazers)
+  [![OpenRouter](https://img.shields.io/badge/OpenRouter-Powered-6366f1?style=flat)](https://openrouter.ai)
 
-<p align="center">
-  <strong>A collection of specialized skills for Claude Code</strong>
-</p>
+  **Modular skills that extend Claude Code with specialized capabilities**
 
-<p align="center">
-  <a href="https://claude.ai/code"><img src="https://img.shields.io/badge/Built%20with-Claude%20Code-DA7857?logo=anthropic" alt="Claude Code"></a>
-  <a href="https://github.com/tsilva/claude-skills"><img src="https://img.shields.io/badge/GitHub-tsilva%2Fclaude--skills-blue?logo=github" alt="GitHub"></a>
-  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white" alt="Python"></a>
-  <a href="https://openrouter.ai"><img src="https://img.shields.io/badge/Powered%20by-OpenRouter-6366f1" alt="OpenRouter"></a>
-  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
-</p>
+  [Documentation](CLAUDE.md) · [Skills Marketplace](#installation)
+</div>
 
 ---
 
-## Overview
+## Why Claude Skills?
 
-A modular collection of Claude Code skills, each providing specialized capabilities through the plugin system. Skills extend Claude Code's functionality to interact with external AI models, generate professional documentation, and automate common development tasks.
-
-Each skill is packaged as an independent plugin with its own versioning, making it easy to install only what you need. The repository follows a clean architecture with minimal dependencies.
+- **300+ AI models at your fingertips** - Call GPT-5, Gemini, Llama, or any OpenRouter model directly from Claude Code
+- **Professional READMEs in seconds** - Auto-generate documentation following GitHub best practices
+- **Custom logos on demand** - Create minimalist repo logos with AI image generation
+- **Plug and play** - Install only what you need, each skill works independently
 
 ## Available Skills
 
 | Skill | Description | Version |
 |-------|-------------|---------|
-| [OpenRouter](#openrouter) | Access 300+ AI models via OpenRouter API | 1.0.4 |
-| [README Generator](#readme-generator) | Create cutting-edge README files with AI-generated logos | 1.0.0 |
+| [OpenRouter](#openrouter) | Access 300+ AI models for text completion and image generation | 1.0.4 |
+| [README Generator](#readme-generator) | Create cutting-edge README files with badges and visual hierarchy | 1.0.5 |
+| [Repo Logo Generator](#repo-logo-generator) | Generate minimalist logos optimized for GitHub | 2.0.3 |
 
 ## Installation
 
-### Via Claude Code Plugin Marketplace
+### Via Claude Code Marketplace
 
 ```bash
-# Add the marketplace
+# Add the skills marketplace
 /plugin marketplace add tsilva/claude-skills
 
-# Install a specific skill
+# Install individual skills
 /plugin install openrouter
+/plugin install readme-generator
+/plugin install repo-logo-generator
 ```
 
 ### Manual Installation
@@ -48,9 +48,39 @@ Each skill is packaged as an independent plugin with its own versioning, making 
 ```bash
 git clone https://github.com/tsilva/claude-skills.git
 cd claude-skills
+./scripts/install-hooks.sh  # Optional: auto-bump versions on changes
+```
 
-# Install git hooks (auto-bumps versions on SKILL.md changes)
-./scripts/install-hooks.sh
+## Quick Start
+
+### Environment Setup
+
+```bash
+export SKILL_OPENROUTER_API_KEY="sk-or-..."  # Get key at https://openrouter.ai/keys
+```
+
+### Text Completion
+
+```bash
+python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py chat \
+  "openai/gpt-5.2" "Explain quantum computing in one paragraph"
+```
+
+### Image Generation
+
+```bash
+python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
+  "google/gemini-3-pro-image-preview" "A futuristic city at sunset" \
+  --output /path/to/output.png
+```
+
+### Logo Generation
+
+```bash
+python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
+  "google/gemini-3-pro-image-preview" \
+  "A minimalist logo for MyProject: geometric terminal icon. Clean vector style on solid #0d1117 background. White icon, no text." \
+  --output /path/to/logo.png
 ```
 
 ---
@@ -60,70 +90,40 @@ cd claude-skills
 ### OpenRouter
 
 <p>
-  <a href="https://openrouter.ai"><img src="https://img.shields.io/badge/Powered%20by-OpenRouter-6366f1" alt="OpenRouter"></a>
-  <img src="https://img.shields.io/badge/Version-1.0.4-green" alt="Version">
-  <img src="https://img.shields.io/badge/Models-300%2B-purple" alt="300+ Models">
+  <a href="https://openrouter.ai"><img src="https://img.shields.io/badge/OpenRouter-Powered-6366f1?style=flat" alt="OpenRouter"></a>
+  <img src="https://img.shields.io/badge/Version-1.0.4-green?style=flat" alt="Version">
+  <img src="https://img.shields.io/badge/Models-300+-purple?style=flat" alt="300+ Models">
 </p>
 
-Gateway to 300+ AI models through a unified API. Call any model from OpenAI, Anthropic, Google, Meta, Mistral, and many more with a single interface.
+Gateway to 300+ AI models through a unified API. Call any model from OpenAI, Anthropic, Google, Meta, Mistral, and more.
 
-#### Setup
-
-```bash
-export SKILL_OPENROUTER_API_KEY="sk-or-..."  # Get key at https://openrouter.ai/keys
-```
-
-#### Features
-
-| Feature | Description |
-|---------|-------------|
-| **Text Completion** | Call any model (GPT-5.2, Claude, Gemini, Llama, Mistral, etc.) |
-| **Image Generation** | Generate images with Flux, Gemini Flash, and other image models |
-| **Model Discovery** | Search and filter models by capability (vision, tools, long context) |
-| **Model Chaining** | Chain models together for complex tasks |
-| **Automatic Retries** | Built-in retry logic for rate limits and transient errors |
-
-#### Quick Reference
+#### Commands
 
 ```bash
 # Text completion
 python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py chat MODEL "prompt"
 
 # Image generation (use absolute paths)
-python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image MODEL "description" --output /absolute/path/output.png
+python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image MODEL "description" --output /path/output.png
 
 # Model discovery
 python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py models [vision|image_gen|tools|long_context]
 python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py find "search term"
 ```
 
-#### Common Models
+#### Popular Models
 
 | Use Case | Model ID | Notes |
 |----------|----------|-------|
 | General | `openai/gpt-5.2` | Fast, capable |
 | Reasoning | `anthropic/claude-opus-4.5` | SOTA reasoning |
-| Code | `anthropic/claude-sonnet-4.5` | Simple code |
-| Long docs | `google/gemini-3-flash-preview` | Long context, cheap |
-| Image gen | `google/gemini-3-pro-image-preview` | Fast, cheap |
+| Code | `anthropic/claude-sonnet-4.5` | Great for code |
+| Long context | `google/gemini-3-flash-preview` | 1M+ tokens, cheap |
+| Image gen | `google/gemini-3-pro-image-preview` | Fast, affordable |
 | Image gen | `black-forest-labs/flux.2-pro` | High quality |
 
-#### Usage Patterns
+#### Python Usage
 
-**Sequential Model Chain** - Call multiple models in sequence:
-```python
-outline = client.chat_simple("openai/gpt-5.2", "Create outline for: {topic}")
-content = client.chat_simple("anthropic/claude-sonnet-4.5", f"Expand this outline:\n{outline}")
-```
-
-**Parallel Comparison** - Get responses from multiple models:
-```bash
-python scripts/openrouter_client.py chat openai/gpt-5.2 "Explain X" > gpt_response.txt &
-python scripts/openrouter_client.py chat anthropic/claude-sonnet-4.5 "Explain X" > claude_response.txt &
-wait
-```
-
-**Python Usage** - Import the client directly:
 ```python
 import sys
 sys.path.insert(0, "plugins/openrouter/skills/openrouter/scripts")
@@ -134,63 +134,77 @@ client = OpenRouterClient(os.environ["SKILL_OPENROUTER_API_KEY"])
 response = client.chat_simple("anthropic/claude-sonnet-4.5", "Hello!")
 ```
 
-[Full OpenRouter documentation](plugins/openrouter/skills/openrouter/SKILL.md)
+[Full documentation](plugins/openrouter/skills/openrouter/SKILL.md)
 
 ---
 
 ### README Generator
 
 <p>
-  <img src="https://img.shields.io/badge/Version-1.0.0-green" alt="Version">
-  <img src="https://img.shields.io/badge/OpenRouter-Integration-6366f1" alt="OpenRouter Integration">
+  <img src="https://img.shields.io/badge/Version-1.0.5-green?style=flat" alt="Version">
+  <img src="https://img.shields.io/badge/OpenRouter-Integration-6366f1?style=flat" alt="OpenRouter Integration">
 </p>
 
-Create stunning, modern README files that make your projects stand out. Automatically analyzes your project and generates professional documentation following GitHub best practices.
+Create READMEs that hook readers in 5 seconds, prove value in 30 seconds, and enable success in under 10 minutes.
+
+#### Framework: Hook -> Prove -> Enable -> Extend
+
+| Phase | Time | Purpose |
+|-------|------|---------|
+| **Hook** | 0-5 sec | Logo + badges + one-liner |
+| **Prove** | 5-30 sec | Features + social proof |
+| **Enable** | 30s - 10m | Install + working example |
+| **Extend** | Committed | Docs + contributing |
 
 #### Features
 
-| Feature | Description |
-|---------|-------------|
-| **Smart Analysis** | Auto-detects project type, language, framework, and package manager |
-| **Modern Design** | Centered hero sections, badge collections, visual hierarchy |
-| **Logo Generation** | Generate custom logos using OpenRouter's image models |
-| **Best Practices** | Follows GitHub README conventions and accessibility standards |
-| **Flexible Output** | CLI tools, libraries, web apps, APIs - adapts to your project |
+- **Smart analysis** - Auto-detects project type, language, framework
+- **Modern design** - Centered hero, badge collections, visual hierarchy
+- **Logo integration** - Works with repo-logo-generator skill
+- **Best practices** - Follows GitHub README conventions
 
-#### Logo Generation with OpenRouter
+[Full documentation](plugins/readme-generator/skills/readme-generator/SKILL.md)
 
-Generate a custom logo for your project using AI:
+---
+
+### Repo Logo Generator
+
+<p>
+  <img src="https://img.shields.io/badge/Version-2.0.3-green?style=flat" alt="Version">
+  <img src="https://img.shields.io/badge/OpenRouter-Integration-6366f1?style=flat" alt="OpenRouter Integration">
+</p>
+
+Generate professional minimalist logos optimized for GitHub's dark theme.
+
+#### Prompt Template
+
+```
+A minimalist logo for {PROJECT_NAME}: {VISUAL_METAPHOR}.
+Clean vector style on solid #0d1117 background.
+Bright, light-colored icon. No text, no letters.
+Single centered icon, geometric shapes, works at 64x64px.
+```
+
+#### Visual Metaphors
+
+| Project Type | Metaphor |
+|--------------|----------|
+| CLI tool | Geometric terminal, origami |
+| Library | Interconnected blocks |
+| Web app | Modern interface window |
+| API | Messenger bird with data |
+| Framework | Architectural scaffold |
+
+#### Example
 
 ```bash
-# Generate a logo using Gemini
 python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
   "google/gemini-3-pro-image-preview" \
-  "A minimalist logo for MyProject: [describe concept]. Clean vector style, GitHub-ready, no text." \
-  --output /path/to/project/assets/logo.png
-
-# Or use Flux for higher quality
-python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
-  "black-forest-labs/flux.2-pro" \
-  "Modern tech logo for MyProject. Minimalist, dark/light mode compatible." \
-  --output /path/to/project/assets/logo.png
+  "A minimalist logo for fastgrep: magnifying glass with speed lines. Clean vector on #0d1117 background. White icon, no text." \
+  --output /path/to/logo.png
 ```
 
-#### README Structure Generated
-
-```
-- Centered logo + title + tagline
-- Badge row (build, version, license)
-- Overview section
-- Features list
-- Quick Start (< 2 min setup)
-- Installation (multi-platform)
-- Usage examples
-- API reference (if applicable)
-- Contributing guidelines
-- License
-```
-
-[Full README Generator documentation](plugins/readme-generator/skills/readme-generator/SKILL.md)
+[Full documentation](plugins/repo-logo-generator/skills/repo-logo-generator/SKILL.md)
 
 ---
 
@@ -199,54 +213,30 @@ python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
 ```
 claude-skills/
 ├── plugins/
-│   ├── openrouter/                    # OpenRouter plugin
-│   │   ├── .claude-plugin/
-│   │   │   └── plugin.json            # Plugin metadata (v1.0.4)
-│   │   └── skills/
-│   │       └── openrouter/
-│   │           ├── SKILL.md           # Skill documentation
-│   │           └── scripts/
-│   │               └── openrouter_client.py  # Python client (253 LOC)
-│   └── readme-generator/              # README Generator plugin
-│       ├── .claude-plugin/
-│       │   └── plugin.json            # Plugin metadata (v1.0.0)
-│       └── skills/
-│           └── readme-generator/
-│               └── SKILL.md           # Skill documentation
+│   ├── openrouter/              # OpenRouter skill (v1.0.4)
+│   ├── readme-generator/        # README Generator skill (v1.0.5)
+│   └── repo-logo-generator/     # Logo Generator skill (v2.0.3)
 ├── hooks/
-│   └── pre-commit                     # Auto-version bump hook
+│   └── pre-commit               # Auto-version bump hook
 ├── scripts/
-│   ├── bump-version.py                # Version bumping logic
-│   └── install-hooks.sh               # Hook installer
+│   ├── bump-version.py          # Version management
+│   └── install-hooks.sh         # Hook installer
 ├── .claude-plugin/
-│   └── marketplace.json               # Lists all available plugins
-├── logo.png                           # Repository logo
-├── CLAUDE.md                          # Developer guidance
-└── README.md                          # This file
+│   └── marketplace.json         # Plugin registry
+├── logo.png                     # Repository logo
+├── CLAUDE.md                    # Developer documentation
+└── README.md                    # This file
 ```
 
 ## Adding New Skills
 
-See [CLAUDE.md](CLAUDE.md#adding-a-new-skill) for detailed instructions on creating and adding new skills to this repository.
-
-## Reporting Issues
-
-Found a bug or have a suggestion? Please report it:
-
-[GitHub Issues](https://github.com/tsilva/claude-skills/issues)
-
-When reporting issues, include:
-
-- Description of the problem or suggestion
-- Steps to reproduce (for bugs)
-- Expected vs actual behavior
-- Environment details (Python version, OS)
+See [CLAUDE.md](CLAUDE.md#adding-a-new-skill) for step-by-step instructions on creating skills.
 
 ## Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/new-skill`)
-3. Add your skill following the structure in CLAUDE.md
+3. Add your skill following the structure in [CLAUDE.md](CLAUDE.md)
 4. Submit a pull request
 
 ## License
@@ -255,7 +245,7 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ## Acknowledgements
 
-- **[Claude Code](https://claude.ai/code)** by Anthropic - AI-powered development environment
+- **[Claude Code](https://claude.ai/code)** - AI-powered development by Anthropic
 - **[OpenRouter](https://openrouter.ai)** - Unified API for 300+ AI models
 - **[shields.io](https://shields.io)** - Badge generation service
 
