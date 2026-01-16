@@ -5,7 +5,7 @@ license: MIT
 compatibility: python 3.8+, requests
 metadata:
   author: tsilva
-  version: "2.0.2"
+  version: "2.0.3"
 ---
 
 # Repo Logo Generator
@@ -27,8 +27,8 @@ Use this template, filling in the project context:
 
 ```
 A minimalist logo for {PROJECT_NAME}: {VISUAL_METAPHOR}.
-Clean vector style on GitHub dark theme background (#0d1117, very dark blue-gray).
-Bright, light-colored icon for high contrast. No text, no letters, no words.
+Clean vector style on solid #0d1117 background (exact hex color, very dark desaturated blue, almost black).
+Bright, light-colored icon (white, light blue, or light gray). No text, no letters, no words.
 Single centered icon, geometric shapes, works at 64x64px.
 ```
 
@@ -55,15 +55,15 @@ Select the appropriate metaphor based on what the project does:
 | Security | Shield, lock, key |
 | Default | Abstract geometric shape |
 
-**Color guidance:** Use bright whites, light blues (#58a6ff), greens (#3fb950), oranges (#d29922), or purples (#a371f7) for icon elements. These GitHub accent colors provide excellent contrast against the dark #0d1117 background.
+**Color guidance:** Use bright whites, light blues (#58a6ff), greens (#3fb950), oranges (#d29922), or purples (#a371f7) for icon elements. These GitHub accent colors provide excellent contrast on dark backgrounds.
 
 ## Technical Requirements
 
 Logos must meet these criteria:
 - **No text**: Readable at 16x16 to 256x256
 - **Centered**: Works in circular and square crops
-- **Dark background**: GitHub dark theme (#0d1117) for seamless README integration
-- **High contrast**: Bright/light icon colors against dark background
+- **Exact background**: Solid #0d1117 (GitHub dark theme) - very dark desaturated blue, almost black
+- **High contrast**: Bright/light icon colors for visibility on dark background
 - **Clean style**: Minimalist vector, not photorealistic
 - **Single focal point**: One clear visual element
 
@@ -82,7 +82,7 @@ For a CLI tool called "fastgrep" that searches files quickly:
 ```bash
 python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
   "google/gemini-3-pro-image-preview" \
-  "A minimalist logo for fastgrep: A magnifying glass with speed lines forming a geometric pattern. Clean vector style on GitHub dark theme background (#0d1117, very dark blue-gray). Bright, light-colored icon for high contrast. No text, no letters, no words. Single centered icon, geometric shapes, works at 64x64px." \
+  "A minimalist logo for fastgrep: A magnifying glass with speed lines forming a geometric pattern. Clean vector style on solid #0d1117 background (exact hex color, very dark desaturated blue, almost black). Bright, light-colored icon (white, light blue, or light gray). No text, no letters, no words. Single centered icon, geometric shapes, works at 64x64px." \
   --output /Users/me/fastgrep/assets/logo.png
 ```
 
