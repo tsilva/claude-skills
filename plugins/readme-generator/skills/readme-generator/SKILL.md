@@ -4,7 +4,7 @@ description: Creates or updates README.md files following GitHub best practices 
 license: MIT
 metadata:
   author: tsilva
-  version: "1.0.5"
+  version: "1.0.6"
 ---
 
 # README Generator
@@ -69,6 +69,15 @@ For theme-aware logos, use the `<picture>` element:
 ## Hero Section
 
 The hero section is the most critical part of the README. It must be center-aligned and contain these elements in order:
+
+### Title Rule
+
+**The title must be exactly the same as the repository name.** Preserve the original casing and formatting:
+- If the repo is `my-awesome-tool`, the title is `my-awesome-tool` (not "My Awesome Tool")
+- If the repo is `fastAPI`, the title is `fastAPI` (not "FastAPI" or "Fastapi")
+- If the repo is `README-Generator`, the title is `README-Generator`
+
+Do not "prettify" or transform the repo name. Use it verbatim as the H1 title.
 
 ```markdown
 <div align="center">
