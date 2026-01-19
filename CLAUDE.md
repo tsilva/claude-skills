@@ -26,7 +26,8 @@ claude-skills/
 │   └── pre-commit               # Git pre-commit hook (auto-version bump)
 ├── scripts/
 │   ├── bump-version.py          # Version bumping logic
-│   └── install-hooks.sh         # Hook installer
+│   ├── install-hooks.sh         # Hook installer
+│   └── validate_skills.py       # Skill validation against spec
 ├── CLAUDE.md                    # This file
 └── README.md                    # Repository documentation
 ```
@@ -161,6 +162,15 @@ Add to `.claude/settings.local.json`:
   }
 }
 ```
+
+### Step 6: Validate
+
+**Always run validation after adding or modifying any skill:**
+```bash
+python scripts/validate_skills.py
+```
+
+This validates against the [Agent Skills specification](https://agentskills.io/specification) and repository rules. Fix any errors before committing.
 
 ## SKILL.md Specification
 
