@@ -2,7 +2,7 @@
 name: repo-logo-generator
 description: Generate minimalist logos for GitHub repositories via OpenRouter. A thin proxy skill with logo-optimized prompts. Use when asked to "generate a logo", "create repo logo", or "make a project logo".
 metadata:
-  version: "2.0.8"
+  version: "2.0.9"
 ---
 
 # Repo Logo Generator
@@ -13,7 +13,12 @@ Generate professional minimalist logos by calling the OpenRouter skill with logo
 
 Follow these steps exactly. Do not skip steps or improvise.
 
-- [ ] **Step 1**: Load config (check `./.claude/readme-generator.json` → `~/.claude/readme-generator.json` → `assets/default-config.json`)
+- [ ] **Step 1**: Load config by reading each path in order (stop at first that exists):
+  1. Read `./.claude/readme-generator.json` (project config)
+  2. Read `~/.claude/readme-generator.json` (user config)
+  3. Read `assets/default-config.json` from this skill's directory (default)
+
+  **IMPORTANT**: Actually READ each file path, don't just search for JSON files.
 - [ ] **Step 2**: Read project files (README, package.json, etc.) to determine project type
 - [ ] **Step 3**: Select visual metaphor from the table below (MUST use table, do NOT invent custom metaphors)
 - [ ] **Step 4**: Fill the prompt template using the EXACT format below (do not paraphrase)
