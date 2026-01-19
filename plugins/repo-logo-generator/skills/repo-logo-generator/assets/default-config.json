@@ -6,6 +6,7 @@
     "size": "64x64",
     "aspectRatio": "1:1",
     "model": "google/gemini-3-pro-image-preview",
-    "darkModeSupport": false
+    "darkModeSupport": false,
+    "displayWidth": "auto"
   }
 }

@@ -2,7 +2,7 @@
 name: repo-logo-generator
 description: Generate minimalist logos for GitHub repositories via OpenRouter. A thin proxy skill with logo-optimized prompts. Use when asked to "generate a logo", "create repo logo", or "make a project logo".
 metadata:
-  version: "2.0.6"
+  version: "2.0.7"
 ---
 
 # Repo Logo Generator
@@ -41,6 +41,7 @@ cp <skill-path>/assets/default-config.json ~/.claude/readme-generator.json
 | `aspectRatio` | `1:1` | Aspect ratio for generation |
 | `model` | `google/gemini-3-pro-image-preview` | OpenRouter model for image generation |
 | `darkModeSupport` | `false` | Generate both dark/light variants |
+| `displayWidth` | `auto` | Display width hint: `auto`, or pixels (150-300). When `auto`, readme-generator will analyze complexity. |
 
 ### Example Configuration
 
@@ -118,7 +119,8 @@ Logos must meet these criteria:
 4. Construct prompt using template with config values (or defaults)
 5. Use openrouter skill's image generation (using `config.model`) to create the logo
 6. Save to project's assets directory (e.g., `logo.png` at repo root)
-7. If `config.darkModeSupport` is true, generate a second variant with inverted colors
+7. Return complexity hint if determinable from style/prompt (minimalist/moderate/detailed)
+8. If `config.darkModeSupport` is true, generate a second variant with inverted colors
 
 ## Example Prompt
 

@@ -15,13 +15,13 @@
       "name": "readme-generator",
       "source": "./plugins/readme-generator",
       "description": "Create cutting-edge README files with modern design, badges, and optional AI-generated logos via OpenRouter integration.",
-      "version": "1.0.8"
+      "version": "1.0.9"
     },
     {
       "name": "repo-logo-generator",
       "source": "./plugins/repo-logo-generator",
       "description": "Generate minimalist logos via OpenRouter with logo-optimized prompts. Use when asked to 'generate a logo' or 'create repo logo'.",
-      "version": "2.0.6"
+      "version": "2.0.7"
     }
   ]
 }

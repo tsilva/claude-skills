@@ -2,7 +2,7 @@
 name: readme-generator
 description: Creates or updates README.md files following GitHub best practices with badges, visual hierarchy, and comprehensive documentation. Use when asked to "create a README", "generate documentation", "write a README for this project", or when starting a new project that needs documentation.
 metadata:
-  version: "1.0.8"
+  version: "1.0.9"
 ---
 
 # README Generator
@@ -44,6 +44,24 @@ These files customize logo appearance (background color, icon colors, style, mod
 
 Invoke the **repo-logo-generator** skill to generate a logo. That skill contains the prompt templates, visual metaphors, and technical requirements for logo generation.
 
+### Step 3: Determine Logo Display Size
+
+After generating or finding the logo, analyze its visual complexity to determine the optimal display width:
+
+| Complexity | Width | Logo Characteristics |
+|------------|-------|---------------------|
+| Minimalist | 150-180px | Single geometric icon, flat colors, clean lines |
+| Moderate | 200-240px | Multi-element icon, some detail, professional |
+| Detailed | 260-300px | Pixel art, illustrations, characters, text, many icons |
+
+**Assessment criteria:**
+- **Count visual elements**: Single icon = minimalist; 2-4 elements = moderate; 5+ elements = detailed
+- **Check for text**: Any text or characters in the logo → detailed (needs larger size for readability)
+- **Evaluate fine detail**: Would details be lost at 150px? If yes → increase size
+- **Style from config**: "pixel art", "character", "illustration" styles → detailed category
+
+Use the assessed width in the HTML img tag (replacing the default 200px).
+
 ### Dark/Light Mode Support
 
 For theme-aware logos, use the `<picture>` element:
@@ -52,7 +70,7 @@ For theme-aware logos, use the `<picture>` element:
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="logo-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="logo-light.png">
-  <img src="logo-light.png" alt="Project Name" width="200">
+  <img src="logo-light.png" alt="Project Name" width="{ASSESSED_WIDTH}">
 </picture>
 ```
 
@@ -71,7 +89,7 @@ Do not "prettify" or transform the repo name. Use it verbatim as the H1 title.
 
 ```markdown
 <div align="center">
-  <img src="logo.png" alt="Project Name" width="200"/>
+  <img src="logo.png" alt="Project Name" width="{ASSESSED_WIDTH}"/>
 
   [![Build](badge)](link) [![Version](badge)](link) [![License](badge)](link)
 
@@ -427,7 +445,8 @@ Avoid these mistakes:
 3. **Extract metadata** - name, description, version, author, license
 4. **Check for existing logo** - look for `logo.png` at repo root
 5. **Generate logo if missing** - use repo-logo-generator skill
-6. **Generate README.md** - following Hook → Prove → Enable → Extend structure
+6. **Assess logo complexity** - determine display width (150-300px based on visual analysis)
+7. **Generate README.md** - following Hook → Prove → Enable → Extend structure
 
 ## Quick Reference Checklist
 
