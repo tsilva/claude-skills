@@ -1,10 +1,8 @@
 ---
 name: readme-generator
 description: Creates or updates README.md files following GitHub best practices with badges, visual hierarchy, and comprehensive documentation. Use when asked to "create a README", "generate documentation", "write a README for this project", or when starting a new project that needs documentation.
-license: MIT
 metadata:
-  author: tsilva
-  version: "1.0.6"
+  version: "1.0.7"
 ---
 
 # README Generator
@@ -36,23 +34,7 @@ Look for `logo.png` at the repo root. If found, use it and skip to README genera
 
 ### Step 2: Generate Logo (if missing)
 
-Use the **repo-logo-generator** skill:
-
-```bash
-python plugins/repo-logo-generator/skills/repo-logo-generator/scripts/repo_logo_generator.py generate \
-  --readme /absolute/path/to/README.md \
-  --output /absolute/path/to/repo/logo.png
-```
-
-For manual control:
-
-```bash
-python plugins/repo-logo-generator/skills/repo-logo-generator/scripts/repo_logo_generator.py generate \
-  --project-name "MyProject" \
-  --project-type "cli" \
-  --style "minimalist" \
-  --output /absolute/path/to/repo/logo.png
-```
+Invoke the **repo-logo-generator** skill to generate a logo. That skill contains the prompt templates, visual metaphors, and technical requirements for logo generation.
 
 ### Dark/Light Mode Support
 

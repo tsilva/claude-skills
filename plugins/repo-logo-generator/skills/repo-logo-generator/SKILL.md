@@ -1,25 +1,19 @@
 ---
 name: repo-logo-generator
 description: Generate minimalist logos for GitHub repositories via OpenRouter. A thin proxy skill with logo-optimized prompts. Use when asked to "generate a logo", "create repo logo", or "make a project logo".
-license: MIT
-compatibility: python 3.8+, requests
 metadata:
-  author: tsilva
-  version: "2.0.3"
+  version: "2.0.4"
 ---
 
 # Repo Logo Generator
 
 Generate professional minimalist logos by calling the OpenRouter skill with logo-optimized prompts.
 
-## Command
+## Usage
 
-```bash
-python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
-  "google/gemini-3-pro-image-preview" \
-  "PROMPT" \
-  --output /absolute/path/to/logo.png
-```
+Use the **openrouter** skill's image generation capability. Refer to that skill for the command syntax, available models, and setup requirements.
+
+Recommended models for logo generation: image generation models with good vector/minimalist style support (check openrouter skill for current options).
 
 ## Prompt Template
 
@@ -72,20 +66,15 @@ Logos must meet these criteria:
 1. Analyze the project (README, package files, code structure)
 2. Determine project type and select visual metaphor from table
 3. Construct prompt using template
-4. Call openrouter_client.py with the prompt
-5. Save to project's assets directory
+4. Use openrouter skill's image generation to create the logo
+5. Save to project's assets directory (e.g., `logo.png` at repo root)
 
-## Example
+## Example Prompt
 
 For a CLI tool called "fastgrep" that searches files quickly:
 
-```bash
-python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
-  "google/gemini-3-pro-image-preview" \
-  "A minimalist logo for fastgrep: A magnifying glass with speed lines forming a geometric pattern. Clean vector style on solid #0d1117 background (exact hex color, very dark desaturated blue, almost black). Bright, light-colored icon (white, light blue, or light gray). No text, no letters, no words. Single centered icon, geometric shapes, works at 64x64px." \
-  --output /Users/me/fastgrep/assets/logo.png
+```
+A minimalist logo for fastgrep: A magnifying glass with speed lines forming a geometric pattern. Clean vector style on solid #0d1117 background (exact hex color, very dark desaturated blue, almost black). Bright, light-colored icon (white, light blue, or light gray). No text, no letters, no words. Single centered icon, geometric shapes, works at 64x64px.
 ```
 
-## Environment
-
-Requires `SKILL_OPENROUTER_API_KEY` environment variable.
+Pass this prompt to the openrouter skill's image generation command, saving to the project's assets directory.
