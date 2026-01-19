@@ -55,16 +55,16 @@ Provides access to 300+ AI models via the OpenRouter API.
 **Usage:**
 ```bash
 # Text completion
-python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py chat MODEL "prompt"
+uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py chat MODEL "prompt"
 
 # Image generation (use absolute paths)
-python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image MODEL "description" --output /absolute/path/output.png
+uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image MODEL "description" --output /absolute/path/output.png
 
 # List models by capability
-python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py models [vision|image_gen|tools|long_context]
+uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py models [vision|image_gen|tools|long_context]
 
 # Search models
-python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py find "search term"
+uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py find "search term"
 ```
 
 **Key implementation details:**
@@ -88,7 +88,7 @@ Creates cutting-edge README files with modern design patterns and optional AI-ge
 
 **Logo generation with OpenRouter:**
 ```bash
-python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
+uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
   "google/gemini-3-pro-image-preview" \
   "A minimalist logo for [PROJECT]: [concept]. Clean vector style, no text." \
   --output /absolute/path/assets/logo.png

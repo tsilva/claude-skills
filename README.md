@@ -62,14 +62,14 @@ export SKILL_OPENROUTER_API_KEY="sk-or-..."  # Get key at https://openrouter.ai/
 ### Text Completion
 
 ```bash
-python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py chat \
+uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py chat \
   "openai/gpt-5.2" "Explain quantum computing in one paragraph"
 ```
 
 ### Image Generation
 
 ```bash
-python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
+uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
   "google/gemini-3-pro-image-preview" "A futuristic city at sunset" \
   --output /path/to/output.png
 ```
@@ -77,7 +77,7 @@ python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
 ### Logo Generation
 
 ```bash
-python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
+uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
   "google/gemini-3-pro-image-preview" \
   "A minimalist logo for MyProject: geometric terminal icon. Clean vector style on solid #0d1117 background. White icon, no text." \
   --output /path/to/logo.png
@@ -101,14 +101,14 @@ Gateway to 300+ AI models through a unified API. Call any model from OpenAI, Ant
 
 ```bash
 # Text completion
-python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py chat MODEL "prompt"
+uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py chat MODEL "prompt"
 
 # Image generation (use absolute paths)
-python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image MODEL "description" --output /path/output.png
+uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image MODEL "description" --output /path/output.png
 
 # Model discovery
-python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py models [vision|image_gen|tools|long_context]
-python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py find "search term"
+uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py models [vision|image_gen|tools|long_context]
+uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py find "search term"
 ```
 
 #### Popular Models
@@ -198,7 +198,7 @@ Single centered icon, geometric shapes, works at 64x64px.
 #### Example
 
 ```bash
-python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
+uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
   "google/gemini-3-pro-image-preview" \
   "A minimalist logo for fastgrep: magnifying glass with speed lines. Clean vector on #0d1117 background. White icon, no text." \
   --output /path/to/logo.png

@@ -3,20 +3,20 @@
 OpenRouter API Client for Claude Code.
 
 Usage:
-    python openrouter_client.py chat MODEL "Your prompt here" [OPTIONS]
-    python openrouter_client.py image MODEL "Image description" [OPTIONS]
-    python openrouter_client.py models [CAPABILITY]
-    python openrouter_client.py find "search term"
+    uv run --with requests openrouter_client.py chat MODEL "Your prompt here" [OPTIONS]
+    uv run --with requests openrouter_client.py image MODEL "Image description" [OPTIONS]
+    uv run --with requests openrouter_client.py models [CAPABILITY]
+    uv run --with requests openrouter_client.py find "search term"
 
 Environment:
     SKILL_OPENROUTER_API_KEY - Required API key from https://openrouter.ai/keys
 
 Examples:
-    python openrouter_client.py chat anthropic/claude-sonnet-4.5 "Explain recursion"
-    python openrouter_client.py chat openai/gpt-5.2 "Write a haiku" --max-tokens 100
-    python openrouter_client.py image google/gemini-3-pro-image-preview "A sunset" --output sunset.png
-    python openrouter_client.py models vision
-    python openrouter_client.py find "claude"
+    uv run --with requests openrouter_client.py chat anthropic/claude-sonnet-4.5 "Explain recursion"
+    uv run --with requests openrouter_client.py chat openai/gpt-5.2 "Write a haiku" --max-tokens 100
+    uv run --with requests openrouter_client.py image google/gemini-3-pro-image-preview "A sunset" --output sunset.png
+    uv run --with requests openrouter_client.py models vision
+    uv run --with requests openrouter_client.py find "claude"
 """
 
 import argparse
@@ -30,7 +30,7 @@ from pathlib import Path
 try:
     import requests
 except ImportError:
-    print("Error: requests library required. Install with: pip install requests", file=sys.stderr)
+    print("Error: requests library required. Run with: uv run --with requests scripts/openrouter_client.py ...", file=sys.stderr)
     sys.exit(1)
 
 

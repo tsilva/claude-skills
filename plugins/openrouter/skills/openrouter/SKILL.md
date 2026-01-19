@@ -2,7 +2,7 @@
 name: openrouter
 description: Invokes 300+ AI models via OpenRouter API for text completion, image generation, and model discovery. Use when delegating tasks to external models (GPT-5.2, Gemini 3, Llama, Mistral, etc.). Triggers on "use OpenRouter to...", "call GPT-5 to...", "generate an image with Gemini", or similar requests for external AI models.
 metadata:
-  version: "1.0.5"
+  version: "1.0.6"
 ---
 
 # OpenRouter
@@ -19,18 +19,18 @@ export SKILL_OPENROUTER_API_KEY="sk-or-..."  # Get key at https://openrouter.ai/
 
 **Text completion:**
 ```bash
-python scripts/openrouter_client.py chat MODEL "prompt" [--system "sys"] [--max-tokens N] [--temperature T]
+uv run --with requests scripts/openrouter_client.py chat MODEL "prompt" [--system "sys"] [--max-tokens N] [--temperature T]
 ```
 
 **Image generation:**
 ```bash
-python scripts/openrouter_client.py image MODEL "description" [--output /absolute/path/file.png] [--aspect 16:9] [--size 2K]
+uv run --with requests scripts/openrouter_client.py image MODEL "description" [--output /absolute/path/file.png] [--aspect 16:9] [--size 2K]
 ```
 
 **Model discovery:**
 ```bash
-python scripts/openrouter_client.py models [vision|image_gen|tools|long_context]
-python scripts/openrouter_client.py find "search term"
+uv run --with requests scripts/openrouter_client.py models [vision|image_gen|tools|long_context]
+uv run --with requests scripts/openrouter_client.py find "search term"
 ```
 
 ## Common Models
@@ -62,8 +62,8 @@ Get responses from multiple models for comparison:
 
 ```bash
 # Run these in parallel
-python scripts/openrouter_client.py chat openai/gpt-5.2 "Explain X" > gpt4_response.txt &
-python scripts/openrouter_client.py chat anthropic/claude-sonnet-4.5 "Explain X" > claude_response.txt &
+uv run --with requests scripts/openrouter_client.py chat openai/gpt-5.2 "Explain X" > gpt4_response.txt &
+uv run --with requests scripts/openrouter_client.py chat anthropic/claude-sonnet-4.5 "Explain X" > claude_response.txt &
 wait
 ```
 
@@ -72,13 +72,13 @@ Route specific tasks to specialized models:
 
 ```bash
 # Use code model for code tasks
-python scripts/openrouter_client.py chat anthropic/claude-sonnet-4.5 "Write a function to..."
+uv run --with requests scripts/openrouter_client.py chat anthropic/claude-sonnet-4.5 "Write a function to..."
 
 # Use vision model for image analysis
-python scripts/openrouter_client.py chat google/gemini-3-flash-preview "Analyze this image: [base64]"
+uv run --with requests scripts/openrouter_client.py chat google/gemini-3-flash-preview "Analyze this image: [base64]"
 
 # Use image model for generation
-python scripts/openrouter_client.py image google/gemini-3-pro-image-preview "A cyberpunk city" -o city.png
+uv run --with requests scripts/openrouter_client.py image google/gemini-3-pro-image-preview "A cyberpunk city" -o city.png
 ```
 
 ### Pattern 4: Structured Output Pipeline
@@ -86,7 +86,7 @@ Request JSON for programmatic processing:
 
 ```bash
 # Get structured data
-python scripts/openrouter_client.py chat openai/gpt-5.2 "Extract entities from: {text}" --json > entities.json
+uv run --with requests scripts/openrouter_client.py chat openai/gpt-5.2 "Extract entities from: {text}" --json > entities.json
 
 # Process the JSON in next step
 ```
@@ -100,7 +100,7 @@ python scripts/openrouter_client.py chat openai/gpt-5.2 "Extract entities from: 
 
 ```bash
 # Generate landscape image (use absolute path for --output)
-python scripts/openrouter_client.py image google/gemini-3-pro-image-preview \
+uv run --with requests scripts/openrouter_client.py image google/gemini-3-pro-image-preview \
   "Mountain sunset with dramatic clouds" \
   --output /absolute/path/to/mountain.png --aspect 16:9 --size 2K
 ```

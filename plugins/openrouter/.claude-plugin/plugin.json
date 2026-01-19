@@ -1,7 +1,7 @@
 {
   "name": "openrouter",
   "description": "Invoke 300+ AI models via OpenRouter API. Use when Claude Code needs to call external models (GPT-5.2, Gemini 3, Llama, Mistral, etc.) for text completion, image generation, or model discovery.",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "author": {
     "name": "tsilva"
   }
