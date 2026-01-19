@@ -2,7 +2,7 @@
 name: repo-logo-generator
 description: Generate minimalist logos for GitHub repositories via OpenRouter. A thin proxy skill with logo-optimized prompts. Use when asked to "generate a logo", "create repo logo", or "make a project logo".
 metadata:
-  version: "2.0.5"
+  version: "2.0.6"
 ---
 
 # Repo Logo Generator
@@ -21,16 +21,22 @@ Logo generation can be customized via configuration files. Check in order (first
 
 1. **Project config**: `./.claude/readme-generator.json`
 2. **User config**: `~/.claude/readme-generator.json`
+3. **Default config**: `assets/default-config.json` (bundled with this skill)
 
-Read JSON if exists, extract `logo` object, merge with defaults (project overrides user overrides default).
+Read JSON if exists, extract `logo` object. Project overrides user overrides default.
+
+Users can copy the default config as a starting point:
+```bash
+cp <skill-path>/assets/default-config.json ~/.claude/readme-generator.json
+```
 
 ### Configurable Parameters
 
 | Parameter | Default | Description |
 |-----------|---------|-------------|
-| `background` | `#0d1117` | Background hex color |
+| `background` | `#12161D` | Background hex color - RGB(18,22,29). Must be flat solid color. |
 | `iconColors` | `["#ffffff", "#58a6ff", "#3fb950", "#d29922", "#a371f7"]` | Preferred icon colors |
-| `style` | `minimalist` | Logo style (minimalist, detailed, geometric) |
+| `style` | `minimalist` | Logo style description (can be detailed prompt text) |
 | `size` | `64x64` | Target size for logo |
 | `aspectRatio` | `1:1` | Aspect ratio for generation |
 | `model` | `google/gemini-3-pro-image-preview` | OpenRouter model for image generation |
@@ -60,11 +66,11 @@ Icon colors from: {config.iconColors}. No text, no letters, no words.
 Single centered icon, geometric shapes, works at {config.size}.
 ```
 
-**Default prompt** (when no config exists):
+**Default prompt** (when no config exists, uses `assets/default-config.json`):
 
 ```
 A minimalist logo for {PROJECT_NAME}: {VISUAL_METAPHOR}.
-Clean vector style on solid #0d1117 background (exact hex color, very dark desaturated blue, almost black).
+Clean vector style on flat solid #12161D background (no gradients, no patterns).
 Bright, light-colored icon (white, light blue, or light gray). No text, no letters, no words.
 Single centered icon, geometric shapes, works at 64x64px.
 ```
@@ -99,7 +105,7 @@ Select the appropriate metaphor based on what the project does:
 Logos must meet these criteria:
 - **No text**: Readable at 16x16 to 256x256
 - **Centered**: Works in circular and square crops
-- **Exact background**: Solid #0d1117 (GitHub dark theme) - very dark desaturated blue, almost black
+- **Flat background**: Solid #12161D - RGB(18,22,29). No gradients, starfields, patterns, or textures.
 - **High contrast**: Bright/light icon colors for visibility on dark background
 - **Clean style**: Minimalist vector, not photorealistic
 - **Single focal point**: One clear visual element
@@ -119,13 +125,13 @@ Logos must meet these criteria:
 For a CLI tool called "fastgrep" that searches files quickly (using default config):
 
 ```
-A minimalist logo for fastgrep: A magnifying glass with speed lines forming a geometric pattern. Clean vector style on solid #0d1117 background (exact hex color, very dark desaturated blue, almost black). Bright, light-colored icon (white, light blue, or light gray). No text, no letters, no words. Single centered icon, geometric shapes, works at 64x64px.
+A minimalist logo for fastgrep: A magnifying glass with speed lines forming a geometric pattern. Clean vector style on flat solid #12161D background (no gradients, no patterns). Bright, light-colored icon (white, light blue, or light gray). No text, no letters, no words. Single centered icon, geometric shapes, works at 64x64px.
 ```
 
 **With custom config** (`background: "#1a1b26"`, `style: "geometric"`, `iconColors: ["#7aa2f7", "#bb9af7"]`):
 
 ```
-A geometric logo for fastgrep: A magnifying glass with speed lines forming a geometric pattern. Clean vector style on solid #1a1b26 background. Icon colors from: #7aa2f7, #bb9af7. No text, no letters, no words. Single centered icon, geometric shapes, works at 64x64px.
+A geometric logo for fastgrep: A magnifying glass with speed lines forming a geometric pattern. Clean vector style on flat solid #1a1b26 background. Icon colors from: #7aa2f7, #bb9af7. No text, no letters, no words. Single centered icon, geometric shapes, works at 64x64px.
 ```
 
 Pass this prompt to the openrouter skill's image generation command, saving to the project's assets directory.

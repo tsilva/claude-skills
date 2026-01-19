@@ -97,6 +97,7 @@ python plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
 **Logo configuration:** Logo appearance is customizable via JSON config files. The system checks in order (first found wins):
 1. `./.claude/readme-generator.json` (project level)
 2. `~/.claude/readme-generator.json` (user level)
+3. `assets/default-config.json` (bundled with repo-logo-generator skill)
 
 Example config:
 ```json
