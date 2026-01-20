@@ -1,8 +1,8 @@
 ---
 name: repo-logo-generator
-description: Generate minimalist logos for GitHub repositories via OpenRouter. A thin proxy skill with logo-optimized prompts. Supports transparent backgrounds via difference matting. Use when asked to "generate a logo", "create repo logo", or "make a project logo".
+description: Generate logos for GitHub repositories via OpenRouter with transparent backgrounds using chroma key flood fill. Works with pixel art, vector designs, and complex multi-colored styles. Use when asked to "generate a logo", "create repo logo", or "make a project logo".
 metadata:
-  version: "2.1.3"
+  version: "2.1.5"
 ---
 
 # Repo Logo Generator
@@ -25,19 +25,19 @@ Follow these steps exactly. Do not skip steps or improvise.
 - [ ] **Step 3**: Read project files (README, package.json, etc.) to determine project type
 - [ ] **Step 4**: Select visual metaphor from the table below and fill the prompt template
 - [ ] **Step 5**: Check if `config.transparentBackground` is `true`:
-  - **If TRUE** (transparency mode):
-    1. Generate FIRST logo with BLACK background → save to `/tmp/claude/logo_black.png`
-    2. Generate SECOND logo with WHITE background → save to `/tmp/claude/logo_white.png`
-    3. Run difference matting script with foreground preservation:
+  - **If TRUE** (transparency mode - CHROMA KEY METHOD):
+    1. Generate SINGLE logo with HOT MAGENTA background (#FF00FF) → save to `/tmp/claude/logo_chroma.png`
+       - Modify prompt to specify: "CRITICAL: Background MUST be pure flat solid hot magenta RGB(255,0,255) #FF00FF"
+    2. Run chroma key removal script:
        ```bash
-       uv run --with pillow --with numpy scripts/create_transparent_logo.py \
-         /tmp/claude/logo_black.png /tmp/claude/logo_white.png logo.png \
-         --min-transparent-pct 5.0 --min-corners 3 --alpha-floor 0.7
+       uv run --with pillow --with opencv-python scripts/remove_chroma_background.py \
+         /tmp/claude/logo_chroma.png logo.png \
+         --min-transparent-pct 5.0 --min-corners 3
        ```
-    4. If script succeeds (exit code 0), transparency is complete
-    5. If script fails (exit code 1), retry generation with adjusted prompt (max 2 retries)
-    6. If all retries fail, fall back to solid background mode using `config.fallbackBackground`
-  - **If FALSE** (solid background mode):
+    3. If script succeeds (exit code 0), transparency is complete
+    4. If script fails (exit code 1), retry generation with adjusted prompt (max 2 retries)
+    5. If all retries fail, fall back to solid background mode using `config.fallbackBackground`
+  - **IF FALSE** (solid background mode):
     1. Generate single logo with `config.background` color
     2. Save directly to `logo.png`
 - [ ] **Step 6**: Verify logo exists and is valid PNG
@@ -179,34 +179,46 @@ Read JSON if exists, extract `logo` object. Project overrides user overrides def
 }
 ```
 
-## Transparent Background (Difference Matting)
+## Transparent Background (Chroma Key Method)
 
 **How it works:**
-AI image models don't reliably generate transparent backgrounds when prompted. Instead, we use **difference matting** - a technique that generates two versions of the same logo with different solid backgrounds (black and white), then mathematically calculates the perfect alpha channel from the pixel differences.
+AI image models don't reliably generate transparent backgrounds when prompted. Instead, we use **chroma key removal** - a technique borrowed from video production where a distinctive background color (hot magenta #FF00FF) is removed using flood fill algorithms.
 
 **The algorithm:**
-1. Generate logo with pure black background (#000000)
-2. Generate logo with pure white background (#FFFFFF)
-3. Calculate alpha channel: `alpha = 1 - |white - black| / 255`
-4. Extract foreground color: `foreground = black / alpha`
-5. Combine into RGBA PNG with transparency
+1. Generate logo with hot magenta background (#FF00FF)
+2. Use OpenCV's flood fill from image corners to detect solid background
+3. Create alpha mask from flood fill results
+4. Combine foreground with transparency
+
+**Why chroma key is better than difference matting:**
+- ✅ **Single generation** (50% faster, 50% cheaper)
+- ✅ **Works with complex pixel art** (no need for identical compositions)
+- ✅ **Reliable for multi-colored images** (doesn't care about color variations)
+- ✅ **Simple algorithm** (flood fill vs. complex matting math)
 
 **Critical requirements:**
-- Both logos MUST have **identical composition** (same icon, position, size, colors)
-- Use pure black (#000000) and pure white (#FFFFFF) for best results
-- Works best with **simple, monochromatic styles** (single-color icons)
-- Script validates transparency quality automatically
+- Background MUST be flat solid color (no gradients, patterns, starfields)
+- Use hot magenta (#FF00FF) - a color that rarely appears in logos
+- Flood fill validates transparency quality automatically
 
-**IMPORTANT LIMITATION - Complex/Pixel Art Styles:**
-Difference matting does NOT work reliably with:
-- Multi-colored pixel art (character sprites, detailed scenes)
-- Complex LucasArts/adventure game styles
-- Styles with text labels or detailed shading
+**Why hot magenta?**
+- Extremely rare in logos/pixel art (very saturated, unnatural color)
+- High contrast with most logo colors
+- Easy for flood fill to detect
+- If magenta appears in your logo, the script auto-detects and uses a different color
 
-For these styles, AI generates different colors/compositions each time, breaking the algorithm. **Recommendation:** Use `transparentBackground: false` for complex pixel art styles.
+**Compatibility:**
+This method works with ALL styles including:
+- ✅ Multi-colored pixel art (character sprites, detailed scenes)
+- ✅ Complex LucasArts/adventure game styles
+- ✅ Logos with text labels and detailed shading
+- ✅ Minimalist vector designs
+- ✅ Photorealistic images
 
 **When transparency fails:**
-The system will retry generation up to 2 times with adjusted prompts. If all attempts fail, it falls back to generating a solid background logo using `config.fallbackBackground`.
+The system will retry generation up to 2 times with adjusted prompts. If all retries fail, it falls back to generating a solid background logo using `config.fallbackBackground`.
+
+**Legacy method:** The old difference matting script (`create_transparent_logo.py`) is still available for simple monochromatic logos, but chroma key is now the default.
 
 ## Technical Requirements
 
