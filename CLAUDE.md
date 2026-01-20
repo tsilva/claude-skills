@@ -55,16 +55,16 @@ Provides access to 300+ AI models via the OpenRouter API.
 **Usage:**
 ```bash
 # Text completion
-uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py chat MODEL "prompt"
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py chat MODEL "prompt"
 
 # Image generation (use absolute paths)
-uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image MODEL "description" --output /absolute/path/output.png
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image MODEL "description" --output /absolute/path/output.png
 
 # List models by capability
-uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py models [vision|image_gen|tools|long_context]
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py models [vision|image_gen|tools|long_context]
 
 # Search models
-uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py find "search term"
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py find "search term"
 ```
 
 **Key implementation details:**
@@ -88,7 +88,7 @@ Creates cutting-edge README files with modern design patterns and optional AI-ge
 
 **Logo generation with OpenRouter:**
 ```bash
-uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
   "google/gemini-3-pro-image-preview" \
   "A minimalist logo for [PROJECT]: [concept]. Clean vector style, no text." \
   --output /absolute/path/assets/logo.png

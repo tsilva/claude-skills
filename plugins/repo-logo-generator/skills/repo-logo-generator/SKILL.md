@@ -2,7 +2,7 @@
 name: repo-logo-generator
 description: Generate logos for GitHub repositories via OpenRouter with transparent backgrounds using chroma key flood fill. Works with pixel art, vector designs, and complex multi-colored styles. Use when asked to "generate a logo", "create repo logo", or "make a project logo".
 metadata:
-  version: "2.1.6"
+  version: "2.1.7"
 ---
 
 # Repo Logo Generator
@@ -30,7 +30,7 @@ Follow these steps exactly. Do not skip steps or improvise.
        - Modify prompt to specify: "CRITICAL: Background MUST be pure flat solid hot magenta RGB(255,0,255) #FF00FF. The logo/icon colors must NOT contain magenta, pink, or similar colors - avoid all colors near RGB(255,0,255)."
     2. Run chroma key removal script:
        ```bash
-       uv run --with pillow --with opencv-python scripts/remove_chroma_background.py \
+       UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with pillow --with opencv-python scripts/remove_chroma_background.py \
          /tmp/claude/logo_chroma.png logo.png \
          --min-transparent-pct 5.0 --min-corners 3
        ```
@@ -233,3 +233,5 @@ Logos must meet these criteria:
 ## Usage
 
 Use the **openrouter** skill's image generation capability. Refer to that skill for the command syntax, available models, and setup requirements.
+
+**Note on Sandbox Mode**: The `UV_CACHE_DIR=/tmp/claude/uv-cache` prefix ensures `uv` uses an allowed cache directory. When Claude runs these commands, it may still need to disable sandbox due to `uv` accessing macOS system configuration APIs. Users running commands manually won't encounter this restriction.

@@ -5,7 +5,7 @@ license: MIT
 compatibility: python 3.8+
 metadata:
   author: tsilva
-  version: "1.0.4"
+  version: "1.0.5"
 ---
 
 # Settings Cleaner
@@ -18,21 +18,23 @@ Audit and optimize Claude Code permission whitelists for security and efficiency
 
 ```bash
 # Analyze permissions (read-only)
-uv run --with colorama {SKILL_BASE}/scripts/settings_cleaner.py analyze \
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with colorama {SKILL_BASE}/scripts/settings_cleaner.py analyze \
   --project-settings {USER_CWD}/.claude/settings.local.json
 
 # Interactive cleanup with confirmation prompts
-uv run --with colorama {SKILL_BASE}/scripts/settings_cleaner.py clean \
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with colorama {SKILL_BASE}/scripts/settings_cleaner.py clean \
   --project-settings {USER_CWD}/.claude/settings.local.json
 
 # Auto-fix redundant permissions only (safest, no prompts)
-uv run --with colorama {SKILL_BASE}/scripts/settings_cleaner.py auto-fix \
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with colorama {SKILL_BASE}/scripts/settings_cleaner.py auto-fix \
   --project-settings {USER_CWD}/.claude/settings.local.json
 ```
 
 Where:
 - `{SKILL_BASE}` = Absolute path to the skill directory (from Base directory message)
 - `{USER_CWD}` = User's current working directory (use `pwd` or equivalent to get absolute path)
+
+**Note on Sandbox Mode**: The `UV_CACHE_DIR=/tmp/claude/uv-cache` prefix ensures `uv` uses an allowed cache directory. When Claude runs these commands, it may still need to disable sandbox due to `uv` accessing macOS system configuration APIs. Users running commands manually won't encounter this restriction.
 
 ## What It Checks
 
@@ -177,7 +179,7 @@ When this skill is invoked, you MUST follow this workflow:
 
 4. **Run the analysis script** with absolute paths:
    ```bash
-   uv run --with colorama {SKILL_BASE}/scripts/settings_cleaner.py analyze \
+   UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with colorama {SKILL_BASE}/scripts/settings_cleaner.py analyze \
      --project-settings {USER_CWD}/.claude/settings.local.json
    ```
 

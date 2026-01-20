@@ -65,14 +65,14 @@ export SKILL_OPENROUTER_API_KEY="sk-or-..."  # Get key at https://openrouter.ai/
 ### Text Completion
 
 ```bash
-uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py chat \
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py chat \
   "openai/gpt-5.2" "Explain quantum computing in one paragraph"
 ```
 
 ### Image Generation
 
 ```bash
-uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
   "google/gemini-3-pro-image-preview" "A futuristic city at sunset" \
   --output /path/to/output.png
 ```
@@ -80,7 +80,7 @@ uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_c
 ### Logo Generation
 
 ```bash
-uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
   "google/gemini-3-pro-image-preview" \
   "A minimalist logo for MyProject: geometric terminal icon. Clean vector style on solid #0d1117 background. White icon, no text." \
   --output /path/to/logo.png
@@ -104,14 +104,14 @@ Gateway to 300+ AI models through a unified API. Call any model from OpenAI, Ant
 
 ```bash
 # Text completion
-uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py chat MODEL "prompt"
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py chat MODEL "prompt"
 
 # Image generation (use absolute paths)
-uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image MODEL "description" --output /path/output.png
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image MODEL "description" --output /path/output.png
 
 # Model discovery
-uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py models [vision|image_gen|tools|long_context]
-uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py find "search term"
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py models [vision|image_gen|tools|long_context]
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py find "search term"
 ```
 
 #### Popular Models
@@ -201,7 +201,7 @@ Single centered icon, geometric shapes, works at 64x64px.
 #### Example
 
 ```bash
-uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_client.py image \
   "google/gemini-3-pro-image-preview" \
   "A minimalist logo for fastgrep: magnifying glass with speed lines. Clean vector on #0d1117 background. White icon, no text." \
   --output /path/to/logo.png
@@ -235,13 +235,13 @@ Audit and optimize Claude Code permission whitelists by identifying dangerous pa
 
 ```bash
 # Analyze permissions (read-only)
-uv run --with colorama plugins/settings-cleaner/skills/settings-cleaner/scripts/settings_cleaner.py analyze
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with colorama plugins/settings-cleaner/skills/settings-cleaner/scripts/settings_cleaner.py analyze
 
 # Interactive cleanup with confirmations
-uv run --with colorama plugins/settings-cleaner/skills/settings-cleaner/scripts/settings_cleaner.py clean
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with colorama plugins/settings-cleaner/skills/settings-cleaner/scripts/settings_cleaner.py clean
 
 # Auto-fix redundant permissions only (safest)
-uv run --with colorama plugins/settings-cleaner/skills/settings-cleaner/scripts/settings_cleaner.py auto-fix
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with colorama plugins/settings-cleaner/skills/settings-cleaner/scripts/settings_cleaner.py auto-fix
 ```
 
 #### Safety Features

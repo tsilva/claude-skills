@@ -9,7 +9,7 @@
       "name": "openrouter",
       "source": "./plugins/openrouter",
       "description": "Invoke 300+ AI models via OpenRouter API. Use when Claude Code needs to call external models (GPT-5.2, Gemini 3, Llama, Mistral, etc.) for text completion, image generation, or model discovery.",
-      "version": "1.0.6"
+      "version": "1.0.7"
     },
     {
       "name": "readme-generator",
@@ -21,13 +21,13 @@
       "name": "repo-logo-generator",
       "source": "./plugins/repo-logo-generator",
       "description": "Generate minimalist logos via OpenRouter with logo-optimized prompts. Supports transparent backgrounds via difference matting. Use when asked to 'generate a logo' or 'create repo logo'.",
-      "version": "2.1.6"
+      "version": "2.1.7"
     },
     {
       "name": "settings-cleaner",
       "source": "./plugins/settings-cleaner",
       "description": "Analyzes and cleans up Claude Code permission whitelists by identifying overly specific approvals, dangerous patterns, and redundant entries.",
-      "version": "1.0.4"
+      "version": "1.0.5"
     }
   ]
 }

@@ -2,7 +2,7 @@
 name: openrouter
 description: Invokes 300+ AI models via OpenRouter API for text completion, image generation, and model discovery. Use when delegating tasks to external models (GPT-5.2, Gemini 3, Llama, Mistral, etc.). Triggers on "use OpenRouter to...", "call GPT-5 to...", "generate an image with Gemini", or similar requests for external AI models.
 metadata:
-  version: "1.0.6"
+  version: "1.0.7"
 ---
 
 # OpenRouter
@@ -15,22 +15,24 @@ Gateway to 300+ AI models through a unified API. Requires `SKILL_OPENROUTER_API_
 export SKILL_OPENROUTER_API_KEY="sk-or-..."  # Get key at https://openrouter.ai/keys
 ```
 
+**Note on Sandbox Mode**: The `UV_CACHE_DIR=/tmp/claude/uv-cache` prefix ensures `uv` uses an allowed cache directory. When Claude runs these commands, it may still need to disable sandbox due to `uv` accessing macOS system configuration APIs. Users running commands manually won't encounter this restriction.
+
 ## Quick Reference
 
 **Text completion:**
 ```bash
-uv run --with requests scripts/openrouter_client.py chat MODEL "prompt" [--system "sys"] [--max-tokens N] [--temperature T]
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests scripts/openrouter_client.py chat MODEL "prompt" [--system "sys"] [--max-tokens N] [--temperature T]
 ```
 
 **Image generation:**
 ```bash
-uv run --with requests scripts/openrouter_client.py image MODEL "description" [--output /absolute/path/file.png] [--aspect 16:9] [--size 2K]
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests scripts/openrouter_client.py image MODEL "description" [--output /absolute/path/file.png] [--aspect 16:9] [--size 2K]
 ```
 
 **Model discovery:**
 ```bash
-uv run --with requests scripts/openrouter_client.py models [vision|image_gen|tools|long_context]
-uv run --with requests scripts/openrouter_client.py find "search term"
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests scripts/openrouter_client.py models [vision|image_gen|tools|long_context]
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests scripts/openrouter_client.py find "search term"
 ```
 
 ## Common Models
@@ -62,8 +64,8 @@ Get responses from multiple models for comparison:
 
 ```bash
 # Run these in parallel
-uv run --with requests scripts/openrouter_client.py chat openai/gpt-5.2 "Explain X" > gpt4_response.txt &
-uv run --with requests scripts/openrouter_client.py chat anthropic/claude-sonnet-4.5 "Explain X" > claude_response.txt &
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests scripts/openrouter_client.py chat openai/gpt-5.2 "Explain X" > gpt4_response.txt &
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests scripts/openrouter_client.py chat anthropic/claude-sonnet-4.5 "Explain X" > claude_response.txt &
 wait
 ```
 
@@ -72,13 +74,13 @@ Route specific tasks to specialized models:
 
 ```bash
 # Use code model for code tasks
-uv run --with requests scripts/openrouter_client.py chat anthropic/claude-sonnet-4.5 "Write a function to..."
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests scripts/openrouter_client.py chat anthropic/claude-sonnet-4.5 "Write a function to..."
 
 # Use vision model for image analysis
-uv run --with requests scripts/openrouter_client.py chat google/gemini-3-flash-preview "Analyze this image: [base64]"
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests scripts/openrouter_client.py chat google/gemini-3-flash-preview "Analyze this image: [base64]"
 
 # Use image model for generation
-uv run --with requests scripts/openrouter_client.py image google/gemini-3-pro-image-preview "A cyberpunk city" -o city.png
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests scripts/openrouter_client.py image google/gemini-3-pro-image-preview "A cyberpunk city" -o city.png
 ```
 
 ### Pattern 4: Structured Output Pipeline
@@ -86,7 +88,7 @@ Request JSON for programmatic processing:
 
 ```bash
 # Get structured data
-uv run --with requests scripts/openrouter_client.py chat openai/gpt-5.2 "Extract entities from: {text}" --json > entities.json
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests scripts/openrouter_client.py chat openai/gpt-5.2 "Extract entities from: {text}" --json > entities.json
 
 # Process the JSON in next step
 ```
@@ -100,7 +102,7 @@ uv run --with requests scripts/openrouter_client.py chat openai/gpt-5.2 "Extract
 
 ```bash
 # Generate landscape image (use absolute path for --output)
-uv run --with requests scripts/openrouter_client.py image google/gemini-3-pro-image-preview \
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests scripts/openrouter_client.py image google/gemini-3-pro-image-preview \
   "Mountain sunset with dramatic clouds" \
   --output /absolute/path/to/mountain.png --aspect 16:9 --size 2K
 ```
