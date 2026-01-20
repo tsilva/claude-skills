@@ -7,6 +7,18 @@
     "aspectRatio": "1:1",
     "model": "google/gemini-3-pro-image-preview",
     "darkModeSupport": false,
-    "displayWidth": "auto"
+    "displayWidth": "auto",
+    "transparentBackground": true,
+    "mattingBackgrounds": {
+      "black": "#000000",
+      "white": "#FFFFFF"
+    },
+    "fallbackBackground": "#12161D",
+    "transparencyValidation": {
+      "minTransparentPercentage": 5.0,
+      "requireCornerTransparency": true,
+      "minTransparentCorners": 3,
+      "alphaThreshold": 0.01
+    }
   }
 }
