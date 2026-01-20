@@ -27,7 +27,7 @@
       "name": "settings-cleaner",
       "source": "./plugins/settings-cleaner",
       "description": "Analyzes and cleans up Claude Code permission whitelists by identifying overly specific approvals, dangerous patterns, and redundant entries.",
-      "version": "1.0.3"
+      "version": "1.0.4"
     }
   ]
 }

@@ -69,6 +69,7 @@ class SettingsCleaner:
         "Edit(/*)",
         "Bash(rm:*)",
         "Bash(sudo:*)",
+        "Skill(*)",
     }
 
     def __init__(self, global_path: Optional[Path] = None, project_path: Optional[Path] = None):
@@ -207,6 +208,31 @@ class SettingsCleaner:
 
         return False
 
+    def detect_self_awareness(self) -> Dict[str, any]:
+        """
+        Detect if the settings-cleaner skill itself is in the permissions.
+        Returns a dict with detection results for reporting.
+        """
+        skill_patterns = [
+            "Skill(settings-cleaner)",
+            "Skill(*)",
+        ]
+
+        found_global = []
+        found_project = []
+
+        for pattern in skill_patterns:
+            if pattern in self.global_permissions:
+                found_global.append(pattern)
+            if pattern in self.project_permissions:
+                found_project.append(pattern)
+
+        return {
+            "is_self_aware": bool(found_global or found_project),
+            "global_patterns": found_global,
+            "project_patterns": found_project,
+        }
+
     def is_redundant(self, perm: Permission) -> Optional[Permission]:
         """
         Check if a project permission is redundant (covered by global permission).
@@ -298,6 +324,9 @@ class SettingsCleaner:
         """Print a formatted report of all issues"""
         print(f"\n{Style.BRIGHT}=== Claude Code Settings Analysis ==={Style.RESET_ALL}\n")
 
+        # Print context section
+        self._print_context()
+
         # Dangerous patterns
         dangerous = grouped[IssueType.DANGEROUS]
         if dangerous:
@@ -339,6 +368,34 @@ class SettingsCleaner:
             print(f"{Fore.GREEN}No issues found! Your permissions are well-configured.{Style.RESET_ALL}\n")
         else:
             print(f"{Style.BRIGHT}Total issues: {total_issues}{Style.RESET_ALL}\n")
+
+    def _print_context(self):
+        """Print contextual information about the analysis"""
+        self_aware = self.detect_self_awareness()
+
+        print(f"{Fore.CYAN}{Style.BRIGHT}📋 CONTEXT:{Style.RESET_ALL}")
+        print(f"  Global settings: {self.global_path}")
+        print(f"  Project settings: {self.project_path}")
+
+        if self_aware["is_self_aware"]:
+            print(f"\n  {Fore.YELLOW}🔍 Self-awareness detected:{Style.RESET_ALL}")
+
+            if self_aware["global_patterns"]:
+                for pattern in self_aware["global_patterns"]:
+                    print(f"    - {pattern} [Global]")
+
+            if self_aware["project_patterns"]:
+                for pattern in self_aware["project_patterns"]:
+                    print(f"    - {pattern} [Project]")
+
+            print(f"    Note: This analysis tool is whitelisted in your permissions.")
+
+            if "Skill(*)" in self_aware["global_patterns"] or "Skill(*)" in self_aware["project_patterns"]:
+                print(f"    {Fore.RED}⚠️  Skill(*) grants unrestricted access to all skills.{Style.RESET_ALL}")
+            else:
+                print(f"    Recommendation: Review if this permission should persist after cleanup.")
+
+        print()  # Blank line before issue sections
 
     def create_backup(self, filepath: Path) -> bool:
         """Create a backup of the settings file"""

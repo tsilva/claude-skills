@@ -29,7 +29,7 @@
 | [OpenRouter](#openrouter) | Access 300+ AI models for text completion and image generation | 1.0.4 |
 | [README Generator](#readme-generator) | Create cutting-edge README files with badges and visual hierarchy | 1.0.5 |
 | [Repo Logo Generator](#repo-logo-generator) | Generate minimalist logos optimized for GitHub | 2.0.3 |
-| [Settings Cleaner](#settings-cleaner) | Audit and optimize Claude Code permission whitelists | 1.0.0 |
+| [Settings Cleaner](#settings-cleaner) | Audit and optimize Claude Code permission whitelists | 1.1.0 |
 
 ## Installation
 
@@ -224,10 +224,12 @@ Audit and optimize Claude Code permission whitelists by identifying dangerous pa
 
 | Category | Description | Example |
 |----------|-------------|---------|
-| 🔴 **Dangerous** | Overly broad permissions | `Bash(*:*)`, `Read(/*)` |
+| 🔴 **Dangerous** | Overly broad permissions | `Bash(*:*)`, `Read(/*)`, `Skill(*)` |
 | 🟡 **Specific** | Hardcoded arguments | `Bash(python test.py)` → `Bash(python:*)` |
 | 🔵 **Redundant** | Covered by broader permission | Project has `Bash(ls -la)`, global has `Bash(ls:*)` |
 | ✅ **Good** | Well-scoped permissions | `Bash(pytest:*)`, `Read(/Users/name/*)` |
+
+**New in v1.1.0**: Self-awareness detection - the tool now detects when it's analyzing its own permissions and provides guidance on whether to retain them.
 
 #### Commands
 
@@ -268,7 +270,7 @@ claude-skills/
 │   ├── openrouter/              # OpenRouter skill (v1.0.4)
 │   ├── readme-generator/        # README Generator skill (v1.0.5)
 │   ├── repo-logo-generator/     # Logo Generator skill (v2.0.3)
-│   └── settings-cleaner/        # Settings Cleaner skill (v1.0.0)
+│   └── settings-cleaner/        # Settings Cleaner skill (v1.1.0)
 ├── hooks/
 │   └── pre-commit               # Auto-version bump hook
 ├── scripts/

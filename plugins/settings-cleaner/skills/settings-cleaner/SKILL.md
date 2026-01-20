@@ -5,7 +5,7 @@ license: MIT
 compatibility: python 3.8+
 metadata:
   author: tsilva
-  version: "1.0.3"
+  version: "1.0.4"
 ---
 
 # Settings Cleaner
@@ -47,6 +47,7 @@ Overly broad permissions that grant unrestricted access:
 - `Edit(/*)` - Edit any file on system
 - `Bash(rm:*)` - Any rm command
 - `Bash(sudo:*)` - Any sudo command
+- `Skill(*)` - Any skill without restriction
 
 ### 🟡 Overly Specific Patterns
 
@@ -69,6 +70,14 @@ Well-scoped permissions that follow best practices:
 - `Read(/Users/tsilva/repos/*)` - Scoped to specific directory
 - `WebFetch(domain:api.openrouter.ai)` - Specific domain
 
+### 🔍 Self-Awareness
+
+When you run this tool, it checks if it's analyzing its own permissions:
+- `Skill(settings-cleaner)` - Specific permission for this tool
+- `Skill(*)` - Wildcard access to all skills (flagged as DANGEROUS)
+
+The tool will note when it detects itself and provide guidance on whether the permission should be retained.
+
 ## Commands
 
 | Command | Description | Modifications |
@@ -80,22 +89,32 @@ Well-scoped permissions that follow best practices:
 ## Example Output
 
 ```
+=== Claude Code Settings Analysis ===
+
+📋 CONTEXT:
+  Global settings: /Users/username/.claude/settings.json
+  Project settings: /Users/username/project/.claude/settings.local.json
+
+  🔍 Self-awareness detected:
+    - Skill(settings-cleaner) [Project]
+    Note: This analysis tool is whitelisted in your permissions.
+    Recommendation: Review if this permission should persist after cleanup.
+
 🔴 DANGEROUS (1 found):
   - Bash(*:*) [Global]
-    Risk: Allows any bash command without restriction
-    Remove? [y/N]:
+    Risk: Allows unrestricted access
 
 🟡 OVERLY SPECIFIC (2 found):
   - Bash(python test.py --verbose) [Project]
     → Suggest: Bash(python:*)
-    Generalize? [y/N]:
 
 🔵 REDUNDANT (1 found):
   - Bash(pytest:*) [Project]
     Covered by: Bash(python:*) [Global]
-    Remove? [Y/n]:
 
 ✅ GOOD (5 permissions)
+
+Total issues: 4
 ```
 
 ## Safety Features
@@ -142,22 +161,28 @@ Trigger the skill by asking:
 
 ### Execution Instructions for Claude
 
-When this skill is invoked, you MUST:
+When this skill is invoked, you MUST follow this workflow:
 
 1. **Get the skill base directory** from the "Base directory for this skill" message
 2. **Get the user's current working directory** (they're already in the right place)
-3. **Run the script with absolute paths** - DO NOT cd into the skill directory
+3. **Read the settings files FIRST** (before running the script):
+   - Read global settings: `~/.claude/settings.json`
+   - Read project settings (if exists): `{USER_CWD}/.claude/settings.local.json`
 
-Example invocation:
-```bash
-uv run --with colorama /absolute/path/to/skill/scripts/settings_cleaner.py analyze \
-  --project-settings /absolute/path/to/user/cwd/.claude/settings.local.json
-```
+   **Why read first?**
+   - Provides context for the analysis
+   - Allows you to give preliminary assessment
+   - Helps catch file existence issues early
+   - Enables better recommendations
 
-**Why this matters**: The script needs to find the project's `.claude/settings.local.json` file in the user's working directory, not in the skill's directory. Running from the wrong location will cause it to miss project-specific permissions and fail to detect redundancies.
+4. **Run the analysis script** with absolute paths:
+   ```bash
+   uv run --with colorama {SKILL_BASE}/scripts/settings_cleaner.py analyze \
+     --project-settings {USER_CWD}/.claude/settings.local.json
+   ```
 
-Workflow:
-1. Run the analyze command with proper paths
-2. Show the findings to the user
-3. Ask if they want to proceed with cleanup
-4. Execute the appropriate command (clean or auto-fix) with the same path arguments
+5. **Show the findings** to the user (script provides formatted output)
+6. **Ask if they want to proceed** with cleanup
+7. **Execute cleanup command** if requested (clean or auto-fix mode)
+
+**Important**: The script needs to find the project's `.claude/settings.local.json` file in the user's working directory, not in the skill's directory. Always use absolute paths.
