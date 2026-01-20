@@ -21,7 +21,7 @@
       "name": "repo-logo-generator",
       "source": "./plugins/repo-logo-generator",
       "description": "Generate minimalist logos via OpenRouter with logo-optimized prompts. Supports transparent backgrounds via difference matting. Use when asked to 'generate a logo' or 'create repo logo'.",
-      "version": "2.1.5"
+      "version": "2.1.6"
     },
     {
       "name": "settings-cleaner",

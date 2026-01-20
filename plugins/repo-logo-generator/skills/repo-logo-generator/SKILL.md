@@ -2,7 +2,7 @@
 name: repo-logo-generator
 description: Generate logos for GitHub repositories via OpenRouter with transparent backgrounds using chroma key flood fill. Works with pixel art, vector designs, and complex multi-colored styles. Use when asked to "generate a logo", "create repo logo", or "make a project logo".
 metadata:
-  version: "2.1.5"
+  version: "2.1.6"
 ---
 
 # Repo Logo Generator
@@ -27,7 +27,7 @@ Follow these steps exactly. Do not skip steps or improvise.
 - [ ] **Step 5**: Check if `config.transparentBackground` is `true`:
   - **If TRUE** (transparency mode - CHROMA KEY METHOD):
     1. Generate SINGLE logo with HOT MAGENTA background (#FF00FF) → save to `/tmp/claude/logo_chroma.png`
-       - Modify prompt to specify: "CRITICAL: Background MUST be pure flat solid hot magenta RGB(255,0,255) #FF00FF"
+       - Modify prompt to specify: "CRITICAL: Background MUST be pure flat solid hot magenta RGB(255,0,255) #FF00FF. The logo/icon colors must NOT contain magenta, pink, or similar colors - avoid all colors near RGB(255,0,255)."
     2. Run chroma key removal script:
        ```bash
        uv run --with pillow --with opencv-python scripts/remove_chroma_background.py \

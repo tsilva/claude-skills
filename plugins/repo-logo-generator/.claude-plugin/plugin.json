@@ -1,7 +1,7 @@
 {
   "name": "repo-logo-generator",
   "description": "Generate minimalist logos via OpenRouter with logo-optimized prompts. Supports transparent backgrounds via difference matting.",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "author": {
     "name": "tsilva"
   }
