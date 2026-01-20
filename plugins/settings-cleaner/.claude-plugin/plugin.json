@@ -1,0 +1,8 @@
+{
+  "name": "settings-cleaner",
+  "description": "Analyzes and cleans up Claude Code permission whitelists for security and efficiency.",
+  "version": "1.0.1",
+  "author": {
+    "name": "tsilva"
+  }
+}

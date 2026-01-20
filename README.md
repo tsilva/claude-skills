@@ -19,6 +19,7 @@
 - **300+ AI models at your fingertips** - Call GPT-5, Gemini, Llama, or any OpenRouter model directly from Claude Code
 - **Professional READMEs in seconds** - Auto-generate documentation following GitHub best practices
 - **Custom logos on demand** - Create minimalist repo logos with AI image generation
+- **Security auditing built-in** - Automatically identify and clean up dangerous or redundant permissions
 - **Plug and play** - Install only what you need, each skill works independently
 
 ## Available Skills
@@ -28,6 +29,7 @@
 | [OpenRouter](#openrouter) | Access 300+ AI models for text completion and image generation | 1.0.4 |
 | [README Generator](#readme-generator) | Create cutting-edge README files with badges and visual hierarchy | 1.0.5 |
 | [Repo Logo Generator](#repo-logo-generator) | Generate minimalist logos optimized for GitHub | 2.0.3 |
+| [Settings Cleaner](#settings-cleaner) | Audit and optimize Claude Code permission whitelists | 1.0.0 |
 
 ## Installation
 
@@ -41,6 +43,7 @@
 /plugin install openrouter
 /plugin install readme-generator
 /plugin install repo-logo-generator
+/plugin install settings-cleaner
 ```
 
 ### Manual Installation
@@ -208,6 +211,55 @@ uv run --with requests plugins/openrouter/skills/openrouter/scripts/openrouter_c
 
 ---
 
+### Settings Cleaner
+
+<p>
+  <img src="https://img.shields.io/badge/Version-1.0.0-green?style=flat" alt="Version">
+  <img src="https://img.shields.io/badge/Security-Audit-red?style=flat" alt="Security">
+</p>
+
+Audit and optimize Claude Code permission whitelists by identifying dangerous patterns, overly specific approvals, and redundant entries.
+
+#### What It Checks
+
+| Category | Description | Example |
+|----------|-------------|---------|
+| 🔴 **Dangerous** | Overly broad permissions | `Bash(*:*)`, `Read(/*)` |
+| 🟡 **Specific** | Hardcoded arguments | `Bash(python test.py)` → `Bash(python:*)` |
+| 🔵 **Redundant** | Covered by broader permission | Project has `Bash(ls -la)`, global has `Bash(ls:*)` |
+| ✅ **Good** | Well-scoped permissions | `Bash(pytest:*)`, `Read(/Users/name/*)` |
+
+#### Commands
+
+```bash
+# Analyze permissions (read-only)
+uv run --with colorama plugins/settings-cleaner/skills/settings-cleaner/scripts/settings_cleaner.py analyze
+
+# Interactive cleanup with confirmations
+uv run --with colorama plugins/settings-cleaner/skills/settings-cleaner/scripts/settings_cleaner.py clean
+
+# Auto-fix redundant permissions only (safest)
+uv run --with colorama plugins/settings-cleaner/skills/settings-cleaner/scripts/settings_cleaner.py auto-fix
+```
+
+#### Safety Features
+
+- **Automatic backups** - Creates `.bak` files before any modifications
+- **Interactive mode** - Prompts for each dangerous/specific pattern
+- **Auto-fix safety** - Only removes redundancies (no dangerous changes)
+- **Color-coded output** - Clear visual categorization of issues
+
+#### Usage from Claude Code
+
+Simply ask:
+- "Clean up my settings"
+- "Review my permissions"
+- "Audit my security settings"
+
+[Full documentation](plugins/settings-cleaner/skills/settings-cleaner/SKILL.md)
+
+---
+
 ## Repository Structure
 
 ```
@@ -215,7 +267,8 @@ claude-skills/
 ├── plugins/
 │   ├── openrouter/              # OpenRouter skill (v1.0.4)
 │   ├── readme-generator/        # README Generator skill (v1.0.5)
-│   └── repo-logo-generator/     # Logo Generator skill (v2.0.3)
+│   ├── repo-logo-generator/     # Logo Generator skill (v2.0.3)
+│   └── settings-cleaner/        # Settings Cleaner skill (v1.0.0)
 ├── hooks/
 │   └── pre-commit               # Auto-version bump hook
 ├── scripts/

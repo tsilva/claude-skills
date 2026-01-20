@@ -22,6 +22,12 @@
       "source": "./plugins/repo-logo-generator",
       "description": "Generate minimalist logos via OpenRouter with logo-optimized prompts. Use when asked to 'generate a logo' or 'create repo logo'.",
       "version": "2.0.9"
+    },
+    {
+      "name": "settings-cleaner",
+      "source": "./plugins/settings-cleaner",
+      "description": "Analyzes and cleans up Claude Code permission whitelists by identifying overly specific approvals, dangerous patterns, and redundant entries.",
+      "version": "1.0.1"
     }
   ]
 }
