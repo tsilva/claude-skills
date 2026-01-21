@@ -1,24 +1,32 @@
 #!/usr/bin/env python3
 """
-Auto-bump version numbers for a skill plugin with semantic versioning support.
+Version bumping tool for skill plugins with semantic versioning support.
 
-Usage: python bump-version.py <plugin-name>
+Claude-driven version management - Claude explicitly chooses the bump type
+based on the changes made.
 
-Supports major, minor, and patch version bumps via SKILL.md markers:
-- <!-- version-bump: major --> - Breaking changes (X+1.0.0)
-- <!-- version-bump: minor --> - New features (X.Y+1.0)
-- <!-- version-bump: patch --> - Bug fixes (X.Y.Z+1, default)
+Usage:
+  # Check if version already bumped in uncommitted changes
+  python scripts/bump-version.py <plugin-name> --check-uncommitted
+  # Exit 0 = version already changed (skip bump)
+  # Exit 1 = version not changed (needs bump)
+
+  # Preview bump without applying
+  python scripts/bump-version.py <plugin-name> --type minor --dry-run
+
+  # Apply bump
+  python scripts/bump-version.py <plugin-name> --type patch
 
 Updates version in:
 1. plugins/<plugin>/skills/<skill>/SKILL.md (metadata.version)
 2. plugins/<plugin>/.claude-plugin/plugin.json (version)
 3. .claude-plugin/marketplace.json (version for that plugin)
-
-The version-bump marker is automatically removed after processing.
 """
 
+import argparse
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -33,7 +41,7 @@ def parse_version(version_str: str) -> tuple[int, int, int]:
     return int(parts[0]), int(parts[1]), int(parts[2])
 
 
-def bump_version(version_str: str, bump_type: str = "patch") -> str:
+def bump_version(version_str: str, bump_type: str) -> str:
     """Bump version based on type: major, minor, or patch."""
     major, minor, patch = parse_version(version_str)
 
@@ -41,38 +49,8 @@ def bump_version(version_str: str, bump_type: str = "patch") -> str:
         return f"{major + 1}.0.0"
     elif bump_type == "minor":
         return f"{major}.{minor + 1}.0"
-    else:  # patch (default)
+    else:  # patch
         return f"{major}.{minor}.{patch + 1}"
-
-
-def extract_bump_type_from_skill_md(skill_md_path: Path) -> str:
-    """Extract version bump type from SKILL.md comment marker.
-
-    Looks for: <!-- version-bump: major|minor|patch -->
-    Returns: "major", "minor", or "patch" (default)
-    """
-    content = skill_md_path.read_text()
-    match = re.search(
-        r'<!--\s*version-bump:\s*(major|minor|patch)\s*-->',
-        content,
-        re.IGNORECASE
-    )
-    return match.group(1).lower() if match else "patch"
-
-
-def remove_version_marker(skill_md_path: Path) -> bool:
-    """Remove version-bump marker after processing."""
-    content = skill_md_path.read_text()
-    new_content = re.sub(
-        r'<!--\s*version-bump:\s*(?:major|minor|patch)\s*-->\s*\n?',
-        '',
-        content,
-        flags=re.IGNORECASE
-    )
-    if new_content != content:
-        skill_md_path.write_text(new_content)
-        return True
-    return False
 
 
 def find_skill_md(plugin_dir: Path) -> Path | None:
@@ -110,7 +88,26 @@ def extract_version_from_skill_md(skill_md_path: Path) -> str | None:
     return None
 
 
-def update_skill_md(skill_md_path: Path, new_version: str) -> bool:
+def check_uncommitted_version_change(skill_md_path: Path) -> bool:
+    """Check if version line changed in uncommitted diff.
+
+    Returns True if the version line has been modified (already bumped).
+    Returns False if version line is unchanged (needs bumping).
+    """
+    result = subprocess.run(
+        ["git", "diff", "--", str(skill_md_path)],
+        capture_output=True, text=True
+    )
+
+    # Look for version line changes in diff (lines starting with + or -)
+    for line in result.stdout.splitlines():
+        if line.startswith(('+', '-')) and not line.startswith(('+++', '---')):
+            if 'version:' in line.lower():
+                return True
+    return False
+
+
+def update_skill_md(skill_md_path: Path, new_version: str, dry_run: bool = False) -> bool:
     """Update the version in SKILL.md frontmatter."""
     content = skill_md_path.read_text()
 
@@ -127,11 +124,12 @@ def update_skill_md(skill_md_path: Path, new_version: str) -> bool:
     if new_content == content:
         return False
 
-    skill_md_path.write_text(new_content)
+    if not dry_run:
+        skill_md_path.write_text(new_content)
     return True
 
 
-def update_plugin_json(plugin_json_path: Path, new_version: str) -> bool:
+def update_plugin_json(plugin_json_path: Path, new_version: str, dry_run: bool = False) -> bool:
     """Update the version in plugin.json."""
     if not plugin_json_path.exists():
         return False
@@ -140,16 +138,20 @@ def update_plugin_json(plugin_json_path: Path, new_version: str) -> bool:
         data = json.load(f)
 
     old_version = data.get("version")
+    if old_version == new_version:
+        return False
+
     data["version"] = new_version
 
-    with open(plugin_json_path, "w") as f:
-        json.dump(data, f, indent=2)
-        f.write("\n")  # Add trailing newline
+    if not dry_run:
+        with open(plugin_json_path, "w") as f:
+            json.dump(data, f, indent=2)
+            f.write("\n")  # Add trailing newline
 
-    return old_version != new_version
+    return True
 
 
-def update_marketplace_json(marketplace_path: Path, plugin_name: str, new_version: str) -> bool:
+def update_marketplace_json(marketplace_path: Path, plugin_name: str, new_version: str, dry_run: bool = False) -> bool:
     """Update the version for a plugin in marketplace.json."""
     if not marketplace_path.exists():
         return False
@@ -167,7 +169,7 @@ def update_marketplace_json(marketplace_path: Path, plugin_name: str, new_versio
                 updated = True
             break
 
-    if updated:
+    if updated and not dry_run:
         with open(marketplace_path, "w") as f:
             json.dump(data, f, indent=2)
             f.write("\n")  # Add trailing newline
@@ -176,25 +178,68 @@ def update_marketplace_json(marketplace_path: Path, plugin_name: str, new_versio
 
 
 def main():
-    if len(sys.argv) != 2:
-        print(f"Usage: {sys.argv[0]} <plugin-name>")
-        sys.exit(1)
+    parser = argparse.ArgumentParser(
+        description="Bump version numbers for a skill plugin",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  # Check if version already bumped in uncommitted changes
+  python scripts/bump-version.py openrouter --check-uncommitted
 
-    plugin_name = sys.argv[1]
+  # Preview what would be bumped
+  python scripts/bump-version.py openrouter --type minor --dry-run
+
+  # Apply version bump
+  python scripts/bump-version.py openrouter --type patch
+"""
+    )
+    parser.add_argument("plugin_name", help="Name of the plugin to bump version for")
+    parser.add_argument(
+        "--type", "-t",
+        choices=["patch", "minor", "major"],
+        help="Type of version bump (required when bumping)"
+    )
+    parser.add_argument(
+        "--dry-run", "-n",
+        action="store_true",
+        help="Show what would be bumped without making changes"
+    )
+    parser.add_argument(
+        "--check-uncommitted",
+        action="store_true",
+        help="Check if version line already changed in uncommitted diff. Exit 0 if changed, 1 if not."
+    )
+
+    args = parser.parse_args()
 
     # Determine repo root (script is in scripts/)
     script_dir = Path(__file__).resolve().parent
     repo_root = script_dir.parent
 
-    # Locate files
-    plugin_dir = repo_root / "plugins" / plugin_name
+    # Locate plugin directory
+    plugin_dir = repo_root / "plugins" / args.plugin_name
     if not plugin_dir.exists():
-        print(f"Error: Plugin directory not found: {plugin_dir}")
+        print(f"Error: Plugin directory not found: {plugin_dir}", file=sys.stderr)
         sys.exit(1)
 
+    # Find SKILL.md
     skill_md_path = find_skill_md(plugin_dir)
     if not skill_md_path:
-        print(f"Error: SKILL.md not found for plugin: {plugin_name}")
+        print(f"Error: SKILL.md not found for plugin: {args.plugin_name}", file=sys.stderr)
+        sys.exit(1)
+
+    # Handle --check-uncommitted mode
+    if args.check_uncommitted:
+        if check_uncommitted_version_change(skill_md_path):
+            print(f"Version already changed in uncommitted diff: {skill_md_path.relative_to(repo_root)}")
+            sys.exit(0)  # Already bumped
+        else:
+            print(f"Version not changed in uncommitted diff: {skill_md_path.relative_to(repo_root)}")
+            sys.exit(1)  # Needs bump
+
+    # For actual bumping, --type is required
+    if not args.type:
+        print("Error: --type is required when bumping version (choose: patch, minor, major)", file=sys.stderr)
         sys.exit(1)
 
     plugin_json_path = plugin_dir / ".claude-plugin" / "plugin.json"
@@ -203,31 +248,26 @@ def main():
     # Extract current version
     current_version = extract_version_from_skill_md(skill_md_path)
     if not current_version:
-        print(f"Error: Could not extract version from {skill_md_path}")
+        print(f"Error: Could not extract version from {skill_md_path}", file=sys.stderr)
         sys.exit(1)
 
-    # Determine bump type from SKILL.md marker
-    bump_type = extract_bump_type_from_skill_md(skill_md_path)
-
     # Bump version
-    new_version = bump_version(current_version, bump_type)
-    print(f"  Bumping version ({bump_type}): {current_version} -> {new_version}")
+    new_version = bump_version(current_version, args.type)
+
+    mode_str = "[DRY RUN] " if args.dry_run else ""
+    print(f"{mode_str}Bumping version ({args.type}): {current_version} -> {new_version}")
 
     # Update all files
     updates = []
 
-    if update_skill_md(skill_md_path, new_version):
-        updates.append(f"  Updated: {skill_md_path.relative_to(repo_root)}")
+    if update_skill_md(skill_md_path, new_version, args.dry_run):
+        updates.append(f"  {'Would update' if args.dry_run else 'Updated'}: {skill_md_path.relative_to(repo_root)}")
 
-    # Remove the version-bump marker after updating version
-    if remove_version_marker(skill_md_path):
-        updates.append(f"  Removed version marker from: {skill_md_path.relative_to(repo_root)}")
+    if update_plugin_json(plugin_json_path, new_version, args.dry_run):
+        updates.append(f"  {'Would update' if args.dry_run else 'Updated'}: {plugin_json_path.relative_to(repo_root)}")
 
-    if update_plugin_json(plugin_json_path, new_version):
-        updates.append(f"  Updated: {plugin_json_path.relative_to(repo_root)}")
-
-    if update_marketplace_json(marketplace_path, plugin_name, new_version):
-        updates.append(f"  Updated: {marketplace_path.relative_to(repo_root)}")
+    if update_marketplace_json(marketplace_path, args.plugin_name, new_version, args.dry_run):
+        updates.append(f"  {'Would update' if args.dry_run else 'Updated'}: {marketplace_path.relative_to(repo_root)}")
 
     for update in updates:
         print(update)

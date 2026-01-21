@@ -22,11 +22,8 @@ claude-skills/
 │               ├── scripts/     # Executable code (optional)
 │               ├── references/  # Documentation loaded on-demand (optional)
 │               └── assets/      # Static resources like templates, icons (optional)
-├── hooks/
-│   └── pre-commit               # Git pre-commit hook (auto-version bump)
 ├── scripts/
-│   ├── bump-version.py          # Version bumping logic
-│   ├── install-hooks.sh         # Hook installer
+│   ├── bump-version.py          # Version bumping CLI tool
 │   └── validate_skills.py       # Skill validation against spec
 ├── CLAUDE.md                    # This file
 └── README.md                    # Repository documentation
@@ -191,7 +188,7 @@ python scripts/validate_skills.py
 
 This validates against the [Agent Skills specification](https://agentskills.io/specification) and repository rules. Fix any errors before committing.
 
-**Important:** When modifying skills, DO NOT manually update version numbers. The git pre-commit hook automatically bumps versions when you commit changes to SKILL.md files. See the **Version Management** section below for details.
+**Important:** After modifying any SKILL.md file, Claude must bump the version. See the **Version Management** section below for the workflow.
 
 ## SKILL.md Specification
 
@@ -385,69 +382,70 @@ This allows the script to function even when optional packages are unavailable.
 
 ## Version Management
 
-**CRITICAL: DO NOT manually bump version numbers.** Version numbers are **automatically bumped** by a git pre-commit hook when you modify a SKILL.md file. If you manually bump versions, they will be bumped again by the hook, causing incorrect version numbers.
+Claude is responsible for version bumping. **After modifying any SKILL.md file**, Claude must:
 
-### Automatic Version Bumping
+1. **Check if version already bumped**: If the file is uncommitted and the version line already changed, skip bumping
+2. **Determine bump type** based on changes made (see strategy below)
+3. **Run the bump script** to update all 3 version locations
+4. **Run validation** to verify sync
 
-When you commit changes to any `SKILL.md` file:
-1. Pre-commit hook detects the staged SKILL.md
-2. Extracts current version from frontmatter
-3. Checks for version-bump marker (defaults to patch if not found)
-4. Bumps the version accordingly (e.g., 1.0.4 → 1.0.5 for patch)
-5. Updates all 3 version locations automatically
-6. Removes the version-bump marker (if present)
-7. Stages the modified files
-8. Commit proceeds with version bump included
+### Version Bump Strategy
 
-**Setup (required after cloning):**
+| Bump Type | When to Use | Example Changes |
+|-----------|-------------|-----------------|
+| **Patch** (X.Y.Z+1) | Documentation, typos, clarifications, bug fixes | Fix typo in instructions, clarify wording |
+| **Minor** (X.Y+1.0) | New features, new parameters, enhanced capabilities | Add new command, add optional feature |
+| **Major** (X+1.0.0) | Breaking changes, removed features, changed behavior | Remove parameter, change default behavior |
+
+### Version Bump Commands
+
 ```bash
-./scripts/install-hooks.sh
+# Check if version already bumped (returns 0 if bumped, 1 if not)
+python scripts/bump-version.py {plugin-name} --check-uncommitted
+
+# Preview what version would be (dry run)
+python scripts/bump-version.py {plugin-name} --type {patch|minor|major} --dry-run
+
+# Apply version bump
+python scripts/bump-version.py {plugin-name} --type {patch|minor|major}
+
+# Validate all skills (always run after version changes)
+python scripts/validate_skills.py
 ```
 
-**To skip auto-bump (if needed):**
-```bash
-git commit --no-verify
-```
+### Workflow
 
-### Semantic Versioning
+When Claude modifies a SKILL.md file:
 
-The pre-commit hook automatically detects version bump type from SKILL.md markers.
+1. **After editing**, check if version needs bumping:
+   ```bash
+   python scripts/bump-version.py {plugin-name} --check-uncommitted
+   ```
+   - Exit 0 = version already bumped, skip to validation
+   - Exit 1 = version not bumped, continue to step 2
 
-**To trigger a minor or major version bump:**
+2. **Determine bump type** based on the changes:
+   - Documentation/typo/clarification → `patch`
+   - New feature/capability → `minor`
+   - Breaking change → `major`
 
-Add a comment marker immediately after the frontmatter in SKILL.md:
+3. **Apply the bump**:
+   ```bash
+   python scripts/bump-version.py {plugin-name} --type {type}
+   ```
 
-```markdown
----
-name: my-skill
-metadata:
-  version: "1.0.7"
----
+4. **Always validate**:
+   ```bash
+   python scripts/validate_skills.py
+   ```
 
-<!-- version-bump: minor -->
+### Version Locations (Auto-Synchronized)
 
-# My Skill
-```
+The bump script updates all three locations:
 
-**Bump types:**
-- `<!-- version-bump: patch -->` - Bug fixes, documentation (default if no marker)
-- `<!-- version-bump: minor -->` - New features, backward-compatible changes
-- `<!-- version-bump: major -->` - Breaking changes
-
-The marker is automatically removed after the version bump.
-
-**When to use each:**
-- **Patch** (X.Y.Z+1): Typos, clarifications, small documentation fixes
-- **Minor** (X.Y+1.0): New parameters, new features, enhanced capabilities
-- **Major** (X+1.0.0): Removing features, changing behavior, breaking API changes
-
-### Version Locations
-
-All three locations are kept in sync automatically:
-
-1. `plugins/{plugin-name}/skills/{skill-name}/SKILL.md` - `metadata.version` in frontmatter
-2. `plugins/{plugin-name}/.claude-plugin/plugin.json` - `version` field
-3. `.claude-plugin/marketplace.json` - `version` field for that plugin
+1. `plugins/{plugin}/skills/{skill}/SKILL.md` - `metadata.version`
+2. `plugins/{plugin}/.claude-plugin/plugin.json` - `version`
+3. `.claude-plugin/marketplace.json` - `version` for that plugin
 
 **Why versions matter:** The version number is how skill updates are detected. If the version doesn't change, updates won't be picked up.
 
