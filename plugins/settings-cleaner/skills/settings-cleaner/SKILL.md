@@ -5,9 +5,10 @@ license: MIT
 compatibility: python 3.8+
 argument-hint: "[analyze|clean|auto-fix]"
 disable-model-invocation: false
+user-invocable: true
 metadata:
   author: tsilva
-  version: "1.0.6"
+  version: "1.0.7"
 ---
 
 # Settings Cleaner

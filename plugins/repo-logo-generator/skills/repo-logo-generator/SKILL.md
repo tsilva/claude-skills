@@ -5,8 +5,9 @@ license: MIT
 compatibility: python 3.8+, requires requests library, uses OpenRouter skill
 argument-hint: "[style-preference]"
 disable-model-invocation: false
+user-invocable: true
 metadata:
-  version: "3.0.5"
+  version: "3.0.6"
 ---
 
 # Repo Logo Generator
