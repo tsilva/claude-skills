@@ -7,16 +7,16 @@ argument-hint: "[style-preference]"
 disable-model-invocation: false
 user-invocable: true
 metadata:
-  version: "3.1.0"
+  version: "3.2.0"
 ---
 
 # Repo Logo Generator
 
 Generate professional logos with transparent backgrounds using chromakey technology:
-1. **Gemini** (google/gemini-3-pro-image-preview) generates logo with magenta (#FF00FF) background
+1. **Gemini** (google/gemini-3-pro-image-preview) generates logo with green (#00FF00) background
 2. **PIL** applies professional chromakey algorithm for smooth transparency
 
-The chromakey approach eliminates "halo" artifacts around edges that occur with white background conversion. This is the same technique used in film/TV green screen compositing.
+The chromakey approach eliminates "halo" artifacts around edges that occur with white background conversion. This is the same technique used in film/TV green screen compositing (hence "green screen").
 
 ## Path Resolution
 
@@ -74,13 +74,20 @@ Follow these steps exactly. Do not skip steps or improvise.
   - **If YES** (user has custom settings): Use the `config.style` value AS-IS for the entire prompt. DO NOT use the template below. DO NOT enforce "no text" or "vector style" rules. The user's style setting completely overrides all defaults.
   - **If NO** (using defaults): Continue to Step 4.
 
+  **CRITICAL: Chromakey Color Handling**
+  - The `--key-color` flag MUST use `config.keyColor` (default: `#00FF00` green)
+  - NEVER infer `--key-color` from background colors mentioned in the `style` text
+  - The style text tells Gemini what to generate; `keyColor` tells PIL what color to remove
+  - If the style mentions "white background", "magenta background", etc., IGNORE it for `--key-color`
+  - Only use a non-green `--key-color` if `config.keyColor` is explicitly set in the JSON
+
 - [ ] **Step 4**: Read project files (README, package.json, etc.) to determine project type
   Mark "Read project documentation" todo as completed after this step.
 
 - [ ] **Step 5**: Select visual metaphor from the table below and fill the prompt template
 
 - [ ] **Step 6**: Generate logo:
-  - Gemini generates image with magenta (#FF00FF) chromakey background
+  - Gemini generates image with green (#00FF00) chromakey background
   - PIL applies chromakey algorithm for smooth transparent edges
   - Use absolute path to script (resolved in Step 1)
   - Command format:
@@ -120,16 +127,17 @@ You MUST construct the prompt using this EXACT template. Do not paraphrase, do n
 ```
 A {config.style} logo for {PROJECT_NAME}: {VISUAL_METAPHOR_FROM_TABLE}.
 Clean vector style. Icon colors from: {config.iconColors}.
-Pure magenta (#FF00FF) background only. Do not use magenta or pink tones anywhere in the design.
+Pure bright green (#00FF00) background only. Do not use green tones anywhere in the design.
 No text, no letters, no words. Single centered icon, geometric shapes, works at {config.size}.
 ```
 
 **Default values** (when no config exists):
 - `config.style` = `minimalist`
-- `config.iconColors` = `#58a6ff, #3fb950, #d29922, #a371f7, #7aa2f7` (avoid magenta/pink)
+- `config.iconColors` = `#58a6ff, #d29922, #a371f7, #7aa2f7, #f97583` (avoid green)
 - `config.size` = `64x64`
 - `config.model` = `google/gemini-3-pro-image-preview`
-- `config.keyColor` = `#FF00FF` (magenta)
+- `config.keyColor` = `#00FF00` (green)
+- `config.tolerance` = `70`
 
 ### Filled Example
 
@@ -137,8 +145,8 @@ For a CLI tool called "fastgrep":
 
 ```
 A minimalist logo for fastgrep: A magnifying glass with speed lines forming a geometric pattern.
-Clean vector style. Icon colors from: #58a6ff, #3fb950, #d29922, #a371f7, #7aa2f7.
-Pure magenta (#FF00FF) background only. Do not use magenta or pink tones anywhere in the design.
+Clean vector style. Icon colors from: #58a6ff, #d29922, #a371f7, #7aa2f7, #f97583.
+Pure bright green (#00FF00) background only. Do not use green tones anywhere in the design.
 No text, no letters, no words. Single centered icon, geometric shapes, works at 64x64.
 ```
 
@@ -173,7 +181,8 @@ Select the metaphor that matches the project type. Do NOT invent alternatives.
 - Skip any line of the template
 - Add "gradient", "3D", "glossy", "photorealistic" or similar non-minimalist styles
 - Include text, letters, or words in the logo description
-- Use magenta or pink tones in the icon colors - magenta is reserved for the chromakey background
+- Use green tones in the icon colors - green is reserved for the chromakey background
+- Infer `--key-color` from background colors in the style text (ALWAYS use `config.keyColor` or default green)
 
 ## Configuration Reference
 
@@ -189,13 +198,13 @@ Read JSON if exists, extract `logo` object. Project overrides user overrides def
 
 | Parameter | Default | Description |
 |-----------|---------|-------------|
-| `iconColors` | `["#58a6ff", "#3fb950", "#d29922", "#a371f7", "#7aa2f7"]` | Preferred icon colors (avoid magenta/pink) |
+| `iconColors` | `["#58a6ff", "#d29922", "#a371f7", "#7aa2f7", "#f97583"]` | Preferred icon colors (avoid green) |
 | `style` | `minimalist` | Logo style description (completely overrides default prompt if set) |
 | `size` | `64x64` | Target size for logo |
 | `aspectRatio` | `1:1` | Aspect ratio for generation |
 | `model` | `google/gemini-3-pro-image-preview` | Model for image generation |
-| `keyColor` | `#FF00FF` | Chromakey background color (magenta recommended) |
-| `tolerance` | `30` | Chromakey tolerance for transparency (0-255, higher = more aggressive) |
+| `keyColor` | `#00FF00` | Chromakey background color (green recommended) |
+| `tolerance` | `70` | Chromakey tolerance for transparency (0-255, higher = more aggressive) |
 
 ### Example Configuration
 
@@ -206,18 +215,20 @@ Read JSON if exists, extract `logo` object. Project overrides user overrides def
     "iconColors": ["#7aa2f7", "#bb9af7", "#7dcfff"],
     "style": "minimalist",
     "model": "google/gemini-3-pro-image-preview",
-    "keyColor": "#FF00FF",
-    "tolerance": 30
+    "keyColor": "#00FF00",
+    "tolerance": 70
   }
 }
 ```
 
-**Pixel art style (LucasArts adventure game aesthetic):**
+**Pixel art style (SNES/LucasArts aesthetic):**
 ```json
 {
   "logo": {
-    "iconColors": "Vibrant saturated colors inspired by classic LucasArts VGA adventure games (avoid magenta/pink)",
-    "style": "Pixel art in the painterly style of classic LucasArts VGA adventure games (1990s era). Create a charming character mascot with a funny expression. Surround with floating icon-only symbols relevant to the project. Use classic adventure game title banner style with ornate border. Rich dithering, vibrant saturated colors, whimsical and humorous. MUST include the project name as pixel art text in the banner.",
+    "iconColors": "SVGA high-color palette with maximum saturation and vibrancy. Vivid reds, bright oranges, golden yellows, electric cyans, deep blues, bold purples. Avoid green tones.",
+    "style": "SNES 16-bit pixel art (Chrono Trigger style). Charming character mascot representing the project concept. VISIBLE CHUNKY PIXELS with dithering for shading. Selective outlines. Full SNES color palette, bright and saturated. Floating icon-only symbols (no text on icons). Banner with project name as pixel art text. Pure bright green (#00FF00) background only - do not use green anywhere else in the design.",
+    "keyColor": "#00FF00",
+    "tolerance": 70,
     "model": "google/gemini-3-pro-image-preview"
   }
 }
@@ -226,33 +237,41 @@ Read JSON if exists, extract `logo` object. Project overrides user overrides def
 ## How It Works: Chromakey Transparency
 
 **Professional-quality workflow:**
-1. **Gemini generates the logo**: Uses `google/gemini-3-pro-image-preview` with magenta (#FF00FF) background
+1. **Gemini generates the logo**: Uses `google/gemini-3-pro-image-preview` with green (#00FF00) background
 2. **PIL applies chromakey**: Professional algorithm calculates proportional alpha for smooth edges
 
 This is the same technique used in film/TV green screen compositing, adapted for logo generation.
 
-**Why Chromakey (Not White)?**
+**Why Green (Not Magenta or White)?**
 
-The white background approach has a fundamental problem: anti-aliased edges blend toward white, creating "halo" artifacts. For example, a blue edge pixel might become `#f0e8dd` - not pure white, so it survives the conversion.
+- **White background** has a fundamental problem: anti-aliased edges blend toward white, creating "halo" artifacts
+- **Magenta background** conflicts with purple/violet tones common in pixel art and colorful designs (LucasArts, SNES aesthetics)
+- **Green background** is industry standard because green is rarely used in character art, logos, and icons
 
-Chromakey solves this:
-- **Distinct hue detection**: Magenta has a specific hue (300°), not just lightness
+Chromakey solves edge artifacts:
+- **Distinct hue detection**: Green has a specific hue (120°), easily distinguished from most design colors
 - **Proportional alpha**: Blended pixels get partial transparency, creating smooth edges
-- **Preserves light colors**: White, cream, light gray in designs are unaffected
+- **Preserves all colors**: Purple, magenta, pink, and light colors in designs are unaffected
 
 **Benefits:**
 - ✅ **Smooth edges** - No halo artifacts around anti-aliased pixels
 - ✅ **Professional quality** - Industry-standard compositing technique
-- ✅ **Any light colors** - White, cream, light gray in the design are preserved
+- ✅ **Works with purple/magenta designs** - Common in pixel art and colorful styles
 - ✅ **Single API call** - Fast and cost-effective
 - ✅ **Deterministic** - Consistent, reproducible results
 
 **Compatibility:**
-- ✅ Multi-colored designs (just avoid magenta/pink in the icon)
+- ✅ Multi-colored designs (just avoid green in the icon)
 - ✅ Pixel art, vector, and complex styles
 - ✅ Logos with or without text
 - ✅ Minimalist or detailed designs
-- ✅ Light-colored designs (white elements preserved!)
+- ✅ Purple/magenta designs (LucasArts, SNES aesthetics)
+
+**Alternative Key Colors:**
+If your design requires green tones, you can use magenta chromakey instead:
+```bash
+uv run --with requests --with pillow "$LOGO_SCRIPT" "prompt" --output logo.png --key-color "#FF00FF"
+```
 
 **Legacy Mode:**
 If you need the old white background approach, use the `--white-bg` flag:
@@ -290,19 +309,20 @@ uv run --with requests --with pillow \
   --output logo.png \
   --keep-original
 
-# Adjust chromakey tolerance (default 30, higher = more aggressive)
+# Adjust chromakey tolerance (default 70, higher = more aggressive)
 uv run --with requests --with pillow \
   "$LOGO_SCRIPT" \
   "Your logo prompt here" \
   --output logo.png \
-  --tolerance 40
+  --tolerance 80
 
-# Use custom key color (default: magenta #FF00FF)
+# Use custom key color (default: green #00FF00)
+# Use magenta if your design needs green tones
 uv run --with requests --with pillow \
   "$LOGO_SCRIPT" \
   "Your logo prompt here" \
   --output logo.png \
-  --key-color "#00FF00"
+  --key-color "#FF00FF"
 
 # Legacy mode: Use white background instead of chromakey
 uv run --with requests --with pillow \

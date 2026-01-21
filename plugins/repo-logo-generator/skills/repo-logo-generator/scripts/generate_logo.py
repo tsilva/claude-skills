@@ -6,9 +6,10 @@ This script generates high-quality logos by:
 1. Using Gemini (google/gemini-3-pro-image-preview) with a chromakey background
 2. Programmatically converting chromakey pixels to transparent using PIL
 
-The chromakey approach uses magenta (#FF00FF) as the background color, which
+The chromakey approach uses green (#00FF00) as the background color, which
 provides professional-quality edge detection without the "halo" artifacts
-that occur with white background conversion.
+that occur with white background conversion. Green is preferred over magenta
+because it avoids conflicts with purple/violet tones common in pixel art.
 
 Usage:
     uv run --with requests --with pillow generate_logo.py "Your logo prompt" --output logo.png
@@ -162,8 +163,8 @@ def convert_white_to_transparent(image_bytes: bytes, tolerance: int = 10) -> Ima
     return img
 
 
-def chromakey_to_transparent(image_bytes: bytes, key_color: tuple = (255, 0, 255),
-                              tolerance: int = 30) -> Image.Image:
+def chromakey_to_transparent(image_bytes: bytes, key_color: tuple = (0, 255, 0),
+                              tolerance: int = 70) -> Image.Image:
     """Convert chromakey background to transparent with smooth edges.
 
     Uses color distance in RGB space to calculate alpha. This is the same
@@ -176,8 +177,8 @@ def chromakey_to_transparent(image_bytes: bytes, key_color: tuple = (255, 0, 255
 
     Args:
         image_bytes: Input image as bytes
-        key_color: RGB tuple of the key color (default: magenta #FF00FF)
-        tolerance: Base tolerance for key color detection (default: 30)
+        key_color: RGB tuple of the key color (default: green #00FF00)
+        tolerance: Base tolerance for key color detection (default: 70)
                    Higher values = more aggressive transparency
 
     Returns:
@@ -222,14 +223,14 @@ def main():
     parser.add_argument("--size", "-z", default="1K", help="Size (1K, 2K, 4K)")
     parser.add_argument("--model", "-m", default="google/gemini-3-pro-image-preview",
                         help="Model to use for generation")
-    parser.add_argument("--tolerance", "-t", type=int, default=30,
-                        help="Color tolerance for transparency (default 30 for chromakey, 10 for white)")
+    parser.add_argument("--tolerance", "-t", type=int, default=70,
+                        help="Color tolerance for transparency (default 70 for chromakey, 10 for white)")
     parser.add_argument("--keep-original", action="store_true",
                         help="Keep original image before transparency conversion")
 
     # Chromakey options (new default approach)
-    parser.add_argument("--key-color", "-k", default="#FF00FF",
-                        help="Chromakey color in hex (default: #FF00FF magenta)")
+    parser.add_argument("--key-color", "-k", default="#00FF00",
+                        help="Chromakey color in hex (default: #00FF00 green)")
     parser.add_argument("--white-bg", action="store_true",
                         help="Use legacy white background approach instead of chromakey")
 
@@ -253,10 +254,19 @@ def main():
             bg_name = "white"
             enhanced_prompt = f"{args.prompt}\n\nIMPORTANT: Use pure white (#ffffff) for the background only. Do not use white (#ffffff) anywhere else in the design - the logo/icon itself should use other colors."
         else:
-            # Chromakey approach (default) - uses magenta for cleaner edge detection
+            # Chromakey approach (default) - uses green for cleaner edge detection
             bg_color = args.key_color.upper()
-            bg_name = "magenta"
-            enhanced_prompt = f"{args.prompt}\n\nIMPORTANT: Use pure magenta ({bg_color}) for the background only. Do not use magenta or pink tones anywhere in the design itself - the logo/icon should use other colors."
+            # Determine color name based on key color
+            if bg_color == "#00FF00":
+                bg_name = "green"
+                avoid_colors = "green tones"
+            elif bg_color == "#FF00FF":
+                bg_name = "magenta"
+                avoid_colors = "magenta or pink tones"
+            else:
+                bg_name = "chromakey"
+                avoid_colors = f"colors similar to {bg_color}"
+            enhanced_prompt = f"{args.prompt}\n\nIMPORTANT: Use pure {bg_name} ({bg_color}) for the background only. Do not use {avoid_colors} anywhere in the design itself - the logo/icon should use other colors."
 
         # Generate with Gemini
         print(f"Generating with {args.model}...", file=sys.stderr)
@@ -292,7 +302,7 @@ def main():
             # Legacy white background conversion
             print("Converting #ffffff to transparent...", file=sys.stderr)
             # Use lower tolerance for white (default was 10)
-            tolerance = args.tolerance if args.tolerance != 30 else 10
+            tolerance = args.tolerance if args.tolerance != 70 else 10
             transparent_img = convert_white_to_transparent(image_bytes, tolerance=tolerance)
         else:
             # Chromakey conversion (default) - better edge handling
