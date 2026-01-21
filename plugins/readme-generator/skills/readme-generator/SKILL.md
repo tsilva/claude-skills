@@ -1,8 +1,10 @@
 ---
 name: readme-generator
 description: Creates or updates README.md files following GitHub best practices with badges, visual hierarchy, and comprehensive documentation. Use when asked to "create a README", "generate documentation", "write a README for this project", or when starting a new project that needs documentation.
+argument-hint: "[project-path]"
+disable-model-invocation: false
 metadata:
-  version: "1.0.9"
+  version: "1.0.10"
 ---
 
 # README Generator

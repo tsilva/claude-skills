@@ -24,12 +24,12 @@
 
 ## Available Skills
 
-| Skill | Description | Version |
-|-------|-------------|---------|
-| [OpenRouter](#openrouter) | Access 300+ AI models for text completion and image generation | 1.1.0 |
-| [README Generator](#readme-generator) | Create cutting-edge README files with badges and visual hierarchy | 1.0.5 |
-| [Repo Logo Generator](#repo-logo-generator) | Generate minimalist logos optimized for GitHub | 2.0.3 |
-| [Settings Cleaner](#settings-cleaner) | Audit and optimize Claude Code permission whitelists | 1.1.0 |
+| Skill | Description | Version | Slash Command |
+|-------|-------------|---------|---------------|
+| [OpenRouter](#openrouter) | Access 300+ AI models for text completion and image generation | 1.1.1 | `/openrouter` |
+| [README Generator](#readme-generator) | Create cutting-edge README files with badges and visual hierarchy | 1.0.9 | `/readme-generator` |
+| [Repo Logo Generator](#repo-logo-generator) | Generate minimalist logos optimized for GitHub | 3.0.4 | `/repo-logo-generator` |
+| [Settings Cleaner](#settings-cleaner) | Audit and optimize Claude Code permission whitelists | 1.0.5 | `/settings-cleaner` |
 
 ## Installation
 
@@ -61,6 +61,25 @@ cd claude-skills
 ```bash
 export SKILL_OPENROUTER_API_KEY="sk-or-..."  # Get key at https://openrouter.ai/keys
 ```
+
+### Using Slash Commands
+
+All skills are available as slash commands in Claude Code. Simply type `/` to see available commands with autocomplete:
+
+```bash
+/readme-generator              # Generate a README for the current project
+/readme-generator ./my-project # Generate README for a specific path
+/repo-logo-generator           # Generate a logo for your repository
+/repo-logo-generator minimalist # Generate with a specific style preference
+/settings-cleaner analyze      # Analyze permission whitelists
+/settings-cleaner clean        # Interactive cleanup with confirmations
+/settings-cleaner auto-fix     # Auto-remove redundant permissions
+```
+
+You can also ask Claude to use these skills naturally:
+- "Create a README for this project" → triggers `/readme-generator`
+- "Generate a logo for my repo" → triggers `/repo-logo-generator`
+- "Clean up my settings" → triggers `/settings-cleaner`
 
 ### Text Completion
 

@@ -212,6 +212,38 @@ Based on the official [Agent Skills Specification](https://agentskills.io/specif
 | `compatibility` | Max 500 chars. Environment requirements (python version, packages, etc.) |
 | `metadata` | Key-value mapping for author, version, and custom properties |
 | `allowed-tools` | Space-delimited list of pre-approved tools (experimental) |
+| `argument-hint` | Shows in autocomplete what arguments the slash command expects (e.g., `[issue-number]`, `[analyze\|clean\|auto-fix]`) |
+| `disable-model-invocation` | Set to `true` to only allow manual `/name` invocation. Prevents Claude from auto-triggering. Defaults to `false` |
+| `user-invocable` | Set to `false` to hide from `/` menu. Claude can still use it automatically. Defaults to `true` |
+
+### Slash Commands
+
+In Claude Code, **every skill automatically becomes a slash command** based on its `name` field. For example, a skill with `name: readme-generator` can be invoked as `/readme-generator`.
+
+**How it works:**
+- The `name` field becomes the slash command (e.g., `name: my-skill` → `/my-skill`)
+- Users can type `/skill-name [arguments]` to manually invoke the skill
+- Claude can also invoke skills automatically based on their `description` (unless `disable-model-invocation: true`)
+
+**Slash command fields:**
+```yaml
+---
+name: settings-cleaner
+description: Analyzes and cleans up Claude Code permission whitelists...
+argument-hint: "[analyze|clean|auto-fix]"     # Shows users what arguments they can pass
+disable-model-invocation: false               # Allow both manual and auto invocation
+user-invocable: true                          # Show in slash command menu (default)
+---
+```
+
+**Examples of slash command usage:**
+- `/readme-generator` - Generate a README for the current project
+- `/readme-generator ./my-project` - Generate README for a specific path
+- `/settings-cleaner analyze` - Run settings analysis
+- `/repo-logo-generator minimalist` - Generate a logo with style preference
+
+**Passing arguments:**
+When users invoke `/skill-name arg1 arg2`, the arguments are available in the skill as `$ARGUMENTS`. If the skill doesn't reference `$ARGUMENTS`, Claude Code automatically appends the arguments to the skill instructions.
 
 ### Description Best Practices
 

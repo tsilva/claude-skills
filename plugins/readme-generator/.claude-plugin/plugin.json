@@ -1,7 +1,7 @@
 {
   "name": "readme-generator",
   "description": "Create cutting-edge README files with modern design, badges, and optional AI-generated logos.",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "author": {
     "name": "tsilva"
   }

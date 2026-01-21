@@ -3,8 +3,10 @@ name: repo-logo-generator
 description: Generate logos for GitHub repositories via OpenRouter using two-step workflow (Gemini for quality + GPT-5 for transparency). Works with pixel art, vector designs, and complex multi-colored styles. Use when asked to "generate a logo", "create repo logo", or "make a project logo".
 license: MIT
 compatibility: python 3.8+, requires requests library, uses OpenRouter skill
+argument-hint: "[style-preference]"
+disable-model-invocation: false
 metadata:
-  version: "3.0.4"
+  version: "3.0.5"
 ---
 
 # Repo Logo Generator

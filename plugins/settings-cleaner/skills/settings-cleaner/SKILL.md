@@ -3,9 +3,11 @@ name: settings-cleaner
 description: Analyzes and cleans up Claude Code permission whitelists by identifying overly specific approvals, dangerous patterns, and redundant entries. Use when asked to "clean up settings", "review permissions", "optimize allowlist", or "audit security settings". Provides interactive review before making changes.
 license: MIT
 compatibility: python 3.8+
+argument-hint: "[analyze|clean|auto-fix]"
+disable-model-invocation: false
 metadata:
   author: tsilva
-  version: "1.0.5"
+  version: "1.0.6"
 ---
 
 # Settings Cleaner

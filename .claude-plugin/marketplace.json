@@ -15,19 +15,19 @@
       "name": "readme-generator",
       "source": "./plugins/readme-generator",
       "description": "Create cutting-edge README files with modern design, badges, and optional AI-generated logos via OpenRouter integration.",
-      "version": "1.0.9"
+      "version": "1.0.10"
     },
     {
       "name": "repo-logo-generator",
       "source": "./plugins/repo-logo-generator",
       "description": "Generate professional logos via OpenRouter with native transparent backgrounds using GPT-5 Image. Supports pixel art, vector designs, and complex styles. Use when asked to 'generate a logo' or 'create repo logo'.",
-      "version": "3.0.4"
+      "version": "3.0.5"
     },
     {
       "name": "settings-cleaner",
       "source": "./plugins/settings-cleaner",
       "description": "Analyzes and cleans up Claude Code permission whitelists by identifying overly specific approvals, dangerous patterns, and redundant entries.",
-      "version": "1.0.5"
+      "version": "1.0.6"
     }
   ]
 }
