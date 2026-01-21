@@ -5,7 +5,7 @@ argument-hint: "[project-path]"
 disable-model-invocation: false
 user-invocable: true
 metadata:
-  version: "1.0.11"
+  version: "1.0.12"
 ---
 
 # README Generator
@@ -49,21 +49,18 @@ Invoke the **repo-logo-generator** skill to generate a logo. That skill contains
 
 ### Step 3: Determine Logo Display Size
 
-After generating or finding the logo, analyze its visual complexity to determine the optimal display width:
+For crisp display on retina/high-DPI screens, set the HTML width to **half the actual image width**:
 
-| Complexity | Width | Logo Characteristics |
-|------------|-------|---------------------|
-| Minimalist | 150-180px | Single geometric icon, flat colors, clean lines |
-| Moderate | 200-240px | Multi-element icon, some detail, professional |
-| Detailed | 260-300px | Pixel art, illustrations, characters, text, many icons |
+1. Get the image dimensions:
+   ```bash
+   sips -g pixelWidth logo.png 2>/dev/null | grep pixelWidth | awk '{print $2}'
+   ```
 
-**Assessment criteria:**
-- **Count visual elements**: Single icon = minimalist; 2-4 elements = moderate; 5+ elements = detailed
-- **Check for text**: Any text or characters in the logo → detailed (needs larger size for readability)
-- **Evaluate fine detail**: Would details be lost at 150px? If yes → increase size
-- **Style from config**: "pixel art", "character", "illustration" styles → detailed category
+2. Divide by 2 for the display width (e.g., 512px image → `width="256"`)
 
-Use the assessed width in the HTML img tag (replacing the default 200px).
+3. Use the calculated width in the HTML img tag
+
+This ensures the logo renders at native resolution on 2x displays while maintaining appropriate size on standard displays.
 
 ### Dark/Light Mode Support
 
@@ -73,7 +70,7 @@ For theme-aware logos, use the `<picture>` element:
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="logo-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="logo-light.png">
-  <img src="logo-light.png" alt="Project Name" width="{ASSESSED_WIDTH}">
+  <img src="logo-light.png" alt="Project Name" width="{DISPLAY_WIDTH}">
 </picture>
 ```
 
@@ -92,7 +89,7 @@ Do not "prettify" or transform the repo name. Use it verbatim as the H1 title.
 
 ```markdown
 <div align="center">
-  <img src="logo.png" alt="Project Name" width="{ASSESSED_WIDTH}"/>
+  <img src="logo.png" alt="Project Name" width="{DISPLAY_WIDTH}"/>
 
   [![Build](badge)](link) [![Version](badge)](link) [![License](badge)](link)
 
@@ -106,7 +103,7 @@ Do not "prettify" or transform the repo name. Use it verbatim as the H1 title.
 
 | Element | Specification |
 |---------|---------------|
-| Logo | 150-300px width, SVG preferred, centered |
+| Logo | Width = half actual pixels (for retina), centered |
 | Badges | 3-6 maximum, shields.io for consistency |
 | Tagline | One sentence answering "What and why?" |
 | Quick links | Docs, demo, community (if available) |
@@ -448,14 +445,14 @@ Avoid these mistakes:
 3. **Extract metadata** - name, description, version, author, license
 4. **Check for existing logo** - look for `logo.png` at repo root
 5. **Generate logo if missing** - use repo-logo-generator skill
-6. **Assess logo complexity** - determine display width (150-300px based on visual analysis)
+6. **Calculate display width** - use half the actual image pixel width (for retina displays)
 7. **Generate README.md** - following Hook → Prove → Enable → Extend structure
 
 ## Quick Reference Checklist
 
 ### Essential (Must Include)
 
-- [ ] Project logo (150-300px, centered)
+- [ ] Project logo (width = half actual pixels, centered)
 - [ ] 4-7 relevant badges
 - [ ] One-liner description ("What and why?")
 - [ ] GIF/screenshot demonstration
