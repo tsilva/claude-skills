@@ -26,7 +26,7 @@
 
 | Skill | Description | Version |
 |-------|-------------|---------|
-| [OpenRouter](#openrouter) | Access 300+ AI models for text completion and image generation | 1.0.4 |
+| [OpenRouter](#openrouter) | Access 300+ AI models for text completion and image generation | 1.1.0 |
 | [README Generator](#readme-generator) | Create cutting-edge README files with badges and visual hierarchy | 1.0.5 |
 | [Repo Logo Generator](#repo-logo-generator) | Generate minimalist logos optimized for GitHub | 2.0.3 |
 | [Settings Cleaner](#settings-cleaner) | Audit and optimize Claude Code permission whitelists | 1.1.0 |
@@ -94,7 +94,7 @@ UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests plugins/openrouter/skil
 
 <p>
   <a href="https://openrouter.ai"><img src="https://img.shields.io/badge/OpenRouter-Powered-6366f1?style=flat" alt="OpenRouter"></a>
-  <img src="https://img.shields.io/badge/Version-1.0.4-green?style=flat" alt="Version">
+  <img src="https://img.shields.io/badge/Version-1.1.0-green?style=flat" alt="Version">
   <img src="https://img.shields.io/badge/Models-300+-purple?style=flat" alt="300+ Models">
 </p>
 
@@ -267,7 +267,7 @@ Simply ask:
 ```
 claude-skills/
 ├── plugins/
-│   ├── openrouter/              # OpenRouter skill (v1.0.4)
+│   ├── openrouter/              # OpenRouter skill (v1.1.0)
 │   ├── readme-generator/        # README Generator skill (v1.0.5)
 │   ├── repo-logo-generator/     # Logo Generator skill (v2.0.3)
 │   └── settings-cleaner/        # Settings Cleaner skill (v1.1.0)
