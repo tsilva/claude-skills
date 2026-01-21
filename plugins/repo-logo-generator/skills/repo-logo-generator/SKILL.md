@@ -1,32 +1,32 @@
 ---
 name: repo-logo-generator
-description: Generate logos for GitHub repositories via OpenRouter using two-step workflow (Gemini for quality + GPT-5 for transparency). Works with pixel art, vector designs, and complex multi-colored styles. Use when asked to "generate a logo", "create repo logo", or "make a project logo".
+description: Generate logos for GitHub repositories via OpenRouter using Gemini with programmatic transparency conversion. Works with pixel art, vector designs, and complex multi-colored styles. Use when asked to "generate a logo", "create repo logo", or "make a project logo".
 license: MIT
-compatibility: python 3.8+, requires requests library, uses OpenRouter skill
+compatibility: python 3.8+, requires requests and pillow libraries, uses OpenRouter skill
 argument-hint: "[style-preference]"
 disable-model-invocation: false
 user-invocable: true
 metadata:
-  version: "3.0.6"
+  version: "3.0.7"
 ---
 
 # Repo Logo Generator
 
-Generate professional logos with transparent backgrounds using a two-step workflow:
-1. **Gemini** (google/gemini-3-pro-image-preview) for superior image quality
-2. **GPT-5 Image** (openai/gpt-5-image) for transparent background conversion
+Generate professional logos with transparent backgrounds using a simplified workflow:
+1. **Gemini** (google/gemini-3-pro-image-preview) generates logo with #ffffff background
+2. **PIL** programmatically converts #ffffff pixels to transparent
 
-This combines the best of both models: Gemini's high-quality generation with GPT-5's transparency capabilities.
+This approach is simpler, faster, and requires only one API call.
 
 ## Path Resolution
 
-The two-step generation script must be resolved from the plugin cache using an absolute path. Never use relative paths.
+The logo generation script must be resolved from the plugin cache using an absolute path. Never use relative paths.
 
 **Dynamic resolution (recommended):**
 ```bash
 # Find latest repo-logo-generator version
 LATEST_VERSION=$(ls -1 ~/.claude/plugins/cache/claude-skills/repo-logo-generator 2>/dev/null | sort -V | tail -n 1)
-LOGO_SCRIPT="$HOME/.claude/plugins/cache/claude-skills/repo-logo-generator/$LATEST_VERSION/skills/repo-logo-generator/scripts/generate_logo_two_step.py"
+LOGO_SCRIPT="$HOME/.claude/plugins/cache/claude-skills/repo-logo-generator/$LATEST_VERSION/skills/repo-logo-generator/scripts/generate_logo.py"
 
 # Verify it exists
 if [ ! -f "$LOGO_SCRIPT" ]; then
@@ -35,7 +35,7 @@ if [ ! -f "$LOGO_SCRIPT" ]; then
 fi
 
 # Use in command
-uv run --with requests "$LOGO_SCRIPT" \
+uv run --with requests --with pillow "$LOGO_SCRIPT" \
   "Your prompt here" \
   --output logo.png
 ```
@@ -48,16 +48,16 @@ Follow these steps exactly. Do not skip steps or improvise.
 
 - [ ] **Step 0**: Create Todo List
   - Use TodoWrite to create a todo list with these items:
-    1. Validate dependencies (find two-step script, check API key)
+    1. Validate dependencies (find script, check API key)
     2. Load configuration files (project → user → default)
     3. Read project documentation to determine type
-    4. Generate logo using two-step workflow (Gemini + GPT-5)
+    4. Generate logo using Gemini with #ffffff background
     5. Verify logo file and properties
 
   This is a multi-step task requiring todo list tracking per TodoWrite guidelines.
 
 - [ ] **Step 1**: Validate Dependencies
-  - Locate latest two-step generation script using path resolution logic above
+  - Locate latest generation script using path resolution logic above
   - Verify `SKILL_OPENROUTER_API_KEY` environment variable is set
   - If either check fails, report to user immediately and do not proceed
   - Mark "Validate dependencies" todo as completed
@@ -79,19 +79,18 @@ Follow these steps exactly. Do not skip steps or improvise.
 
 - [ ] **Step 5**: Select visual metaphor from the table below and fill the prompt template
 
-- [ ] **Step 6**: Generate logo using two-step workflow:
-  - Step 6a: Gemini generates high-quality image
-  - Step 6b: GPT-5 Image converts to transparent background
-  - Both steps are handled by the `generate_logo_two_step.py` script
+- [ ] **Step 6**: Generate logo:
+  - Gemini generates image with #ffffff background
+  - PIL programmatically converts #ffffff to transparent
   - Use absolute path to script (resolved in Step 1)
   - Command format:
     ```bash
-    uv run --with requests \
+    uv run --with requests --with pillow \
       "$LOGO_SCRIPT" \
       "[YOUR PROMPT HERE]" \
       --output logo.png
     ```
-  Mark "Generate logo using two-step workflow" todo as completed after this step.
+  Mark "Generate logo" todo as completed after this step.
 
 - [ ] **Step 7**: Verify logo exists and is valid PNG with transparency
   Mark "Verify logo file and properties" todo as completed after this step.
@@ -108,8 +107,8 @@ Follow these steps exactly. Do not skip steps or improvise.
 **Alternative (for restricted environments):**
 If sandbox restrictions are problematic, you can pre-install dependencies:
 ```bash
-python3 -m pip install requests
-python3 /absolute/path/to/openrouter_client.py image MODEL "prompt" --output logo.png
+python3 -m pip install requests pillow
+python3 /absolute/path/to/generate_logo.py "prompt" --output logo.png
 ```
 
 However, we recommend the standard UV approach for portability and zero-setup benefits.
@@ -121,15 +120,15 @@ You MUST construct the prompt using this EXACT template. Do not paraphrase, do n
 ```
 A {config.style} logo for {PROJECT_NAME}: {VISUAL_METAPHOR_FROM_TABLE}.
 Clean vector style. Icon colors from: {config.iconColors}.
-Transparent background. No text, no letters, no words. Single centered icon, geometric shapes, works at {config.size}.
+Pure white (#ffffff) background only. Do not use white (#ffffff) anywhere else in the design.
+No text, no letters, no words. Single centered icon, geometric shapes, works at {config.size}.
 ```
 
 **Default values** (when no config exists):
 - `config.style` = `minimalist`
-- `config.iconColors` = `#ffffff, #58a6ff, #3fb950, #d29922, #a371f7`
+- `config.iconColors` = `#58a6ff, #3fb950, #d29922, #a371f7, #7aa2f7` (no white)
 - `config.size` = `64x64`
-- `config.geminiModel` = `google/gemini-3-pro-image-preview`
-- `config.gpt5Model` = `openai/gpt-5-image`
+- `config.model` = `google/gemini-3-pro-image-preview`
 
 ### Filled Example
 
@@ -137,8 +136,9 @@ For a CLI tool called "fastgrep":
 
 ```
 A minimalist logo for fastgrep: A magnifying glass with speed lines forming a geometric pattern.
-Clean vector style. Icon colors from: #ffffff, #58a6ff, #3fb950, #d29922, #a371f7.
-Transparent background. No text, no letters, no words. Single centered icon, geometric shapes, works at 64x64.
+Clean vector style. Icon colors from: #58a6ff, #3fb950, #d29922, #a371f7, #7aa2f7.
+Pure white (#ffffff) background only. Do not use white (#ffffff) anywhere else in the design.
+No text, no letters, no words. Single centered icon, geometric shapes, works at 64x64.
 ```
 
 ## Visual Metaphors by Project Type (MUST use this table)
@@ -172,6 +172,7 @@ Select the metaphor that matches the project type. Do NOT invent alternatives.
 - Skip any line of the template
 - Add "gradient", "3D", "glossy", "photorealistic" or similar non-minimalist styles
 - Include text, letters, or words in the logo description
+- Use white (#ffffff) in the icon colors - white is reserved for the background only
 
 ## Configuration Reference
 
@@ -187,12 +188,12 @@ Read JSON if exists, extract `logo` object. Project overrides user overrides def
 
 | Parameter | Default | Description |
 |-----------|---------|-------------|
-| `iconColors` | `["#ffffff", "#58a6ff", "#3fb950", "#d29922", "#a371f7"]` | Preferred icon colors |
+| `iconColors` | `["#58a6ff", "#3fb950", "#d29922", "#a371f7", "#7aa2f7"]` | Preferred icon colors (do not include white) |
 | `style` | `minimalist` | Logo style description (completely overrides default prompt if set) |
 | `size` | `64x64` | Target size for logo |
 | `aspectRatio` | `1:1` | Aspect ratio for generation |
-| `geminiModel` | `google/gemini-3-pro-image-preview` | Model for initial high-quality generation (step 1) |
-| `gpt5Model` | `openai/gpt-5-image` | Model for transparency conversion (step 2) |
+| `model` | `google/gemini-3-pro-image-preview` | Model for image generation |
+| `tolerance` | `10` | White pixel tolerance for transparency conversion (0-255) |
 
 ### Example Configuration
 
@@ -202,8 +203,8 @@ Read JSON if exists, extract `logo` object. Project overrides user overrides def
   "logo": {
     "iconColors": ["#7aa2f7", "#bb9af7", "#7dcfff"],
     "style": "minimalist",
-    "geminiModel": "google/gemini-3-pro-image-preview",
-    "gpt5Model": "openai/gpt-5-image"
+    "model": "google/gemini-3-pro-image-preview",
+    "tolerance": 10
   }
 }
 ```
@@ -212,41 +213,39 @@ Read JSON if exists, extract `logo` object. Project overrides user overrides def
 ```json
 {
   "logo": {
-    "iconColors": "Vibrant saturated colors inspired by classic LucasArts VGA adventure games",
+    "iconColors": "Vibrant saturated colors inspired by classic LucasArts VGA adventure games (but not white)",
     "style": "Pixel art in the painterly style of classic LucasArts VGA adventure games (1990s era). Create a charming character mascot with a funny expression. Surround with floating icon-only symbols relevant to the project. Use classic adventure game title banner style with ornate border. Rich dithering, vibrant saturated colors, whimsical and humorous. MUST include the project name as pixel art text in the banner.",
-    "geminiModel": "google/gemini-3-pro-image-preview",
-    "gpt5Model": "openai/gpt-5-image"
+    "model": "google/gemini-3-pro-image-preview"
   }
 }
 ```
 
-## Two-Step Workflow: Best of Both Models
+## How It Works: Gemini + Programmatic Transparency
 
-**How it works:**
-1. **Gemini generates the logo**: Uses `google/gemini-3-pro-image-preview` for superior image quality and design
-2. **GPT-5 converts to transparent**: Sends Gemini's output to `openai/gpt-5-image` with "remove background" prompt
+**Simple, efficient workflow:**
+1. **Gemini generates the logo**: Uses `google/gemini-3-pro-image-preview` with #ffffff background
+2. **PIL converts to transparent**: Programmatically replaces all #ffffff pixels with transparency
 
-This workflow combines:
-- Gemini's superior visual design capabilities
-- GPT-5 Image's transparency conversion abilities
+This approach is simpler, faster, and more reliable than multi-step AI conversions.
 
 **Benefits:**
-- ✅ **Higher quality** - Gemini produces better designs than GPT-5 alone
-- ✅ **Reliable transparency** - GPT-5 successfully converts backgrounds to transparent
-- ✅ **No color constraints** - use any colors including magenta/pink
-- ✅ **Real alpha channel** - proper RGBA transparency
-- ✅ **Works with all styles** - pixel art, vector, complex designs
-- ✅ **Clean edges** - AI-generated smooth transparency
+- ✅ **High quality** - Gemini produces excellent designs
+- ✅ **Reliable transparency** - Deterministic color replacement, no AI guesswork
+- ✅ **No color constraints** - Use any colors except white in the icon
+- ✅ **Perfect alpha channel** - Clean RGBA transparency
+- ✅ **Faster** - Single API call instead of two
+- ✅ **Lower cost** - Half the API usage
+- ✅ **Consistent results** - No variation in transparency conversion
 
 **Compatibility:**
-- ✅ Multi-colored pixel art (character sprites, detailed scenes)
-- ✅ Complex LucasArts/adventure game styles
-- ✅ Logos with text labels and detailed shading
-- ✅ Minimalist vector designs
-- ✅ Any style supported by either model
+- ✅ Multi-colored designs (just avoid white in the icon)
+- ✅ Pixel art, vector, and complex styles
+- ✅ Logos with or without text
+- ✅ Minimalist or detailed designs
+- ✅ Any style that works without white in the foreground
 
 **Quality:**
-The two-step approach consistently produces high-quality logos with proper transparent backgrounds. Testing shows Gemini's superior generation quality combined with GPT-5's reliable transparency conversion.
+This approach produces high-quality logos with perfect transparent backgrounds. The programmatic conversion is more reliable than AI-based transparency removal.
 
 ## Technical Requirements
 
@@ -258,25 +257,32 @@ Logos must meet these criteria:
 
 ## Usage
 
-Use the two-step generation script for best quality with transparency:
+Use the generation script with Gemini + PIL for transparent logos:
 
 ```bash
 # Resolve script path (see Path Resolution section above)
 LATEST_VERSION=$(ls -1 ~/.claude/plugins/cache/claude-skills/repo-logo-generator 2>/dev/null | sort -V | tail -n 1)
-LOGO_SCRIPT="$HOME/.claude/plugins/cache/claude-skills/repo-logo-generator/$LATEST_VERSION/skills/repo-logo-generator/scripts/generate_logo_two_step.py"
+LOGO_SCRIPT="$HOME/.claude/plugins/cache/claude-skills/repo-logo-generator/$LATEST_VERSION/skills/repo-logo-generator/scripts/generate_logo.py"
 
-# Generate logo with two-step workflow (Gemini + GPT-5)
-uv run --with requests \
+# Generate logo with transparent background
+uv run --with requests --with pillow \
   "$LOGO_SCRIPT" \
   "Your logo prompt here" \
   --output logo.png
 
-# Optional: Keep intermediate Gemini image for comparison
-uv run --with requests \
+# Optional: Keep original image with white background for comparison
+uv run --with requests --with pillow \
   "$LOGO_SCRIPT" \
   "Your logo prompt here" \
   --output logo.png \
-  --keep-intermediate
+  --keep-original
+
+# Optional: Adjust white pixel tolerance (default 10)
+uv run --with requests --with pillow \
+  "$LOGO_SCRIPT" \
+  "Your logo prompt here" \
+  --output logo.png \
+  --tolerance 5
 ```
 
 **Note on Sandbox Mode**: When Claude runs these commands, it may need to disable sandbox due to `uv` accessing macOS system configuration APIs (see Sandbox Compatibility section above).

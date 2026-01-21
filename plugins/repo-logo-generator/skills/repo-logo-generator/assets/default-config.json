@@ -1,9 +1,10 @@
 {
   "logo": {
-    "iconColors": ["#ffffff", "#58a6ff", "#3fb950", "#d29922", "#a371f7"],
+    "iconColors": ["#58a6ff", "#3fb950", "#d29922", "#a371f7", "#7aa2f7"],
     "style": "minimalist",
     "size": "64x64",
     "aspectRatio": "1:1",
-    "model": "openai/gpt-5-image"
+    "model": "google/gemini-3-pro-image-preview",
+    "tolerance": 10
   }
 }

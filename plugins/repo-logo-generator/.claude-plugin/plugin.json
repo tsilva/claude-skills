@@ -1,7 +1,7 @@
 {
   "name": "repo-logo-generator",
   "description": "Generate professional logos via OpenRouter with native transparent backgrounds using GPT-5 Image. Supports pixel art, vector designs, and complex styles.",
-  "version": "3.0.6",
+  "version": "3.0.7",
   "author": {
     "name": "tsilva"
   }
