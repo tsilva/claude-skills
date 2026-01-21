@@ -2,7 +2,7 @@
 name: openrouter
 description: Invokes 300+ AI models via OpenRouter API for text completion, image generation, and model discovery. Use when delegating tasks to external models (GPT-5.2, Gemini 3, Llama, Mistral, etc.). Triggers on "use OpenRouter to...", "call GPT-5 to...", "generate an image with Gemini", or similar requests for external AI models.
 metadata:
-  version: "1.0.7"
+  version: "1.1.0"
 ---
 
 # OpenRouter
@@ -26,7 +26,7 @@ UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests scripts/openrouter_clie
 
 **Image generation:**
 ```bash
-UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests scripts/openrouter_client.py image MODEL "description" [--output /absolute/path/file.png] [--aspect 16:9] [--size 2K]
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests scripts/openrouter_client.py image MODEL "description" [--output /absolute/path/file.png] [--aspect 16:9] [--size 2K] [--background transparent] [--quality high] [--output-format png]
 ```
 
 **Model discovery:**
@@ -43,6 +43,7 @@ UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests scripts/openrouter_clie
 | Reasoning | `anthropic/claude-opus-4.5` | SOTA reasoning |
 | Code | `anthropic/claude-sonnet-4.5` | Simple code |
 | Long docs | `google/gemini-3-flash-preview` | Long context, cheap |
+| Image gen | `openai/gpt-5-image` | Native transparency |
 | Image gen | `google/gemini-3-pro-image-preview` | Fast, cheap |
 | Image gen | `black-forest-labs/flux.2-pro` | High quality |
 
@@ -109,6 +110,35 @@ UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests scripts/openrouter_clie
 
 **Note:** Always use absolute paths for `--output` to ensure images are saved to the correct location. The script creates parent directories automatically if they don't exist.
 
+### Advanced Image Generation Options
+
+**Transparent Backgrounds** (GPT-5 Image and compatible models):
+
+```bash
+UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests scripts/openrouter_client.py image \
+  openai/gpt-5-image "Logo design with transparent background" \
+  --background transparent \
+  --quality high \
+  --output-format png \
+  --output /absolute/path/to/logo.png
+```
+
+**New parameters:**
+- `--background <value>`: Background setting (e.g., `transparent`). Model support varies.
+- `--quality <value>`: Image quality setting (`high`, `medium`, `low`). Affects detail and transparency quality.
+- `--output-format <format>`: Output format (`png`, `webp`, `jpeg`). Use `png` or `webp` for transparency.
+
+**Transparency Requirements:**
+For transparent backgrounds, specify transparency in BOTH:
+1. **API parameter**: Use `--background transparent` flag
+2. **Prompt text**: Include "transparent background" in the description
+
+Both are required for best results. The `--quality high` and `--output-format png` parameters improve transparency quality.
+
+**Model Compatibility:**
+- ✅ `openai/gpt-5-image` - Full transparent background support
+- ⚠️  Other models - Check model documentation for transparency support
+
 ## Error Handling
 
 The script handles retries automatically for transient errors (429, 502, 503).
@@ -148,6 +178,17 @@ images = client.generate_image(
     "A serene forest path",
     output_path="/absolute/path/to/forest.png",
     aspect_ratio="16:9"
+)
+
+# Generate image with transparent background
+images = client.generate_image(
+    "openai/gpt-5-image",
+    "A minimalist logo with transparent background",
+    output_path="/absolute/path/to/logo.png",
+    aspect_ratio="1:1",
+    background="transparent",
+    quality="high",
+    output_format="png"
 )
 
 # Find models
