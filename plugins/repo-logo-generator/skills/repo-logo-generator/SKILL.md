@@ -1,40 +1,43 @@
 ---
 name: repo-logo-generator
-description: Generate logos for GitHub repositories via OpenRouter with native transparent backgrounds using GPT-5 Image. Works with pixel art, vector designs, and complex multi-colored styles. Use when asked to "generate a logo", "create repo logo", or "make a project logo".
+description: Generate logos for GitHub repositories via OpenRouter using two-step workflow (Gemini for quality + GPT-5 for transparency). Works with pixel art, vector designs, and complex multi-colored styles. Use when asked to "generate a logo", "create repo logo", or "make a project logo".
 license: MIT
 compatibility: python 3.8+, requires requests library, uses OpenRouter skill
 metadata:
-  version: "3.0.3"
+  version: "3.0.4"
 ---
 
 # Repo Logo Generator
 
-Generate professional logos with native transparent backgrounds using GPT-5 Image via OpenRouter.
+Generate professional logos with transparent backgrounds using a two-step workflow:
+1. **Gemini** (google/gemini-3-pro-image-preview) for superior image quality
+2. **GPT-5 Image** (openai/gpt-5-image) for transparent background conversion
+
+This combines the best of both models: Gemini's high-quality generation with GPT-5's transparency capabilities.
 
 ## Path Resolution
 
-The OpenRouter client must be resolved from the plugin cache using an absolute path. Never use relative paths when invoking scripts from other plugins.
+The two-step generation script must be resolved from the plugin cache using an absolute path. Never use relative paths.
 
 **Dynamic resolution (recommended):**
 ```bash
-# Find latest OpenRouter version
-LATEST_VERSION=$(ls -1 ~/.claude/plugins/cache/claude-skills/openrouter 2>/dev/null | sort -V | tail -n 1)
-OPENROUTER_CLIENT="$HOME/.claude/plugins/cache/claude-skills/openrouter/$LATEST_VERSION/skills/openrouter/scripts/openrouter_client.py"
+# Find latest repo-logo-generator version
+LATEST_VERSION=$(ls -1 ~/.claude/plugins/cache/claude-skills/repo-logo-generator 2>/dev/null | sort -V | tail -n 1)
+LOGO_SCRIPT="$HOME/.claude/plugins/cache/claude-skills/repo-logo-generator/$LATEST_VERSION/skills/repo-logo-generator/scripts/generate_logo_two_step.py"
 
 # Verify it exists
-if [ ! -f "$OPENROUTER_CLIENT" ]; then
-  echo "Error: OpenRouter plugin not found. Install via: /skills-discovery openrouter" >&2
+if [ ! -f "$LOGO_SCRIPT" ]; then
+  echo "Error: repo-logo-generator plugin not found. Install via: /skills-discovery repo-logo-generator" >&2
   exit 1
 fi
 
 # Use in command
-UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests "$OPENROUTER_CLIENT" image \
-  "model-name" \
+uv run --with requests "$LOGO_SCRIPT" \
   "Your prompt here" \
   --output logo.png
 ```
 
-**Important:** Always validate that the OpenRouter client exists before attempting to execute it. If not found, inform the user immediately and do not proceed.
+**Important:** Always validate that the script exists before attempting to execute it. If not found, inform the user immediately and do not proceed.
 
 ## REQUIRED: Execution Checklist (MUST complete in order)
 
@@ -42,16 +45,16 @@ Follow these steps exactly. Do not skip steps or improvise.
 
 - [ ] **Step 0**: Create Todo List
   - Use TodoWrite to create a todo list with these items:
-    1. Validate dependencies (find OpenRouter client, check API key)
+    1. Validate dependencies (find two-step script, check API key)
     2. Load configuration files (project → user → default)
     3. Read project documentation to determine type
-    4. Generate logo using OpenRouter
+    4. Generate logo using two-step workflow (Gemini + GPT-5)
     5. Verify logo file and properties
 
   This is a multi-step task requiring todo list tracking per TodoWrite guidelines.
 
 - [ ] **Step 1**: Validate Dependencies
-  - Locate latest OpenRouter client using path resolution logic above
+  - Locate latest two-step generation script using path resolution logic above
   - Verify `SKILL_OPENROUTER_API_KEY` environment variable is set
   - If either check fails, report to user immediately and do not proceed
   - Mark "Validate dependencies" todo as completed
@@ -73,21 +76,19 @@ Follow these steps exactly. Do not skip steps or improvise.
 
 - [ ] **Step 5**: Select visual metaphor from the table below and fill the prompt template
 
-- [ ] **Step 6**: Generate logo using OpenRouter with native transparency:
-  - Use `openai/gpt-5-image` model (or configured `config.model`)
-  - Add `--background transparent` flag for transparent background
-  - Save directly to `logo.png`
-  - Use absolute path to OpenRouter client (resolved in Step 1)
+- [ ] **Step 6**: Generate logo using two-step workflow:
+  - Step 6a: Gemini generates high-quality image
+  - Step 6b: GPT-5 Image converts to transparent background
+  - Both steps are handled by the `generate_logo_two_step.py` script
+  - Use absolute path to script (resolved in Step 1)
   - Command format:
     ```bash
-    UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests \
-      "$OPENROUTER_CLIENT" image \
-      "openai/gpt-5-image" \
+    uv run --with requests \
+      "$LOGO_SCRIPT" \
       "[YOUR PROMPT HERE]" \
-      --background transparent \
       --output logo.png
     ```
-  Mark "Generate logo using OpenRouter" todo as completed after this step.
+  Mark "Generate logo using two-step workflow" todo as completed after this step.
 
 - [ ] **Step 7**: Verify logo exists and is valid PNG with transparency
   Mark "Verify logo file and properties" todo as completed after this step.
@@ -124,7 +125,8 @@ Transparent background. No text, no letters, no words. Single centered icon, geo
 - `config.style` = `minimalist`
 - `config.iconColors` = `#ffffff, #58a6ff, #3fb950, #d29922, #a371f7`
 - `config.size` = `64x64`
-- `config.model` = `openai/gpt-5-image`
+- `config.geminiModel` = `google/gemini-3-pro-image-preview`
+- `config.gpt5Model` = `openai/gpt-5-image`
 
 ### Filled Example
 
@@ -186,7 +188,8 @@ Read JSON if exists, extract `logo` object. Project overrides user overrides def
 | `style` | `minimalist` | Logo style description (completely overrides default prompt if set) |
 | `size` | `64x64` | Target size for logo |
 | `aspectRatio` | `1:1` | Aspect ratio for generation |
-| `model` | `openai/gpt-5-image` | OpenRouter model for image generation (GPT-5 Image supports native transparency) |
+| `geminiModel` | `google/gemini-3-pro-image-preview` | Model for initial high-quality generation (step 1) |
+| `gpt5Model` | `openai/gpt-5-image` | Model for transparency conversion (step 2) |
 
 ### Example Configuration
 
@@ -196,7 +199,8 @@ Read JSON if exists, extract `logo` object. Project overrides user overrides def
   "logo": {
     "iconColors": ["#7aa2f7", "#bb9af7", "#7dcfff"],
     "style": "minimalist",
-    "model": "openai/gpt-5-image"
+    "geminiModel": "google/gemini-3-pro-image-preview",
+    "gpt5Model": "openai/gpt-5-image"
   }
 }
 ```
@@ -207,22 +211,25 @@ Read JSON if exists, extract `logo` object. Project overrides user overrides def
   "logo": {
     "iconColors": "Vibrant saturated colors inspired by classic LucasArts VGA adventure games",
     "style": "Pixel art in the painterly style of classic LucasArts VGA adventure games (1990s era). Create a charming character mascot with a funny expression. Surround with floating icon-only symbols relevant to the project. Use classic adventure game title banner style with ornate border. Rich dithering, vibrant saturated colors, whimsical and humorous. MUST include the project name as pixel art text in the banner.",
-    "model": "openai/gpt-5-image"
+    "geminiModel": "google/gemini-3-pro-image-preview",
+    "gpt5Model": "openai/gpt-5-image"
   }
 }
 ```
 
-## Native Transparent Backgrounds
+## Two-Step Workflow: Best of Both Models
 
 **How it works:**
-GPT-5 Image supports native transparent background generation. To generate transparent backgrounds, you must specify transparency in BOTH:
-1. **API parameter**: Use `--background transparent` flag in the command
-2. **Prompt text**: Include "Transparent background" in the prompt itself
+1. **Gemini generates the logo**: Uses `google/gemini-3-pro-image-preview` for superior image quality and design
+2. **GPT-5 converts to transparent**: Sends Gemini's output to `openai/gpt-5-image` with "remove background" prompt
 
-Both are required - the API parameter alone is not sufficient.
+This workflow combines:
+- Gemini's superior visual design capabilities
+- GPT-5 Image's transparency conversion abilities
 
 **Benefits:**
-- ✅ **Single generation** - no post-processing required
+- ✅ **Higher quality** - Gemini produces better designs than GPT-5 alone
+- ✅ **Reliable transparency** - GPT-5 successfully converts backgrounds to transparent
 - ✅ **No color constraints** - use any colors including magenta/pink
 - ✅ **Real alpha channel** - proper RGBA transparency
 - ✅ **Works with all styles** - pixel art, vector, complex designs
@@ -233,10 +240,10 @@ Both are required - the API parameter alone is not sufficient.
 - ✅ Complex LucasArts/adventure game styles
 - ✅ Logos with text labels and detailed shading
 - ✅ Minimalist vector designs
-- ✅ Any style that GPT-5 Image supports
+- ✅ Any style supported by either model
 
 **Quality:**
-GPT-5 Image consistently produces high-quality transparent backgrounds with proper alpha channels. Tested results show 50-90% transparency depending on logo complexity, with all corners transparent for centered designs.
+The two-step approach consistently produces high-quality logos with proper transparent backgrounds. Testing shows Gemini's superior generation quality combined with GPT-5's reliable transparency conversion.
 
 ## Technical Requirements
 
@@ -248,20 +255,25 @@ Logos must meet these criteria:
 
 ## Usage
 
-Use the **openrouter** skill's image generation capability with the `--background transparent` flag:
+Use the two-step generation script for best quality with transparency:
 
 ```bash
-# Resolve OpenRouter client path (see Path Resolution section above)
-LATEST_VERSION=$(ls -1 ~/.claude/plugins/cache/claude-skills/openrouter 2>/dev/null | sort -V | tail -n 1)
-OPENROUTER_CLIENT="$HOME/.claude/plugins/cache/claude-skills/openrouter/$LATEST_VERSION/skills/openrouter/scripts/openrouter_client.py"
+# Resolve script path (see Path Resolution section above)
+LATEST_VERSION=$(ls -1 ~/.claude/plugins/cache/claude-skills/repo-logo-generator 2>/dev/null | sort -V | tail -n 1)
+LOGO_SCRIPT="$HOME/.claude/plugins/cache/claude-skills/repo-logo-generator/$LATEST_VERSION/skills/repo-logo-generator/scripts/generate_logo_two_step.py"
 
-# Generate logo with transparent background
-UV_CACHE_DIR=/tmp/claude/uv-cache uv run --with requests \
-  "$OPENROUTER_CLIENT" image \
-  "openai/gpt-5-image" \
+# Generate logo with two-step workflow (Gemini + GPT-5)
+uv run --with requests \
+  "$LOGO_SCRIPT" \
   "Your logo prompt here" \
-  --background transparent \
   --output logo.png
+
+# Optional: Keep intermediate Gemini image for comparison
+uv run --with requests \
+  "$LOGO_SCRIPT" \
+  "Your logo prompt here" \
+  --output logo.png \
+  --keep-intermediate
 ```
 
-**Note on Sandbox Mode**: The `UV_CACHE_DIR=/tmp/claude/uv-cache` prefix ensures `uv` uses an allowed cache directory. When Claude runs these commands, it may still need to disable sandbox due to `uv` accessing macOS system configuration APIs (see Sandbox Compatibility section above).
+**Note on Sandbox Mode**: When Claude runs these commands, it may need to disable sandbox due to `uv` accessing macOS system configuration APIs (see Sandbox Compatibility section above).
