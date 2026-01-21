@@ -362,6 +362,41 @@ def validate_body(body_line_count: int, file_path: str) -> list[ValidationIssue]
     return issues
 
 
+def validate_character_budget(
+    skill_md_path: Path,
+    file_path: str,
+    char_budget: int = 15000
+) -> list[ValidationIssue]:
+    """
+    Validate that skill file size is within Claude Code's context budget.
+
+    Rules:
+    - Warning if SKILL.md exceeds char_budget characters (default: 15,000)
+    - Claude Code loads skill metadata into context; large skills may be excluded
+    - Users can increase budget with SLASH_COMMAND_TOOL_CHAR_BUDGET env var
+    """
+    issues = []
+
+    try:
+        content = skill_md_path.read_text()
+        char_count = len(content)
+
+        if char_count > char_budget:
+            issues.append(ValidationIssue(
+                Severity.WARNING, file_path, "character-budget",
+                f"SKILL.md exceeds default context budget ({char_count:,} chars, limit: {char_budget:,}). "
+                f"This skill may not appear in the slash command menu. "
+                f"Consider reducing file size or set SLASH_COMMAND_TOOL_CHAR_BUDGET={char_count} to increase limit."
+            ))
+    except Exception as e:
+        issues.append(ValidationIssue(
+            Severity.WARNING, file_path, "character-budget",
+            f"Could not read file to check character budget: {e}"
+        ))
+
+    return issues
+
+
 def validate_plugin_json(plugin_json_path: Path, repo_root: Path) -> list[ValidationIssue]:
     """
     Validate plugin.json schema.
@@ -640,6 +675,9 @@ def validate_skill(
 
     # Validate body
     result.issues.extend(validate_body(body_line_count, rel_path))
+
+    # Validate character budget (Claude Code context limit)
+    result.issues.extend(validate_character_budget(skill_md_path, rel_path))
 
     # Validate plugin.json
     plugin_json_path = repo_root / "plugins" / plugin_name / ".claude-plugin" / "plugin.json"
