@@ -9,7 +9,7 @@
   [![GitHub Stars](https://img.shields.io/github/stars/tsilva/claude-skills?style=flat)](https://github.com/tsilva/claude-skills/stargazers)
   [![OpenRouter](https://img.shields.io/badge/OpenRouter-Powered-6366f1?style=flat)](https://openrouter.ai)
 
-  **Extend Claude Code with 300+ AI models, auto-generated READMEs, custom logos, and security auditing**
+  **🔌 Supercharge Claude Code with 300+ AI models, auto-generated READMEs, custom logos, and security auditing**
 
   [Documentation](CLAUDE.md) · [Skills Marketplace](#installation)
 </div>
@@ -18,20 +18,21 @@
 
 ## Why Claude Skills?
 
-- **300+ AI models at your fingertips** - Call GPT-5, Gemini, Llama, or any OpenRouter model directly from Claude Code
-- **Professional READMEs in seconds** - Auto-generate documentation following GitHub best practices
-- **Custom logos on demand** - Create minimalist repo logos with AI image generation
-- **Security auditing built-in** - Automatically identify and clean up dangerous or redundant permissions
-- **Plug and play** - Install only what you need, each skill works independently
+- **🤖 300+ AI models at your fingertips** - Call GPT-5, Gemini, Llama, or any OpenRouter model directly from Claude Code
+- **📝 Professional READMEs in seconds** - Auto-generate documentation following GitHub best practices
+- **🎨 Custom logos on demand** - Create minimalist repo logos with AI image generation
+- **🔐 Security auditing built-in** - Automatically identify and clean up dangerous or redundant permissions
+- **⚡ Plug and play** - Install only what you need, each skill works independently
 
 ## Available Skills
 
 | Skill | Description | Version | Slash Command |
 |-------|-------------|---------|---------------|
 | [OpenRouter](#openrouter) | Access 300+ AI models for text completion and image generation | 1.1.1 | `/openrouter` |
-| [README Generator](#readme-generator) | Create cutting-edge README files with badges and visual hierarchy | 1.0.11 | `/readme-generator` |
-| [Repo Logo Generator](#repo-logo-generator) | Generate logos with transparent backgrounds via chromakey | 3.2.0 | `/repo-logo-generator` |
-| [Settings Cleaner](#settings-cleaner) | Audit and optimize Claude Code permission whitelists | 1.0.7 | `/settings-cleaner` |
+| [README Generator](#readme-generator) | Create cutting-edge README files with badges and visual hierarchy | 1.1.1 | `/readme-generator` |
+| [Repo Logo Generator](#repo-logo-generator) | Generate logos with native transparent backgrounds | 3.3.0 | `/repo-logo-generator` |
+| [Settings Optimizer](#claude-settings-optimizer) | Audit and optimize Claude Code permission whitelists | 1.0.0 | `/claude-settings-optimizer` |
+| [Repo Name Generator](#repo-name-generator) | Generate creative, memorable repository names | 1.0.0 | `/repo-name-generator` |
 
 ## Installation
 
