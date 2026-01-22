@@ -371,9 +371,9 @@ def validate_character_budget(
     Validate that skill file size is within Claude Code's context budget.
 
     Rules:
-    - Warning if SKILL.md exceeds char_budget characters (default: 15,000)
-    - Claude Code loads skill metadata into context; large skills may be excluded
-    - Users can increase budget with SLASH_COMMAND_TOOL_CHAR_BUDGET env var
+    - Error if SKILL.md exceeds char_budget characters (default: 15,000)
+    - Claude Code loads skill metadata into context; large skills will be excluded
+    - This is a hard constraint - skills must be compressed to fit
     """
     issues = []
 
@@ -383,14 +383,13 @@ def validate_character_budget(
 
         if char_count > char_budget:
             issues.append(ValidationIssue(
-                Severity.WARNING, file_path, "character-budget",
-                f"SKILL.md exceeds default context budget ({char_count:,} chars, limit: {char_budget:,}). "
-                f"This skill may not appear in the slash command menu. "
-                f"Consider reducing file size or set SLASH_COMMAND_TOOL_CHAR_BUDGET={char_count} to increase limit."
+                Severity.ERROR, file_path, "character-budget",
+                f"SKILL.md exceeds context budget ({char_count:,} chars, limit: {char_budget:,}). "
+                f"Skill must be compressed to fit within budget. See CLAUDE.md for compression guidelines."
             ))
     except Exception as e:
         issues.append(ValidationIssue(
-            Severity.WARNING, file_path, "character-budget",
+            Severity.ERROR, file_path, "character-budget",
             f"Could not read file to check character budget: {e}"
         ))
 

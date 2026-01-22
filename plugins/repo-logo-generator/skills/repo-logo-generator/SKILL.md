@@ -7,7 +7,7 @@ argument-hint: "[style-preference]"
 disable-model-invocation: false
 user-invocable: true
 metadata:
-  version: "3.2.0"
+  version: "3.3.0"
 ---
 
 # Repo Logo Generator
@@ -104,21 +104,9 @@ Follow these steps exactly. Do not skip steps or improvise.
 
 ## Sandbox Compatibility
 
-⚠️ **macOS Limitation**: On macOS, `uv run` may require `dangerouslyDisableSandbox: true` because UV accesses system configuration APIs (`SystemConfiguration.framework`) to detect proxy settings. This is a known UV limitation on macOS systems.
+On macOS, `uv run` may require `dangerouslyDisableSandbox: true` (UV accesses system APIs). Claude will retry with sandbox disabled if needed.
 
-**Behavior:**
-- On first execution, Claude may attempt with sandbox enabled
-- If it fails with system-configuration errors, Claude will retry with sandbox disabled
-- This is expected behavior and does not indicate a security issue
-
-**Alternative (for restricted environments):**
-If sandbox restrictions are problematic, you can pre-install dependencies:
-```bash
-python3 -m pip install requests pillow
-python3 /absolute/path/to/generate_logo.py "prompt" --output logo.png
-```
-
-However, we recommend the standard UV approach for portability and zero-setup benefits.
+**Alternative:** Pre-install dependencies with `pip install requests pillow` and use `python3` directly.
 
 ## Prompt Template (MANDATORY - DO NOT MODIFY FORMAT)
 
@@ -234,50 +222,27 @@ Read JSON if exists, extract `logo` object. Project overrides user overrides def
 }
 ```
 
-## How It Works: Chromakey Transparency
+## Chromakey Transparency
 
-**Professional-quality workflow:**
-1. **Gemini generates the logo**: Uses `google/gemini-3-pro-image-preview` with green (#00FF00) background
-2. **PIL applies chromakey**: Professional algorithm calculates proportional alpha for smooth edges
+**Workflow:** Gemini generates logo with green (#00FF00) background → PIL converts to transparent with smooth edges.
 
-This is the same technique used in film/TV green screen compositing, adapted for logo generation.
+**Why green?** Industry standard (film/TV green screen). White causes halo artifacts. Magenta conflicts with purple tones in pixel art.
 
-**Why Green (Not Magenta or White)?**
+**Flags:**
+- `--key-color "#FF00FF"` - Use magenta if design needs green
+- `--white-bg` - Legacy white background mode
 
-- **White background** has a fundamental problem: anti-aliased edges blend toward white, creating "halo" artifacts
-- **Magenta background** conflicts with purple/violet tones common in pixel art and colorful designs (LucasArts, SNES aesthetics)
-- **Green background** is industry standard because green is rarely used in character art, logos, and icons
+## PNG Compression
 
-Chromakey solves edge artifacts:
-- **Distinct hue detection**: Green has a specific hue (120°), easily distinguished from most design colors
-- **Proportional alpha**: Blended pixels get partial transparency, creating smooth edges
-- **Preserves all colors**: Purple, magenta, pink, and light colors in designs are unaffected
+Logos are automatically compressed using **pngquant** (60-80% reduction, preserves alpha quality).
 
-**Benefits:**
-- ✅ **Smooth edges** - No halo artifacts around anti-aliased pixels
-- ✅ **Professional quality** - Industry-standard compositing technique
-- ✅ **Works with purple/magenta designs** - Common in pixel art and colorful styles
-- ✅ **Single API call** - Fast and cost-effective
-- ✅ **Deterministic** - Consistent, reproducible results
+**Install:** `brew install pngquant` (macOS) or `apt install pngquant` (Linux)
 
-**Compatibility:**
-- ✅ Multi-colored designs (just avoid green in the icon)
-- ✅ Pixel art, vector, and complex styles
-- ✅ Logos with or without text
-- ✅ Minimalist or detailed designs
-- ✅ Purple/magenta designs (LucasArts, SNES aesthetics)
+**Flags:**
+- `--no-compress` - Skip compression
+- `--compress-quality 90` - Adjust quality (1-100, default: 80)
 
-**Alternative Key Colors:**
-If your design requires green tones, you can use magenta chromakey instead:
-```bash
-uv run --with requests --with pillow "$LOGO_SCRIPT" "prompt" --output logo.png --key-color "#FF00FF"
-```
-
-**Legacy Mode:**
-If you need the old white background approach, use the `--white-bg` flag:
-```bash
-uv run --with requests --with pillow "$LOGO_SCRIPT" "prompt" --output logo.png --white-bg
-```
+If pngquant not installed, compression is skipped with a warning.
 
 ## Technical Requirements
 
@@ -289,47 +254,17 @@ Logos must meet these criteria:
 
 ## Usage
 
-Use the generation script with Gemini + chromakey for transparent logos:
-
 ```bash
-# Resolve script path (see Path Resolution section above)
-LATEST_VERSION=$(ls -1 ~/.claude/plugins/cache/claude-skills/repo-logo-generator 2>/dev/null | sort -V | tail -n 1)
-LOGO_SCRIPT="$HOME/.claude/plugins/cache/claude-skills/repo-logo-generator/$LATEST_VERSION/skills/repo-logo-generator/scripts/generate_logo.py"
+# Basic usage (see Path Resolution for $LOGO_SCRIPT)
+uv run --with requests --with pillow "$LOGO_SCRIPT" "prompt" --output logo.png
 
-# Generate logo with chromakey transparency (default)
-uv run --with requests --with pillow \
-  "$LOGO_SCRIPT" \
-  "Your logo prompt here" \
-  --output logo.png
-
-# Keep original image before transparency conversion
-uv run --with requests --with pillow \
-  "$LOGO_SCRIPT" \
-  "Your logo prompt here" \
-  --output logo.png \
-  --keep-original
-
-# Adjust chromakey tolerance (default 70, higher = more aggressive)
-uv run --with requests --with pillow \
-  "$LOGO_SCRIPT" \
-  "Your logo prompt here" \
-  --output logo.png \
-  --tolerance 80
-
-# Use custom key color (default: green #00FF00)
-# Use magenta if your design needs green tones
-uv run --with requests --with pillow \
-  "$LOGO_SCRIPT" \
-  "Your logo prompt here" \
-  --output logo.png \
-  --key-color "#FF00FF"
-
-# Legacy mode: Use white background instead of chromakey
-uv run --with requests --with pillow \
-  "$LOGO_SCRIPT" \
-  "Your logo prompt here" \
-  --output logo.png \
-  --white-bg
+# Optional flags:
+#   --keep-original          Save original before transparency
+#   --tolerance 80           Chromakey tolerance (default: 70)
+#   --key-color "#FF00FF"    Use magenta instead of green
+#   --white-bg               Legacy white background mode
+#   --no-compress            Skip PNG compression
+#   --compress-quality 90    Compression quality (default: 80)
 ```
 
-**Note on Sandbox Mode**: When Claude runs these commands, it may need to disable sandbox due to `uv` accessing macOS system configuration APIs (see Sandbox Compatibility section above).
+**Note:** On macOS, may require `dangerouslyDisableSandbox: true` due to UV accessing system APIs.

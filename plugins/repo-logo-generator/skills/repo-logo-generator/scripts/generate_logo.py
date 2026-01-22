@@ -213,6 +213,56 @@ def chromakey_to_transparent(image_bytes: bytes, key_color: tuple = (0, 255, 0),
     return img
 
 
+def compress_png(image_path: Path, quality: int = 80) -> tuple:
+    """Compress PNG using pngquant if available.
+
+    pngquant provides 60-80% compression with excellent alpha handling
+    via premultiplied color space - the same technique used in professional
+    image editing software.
+
+    Args:
+        image_path: Path to the PNG file to compress (modified in-place)
+        quality: Quality setting 1-100 (default: 80)
+
+    Returns:
+        Tuple of (original_size, compressed_size) in bytes
+    """
+    import shutil
+    import subprocess
+
+    original_size = image_path.stat().st_size
+
+    # Check for pngquant
+    if not shutil.which("pngquant"):
+        print("  pngquant not found, skipping compression", file=sys.stderr)
+        print("  Install: brew install pngquant (macOS) or apt install pngquant (Linux)", file=sys.stderr)
+        return original_size, original_size
+
+    # Run pngquant in-place
+    # Quality range: min-max, using quality-20 as min for flexibility
+    quality_min = max(0, quality - 20)
+    result = subprocess.run([
+        "pngquant",
+        "--quality", f"{quality_min}-{quality}",
+        "--speed", "1",      # Best compression (slowest)
+        "--strip",           # Remove metadata
+        "--force",           # Overwrite output
+        "--output", str(image_path),
+        str(image_path)
+    ], capture_output=True)
+
+    if result.returncode != 0:
+        # pngquant returns 99 if quality can't be achieved, which is OK
+        if result.returncode != 99:
+            stderr = result.stderr.decode().strip()
+            if stderr:
+                print(f"  pngquant warning: {stderr}", file=sys.stderr)
+        return original_size, original_size
+
+    compressed_size = image_path.stat().st_size
+    return original_size, compressed_size
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Logo generation with Gemini + programmatic transparency"
@@ -233,6 +283,14 @@ def main():
                         help="Chromakey color in hex (default: #00FF00 green)")
     parser.add_argument("--white-bg", action="store_true",
                         help="Use legacy white background approach instead of chromakey")
+
+    # Compression options
+    parser.add_argument("--compress", action="store_true", default=True,
+                        help="Compress output PNG using pngquant (default: enabled)")
+    parser.add_argument("--no-compress", dest="compress", action="store_false",
+                        help="Skip PNG compression")
+    parser.add_argument("--compress-quality", type=int, default=80,
+                        help="pngquant quality 1-100 (default: 80)")
 
     args = parser.parse_args()
 
@@ -315,6 +373,14 @@ def main():
         # Save final output
         output_path.parent.mkdir(parents=True, exist_ok=True)
         transparent_img.save(output_path, format='PNG')
+
+        # Compress if enabled
+        if args.compress:
+            print("Compressing PNG...", file=sys.stderr)
+            orig_size, comp_size = compress_png(output_path, args.compress_quality)
+            if orig_size != comp_size:
+                reduction = (1 - comp_size / orig_size) * 100
+                print(f"✓ Compressed: {orig_size:,}B → {comp_size:,}B ({reduction:.1f}% reduction)", file=sys.stderr)
 
         print(f"✓ Saved logo: {output_path}", file=sys.stderr)
         print(f"\nSuccess! Transparent logo created at: {output_path}")

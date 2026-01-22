@@ -186,7 +186,12 @@ Add to `.claude/settings.local.json`:
 python scripts/validate_skills.py
 ```
 
-This validates against the [Agent Skills specification](https://agentskills.io/specification) and repository rules. Fix any errors before committing.
+This validates against the [Agent Skills specification](https://agentskills.io/specification) and repository rules.
+
+**Validation is a hard constraint.** If validation fails:
+1. **Fix all errors** before committing - skills with errors will not work correctly
+2. **Character budget errors** require compressing the SKILL.md file (see **Skill Compression Guidelines** below)
+3. Re-run validation until it passes with 0 errors
 
 **Important:** After modifying any SKILL.md file, Claude must bump the version. See the **Version Management** section below for the workflow.
 
@@ -310,6 +315,66 @@ Test skills with all models you plan to use:
 - **Haiku**: Does the skill provide enough guidance?
 - **Sonnet**: Is the skill clear and efficient?
 - **Opus**: Does the skill avoid over-explaining?
+
+### Skill Compression Guidelines
+
+SKILL.md files must fit within the **15,000 character budget**. This is a hard constraint enforced by validation. When a skill exceeds this limit, it must be compressed.
+
+**Compression Philosophy:**
+- **Preserve functionality** - the skill must still work correctly after compression
+- **Preserve critical information** - keep all information Claude needs to execute the skill
+- **Remove redundancy** - eliminate duplicate explanations and verbose examples
+- **Trust Claude's intelligence** - Claude doesn't need extensive hand-holding
+
+**Compression Techniques (in order of preference):**
+
+1. **Remove verbose explanations** - replace paragraphs with concise bullet points
+2. **Consolidate examples** - one good example beats three mediocre ones
+3. **Eliminate redundancy** - if something is said twice, say it once
+4. **Simplify tables** - reduce columns, remove obvious information
+5. **Shorten code blocks** - show minimal working examples, not full implementations
+6. **Move reference material** - put detailed docs in `references/` subdirectory for on-demand loading
+7. **Remove obvious instructions** - Claude knows how to read files, run commands, etc.
+
+**What to preserve (never remove):**
+- Required frontmatter fields (name, description)
+- Core workflow steps and execution order
+- Critical constraints and edge cases
+- Error handling instructions
+- Configuration parameters and defaults
+- Security-relevant instructions
+
+**What to aggressively compress:**
+- Background explanations ("why" sections)
+- Multiple examples showing the same concept
+- Verbose installation instructions
+- Historical context or changelogs
+- Obvious best practices Claude already knows
+
+**Example compression:**
+
+Before (verbose):
+```markdown
+## How It Works
+
+This skill works by first analyzing the project structure to understand what type of project it is.
+Then it reads the configuration files to determine user preferences. After that, it generates
+the appropriate output based on the analysis. The workflow ensures that all steps are completed
+in the correct order to produce consistent results.
+```
+
+After (compressed):
+```markdown
+## Workflow
+1. Analyze project structure
+2. Read config files
+3. Generate output
+```
+
+**When compressing, always re-run validation:**
+```bash
+python scripts/validate_skills.py
+```
 
 ## Dependency Management Best Practices
 
