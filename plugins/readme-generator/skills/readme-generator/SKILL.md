@@ -5,7 +5,7 @@ argument-hint: "[project-path]"
 disable-model-invocation: false
 user-invocable: true
 metadata:
-  version: "1.0.12"
+  version: "1.1.0"
 ---
 
 # README Generator
@@ -25,7 +25,7 @@ Every README follows this psychological progression:
 
 **The goal: Time to first success under 10 minutes.**
 
-The first 5-10 lines visible without scrolling determine whether users stay or leave. Research on 14,901 repositories found that READMEs containing project name, usage information, installation instructions, code snippets, and images correlate significantly with higher star counts.
+The first 5-10 lines visible without scrolling determine whether users stay or leave.
 
 ## Logo Generation (Mandatory)
 
@@ -118,6 +118,12 @@ Good taglines lead with benefits, not features:
 - ❌ "A Python library for doing Y" (too generic)
 - ❌ "Version 2.0 of the Z project" (self-focused)
 
+**Meme-worthy patterns** (use judiciously):
+- "X, but actually good" - sets expectations
+- "The last X you'll ever need" - confidence
+- "X without the Y" - removes pain points
+- "It just works" - simplicity promise
+
 ### GIF Demo Placement
 
 For CLI tools, place an animated GIF demo **immediately after the tagline**. This is the single most distinctive pattern across successful CLI projects (thefuck, lazygit, fzf, bat).
@@ -205,11 +211,34 @@ graph LR
 - Maximum 3-5 lines per paragraph
 - One concept per paragraph
 - 80-character line width for readability
-- Headers with emojis (📚 🚀 ⚙️) improve navigation (use sparingly)
+
+### Emoji Strategy
+
+Strategic emojis boost engagement:
+
+| Location | Examples | Purpose |
+|----------|----------|---------|
+| Section headers | 🚀 Quick Start, ⚙️ Config, 📦 Install | Visual navigation |
+| Feature bullets | ✨ New, ⚡ Fast, 🔒 Secure | Scannable benefits |
+| Status indicators | ✅ Done, ⏳ WIP, ❌ Deprecated | Quick comprehension |
+| CTAs | ⭐ Star us!, 🤝 Contribute | Engagement boost |
+
+**Rules**: 1-2 per section max. Never in code blocks. Consistent style throughout.
 
 ### Anti-Pattern
 
 Focus on user benefits, not project history or developer achievements. The README is for users, not a changelog.
+
+## Engagement Boosters
+
+### Humor That Works
+
+Subtle, inclusive humor increases engagement:
+- **Self-aware**: "Yes, another X. But hear us out..."
+- **Relatable pain**: "We got tired of Y, so we built this"
+- **Easter eggs**: Hidden features for curious readers
+
+Avoid: Dated memes, inside jokes, anything requiring context.
 
 ## README by Project Type
 
@@ -401,10 +430,11 @@ Place prominently after hero section with 6-12 company logos:
 
 ### Star CTA
 
-Tasteful star call-to-action:
-```markdown
-If this helps you, please ⭐ star the repo!
-```
+Engaging call-to-action patterns:
+- `⭐ Star if this saved you hours of debugging!`
+- `🌟 If this helped, a star would make our day!`
+
+**Rules**: One CTA max. Humor optional but never cringe. Self-deprecation > bragging.
 
 ### Community Links
 
@@ -437,6 +467,7 @@ Avoid these mistakes:
 | Redundant information | Repeating title (already in URL) |
 | Inconsistent formatting | Mixed badge styles, varying headers |
 | Self-focused writing | Developer achievements over user benefits |
+| Emoji overload 🎉🚀✨💯🔥 | Visual noise, unprofessional |
 
 ## Workflow
 
