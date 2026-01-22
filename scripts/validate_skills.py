@@ -263,11 +263,6 @@ def validate_name(
             Severity.ERROR, file_path, "name",
             "'name' cannot contain 'anthropic'"
         ))
-    if 'claude' in name_lower:
-        issues.append(ValidationIssue(
-            Severity.ERROR, file_path, "name",
-            "'name' cannot contain 'claude'"
-        ))
 
     return issues
 

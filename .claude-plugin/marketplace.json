@@ -28,6 +28,12 @@
       "source": "./plugins/settings-cleaner",
       "description": "Analyzes and cleans up Claude Code permission whitelists by identifying overly specific approvals, dangerous patterns, and redundant entries.",
       "version": "1.0.7"
+    },
+    {
+      "name": "claude-settings-optimizer",
+      "source": "./plugins/claude-settings-optimizer",
+      "description": "Optimizes Claude Code settings by analyzing permission whitelists, detecting dangerous patterns, identifying redundancies, and migrating WebFetch domains to sandbox network allowlists.",
+      "version": "1.0.0"
     }
   ]
 }
