@@ -5,7 +5,7 @@ argument-hint: "[project-path]"
 disable-model-invocation: false
 user-invocable: true
 metadata:
-  version: "1.1.0"
+  version: "1.1.1"
 ---
 
 # README Generator
@@ -105,24 +105,24 @@ Do not "prettify" or transform the repo name. Use it verbatim as the H1 title.
 |---------|---------------|
 | Logo | Width = half actual pixels (for retina), centered |
 | Badges | 3-6 maximum, shields.io for consistency |
-| Tagline | One sentence answering "What and why?" |
+| Tagline | One sentence with emoji(s), max 350 chars (fits GitHub "About" field) |
 | Quick links | Docs, demo, community (if available) |
 
 ### Tagline Patterns That Work
 
+**Rules:**
+- **Must include emoji(s)** - 1-3 relevant emojis that reinforce the message
+- **Max 350 characters** - fits GitHub's "About → Description" field
+- **Ideal length: 80-150 chars** - punchy and scannable
+
 Good taglines lead with benefits, not features:
 
-- ✅ "Magnificent app which corrects your previous console command" (thefuck)
-- ✅ "High-performance, easy to learn, fast to code, ready for production" (FastAPI)
-- ✅ "A blazing fast CLI for X"
-- ❌ "A Python library for doing Y" (too generic)
-- ❌ "Version 2.0 of the Z project" (self-focused)
-
-**Meme-worthy patterns** (use judiciously):
-- "X, but actually good" - sets expectations
-- "The last X you'll ever need" - confidence
-- "X without the Y" - removes pain points
-- "It just works" - simplicity promise
+- ✅ "🔧 Magnificent app which corrects your previous console command"
+- ✅ "⚡ High-performance, easy to learn, fast to code, ready for production"
+- ✅ "🚀 A blazing fast CLI for X"
+- ✅ "🛠️ Build, test, and deploy with zero config"
+- ❌ "A Python library for doing Y" (no emoji, too generic)
+- ❌ "Version 2.0 of the Z project" (no emoji, self-focused)
 
 ### GIF Demo Placement
 
