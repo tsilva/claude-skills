@@ -34,6 +34,12 @@
       "source": "./plugins/claude-settings-optimizer",
       "description": "Optimizes Claude Code settings by analyzing permission whitelists, detecting dangerous patterns, identifying redundancies, and migrating WebFetch domains to sandbox network allowlists.",
       "version": "1.0.0"
+    },
+    {
+      "name": "repo-name-generator",
+      "source": "./plugins/repo-name-generator",
+      "description": "Generate creative, memorable repository names optimized for virality.",
+      "version": "1.0.0"
     }
   ]
 }
