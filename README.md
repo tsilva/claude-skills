@@ -52,6 +52,7 @@
 ```bash
 git clone https://github.com/tsilva/claude-skills.git
 cd claude-skills
+git config core.hooksPath hooks  # Enable pre-commit version validation
 ```
 
 ## Quick Start

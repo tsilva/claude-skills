@@ -1,11 +1,11 @@
 ---
 name: repo-name-generator
-description: Generate creative, memorable repository names optimized for virality. Analyzes project content to suggest names that are catchy, searchable, and shareable. Use when asked to "name this repo", "suggest repo names", "what should I call this project", or "generate project name".
+description: Generates creative, memorable repository names optimized for virality. Analyzes project content to suggest names that are catchy, searchable, and shareable. Use when asked to "name this repo", "suggest repo names", "what should I call this project", or "generate project name".
 license: MIT
 compatibility: Any environment
 metadata:
   author: tsilva
-  version: "1.0.1"
+  version: "1.1.0"
 argument-hint: "[project-path]"
 disable-model-invocation: false
 user-invocable: true
@@ -24,7 +24,11 @@ Generate 6 creative, memorable repository names optimized for virality.
 
 ## Workflow
 
-### 1. Project Analysis
+1. **Project Analysis** - Examine available files to understand the project
+2. **Apply Virality Criteria** - Score names against viral factors
+3. **Generate Diverse Names** - Create names across different styles
+
+### Project Analysis
 
 Examine available files to understand the project:
 
@@ -35,7 +39,7 @@ Examine available files to understand the project:
 | Main source files | Core functionality |
 | Current repo name | Context for renaming |
 
-### 2. Apply Virality Criteria
+### Virality Criteria
 
 | Factor | Description | Examples |
 |--------|-------------|----------|
@@ -45,7 +49,7 @@ Examine available files to understand the project:
 | **Descriptive** | Hints at purpose | `typescript`, `autoprefixer` |
 | **Clever** | Wordplay, metaphors | `yarn`, `brew`, `nest` |
 
-### 3. Generate Names Across Styles
+### Name Styles
 
 Generate at least one name per style:
 

@@ -1,7 +1,7 @@
 {
   "name": "repo-name-generator",
-  "description": "Generate creative, memorable repository names optimized for virality.",
-  "version": "1.0.1",
+  "description": "Generates creative, memorable repository names optimized for virality.",
+  "version": "1.1.0",
   "author": {
     "name": "tsilva"
   }

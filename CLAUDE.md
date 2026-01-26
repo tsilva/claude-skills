@@ -51,7 +51,7 @@ Creates cutting-edge README files with modern design patterns and optional AI-ge
 
 ## Skill Authoring
 
-For creating or modifying skills, use `/claude-skill-author` which contains the authoritative specification, best practices, validation, version management, and workflows.
+For creating or modifying skills, use `/skill-author` which contains the authoritative specification, best practices, validation, version management, and workflows.
 
 ## Dependency Management Best Practices
 

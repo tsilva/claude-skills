@@ -8,26 +8,26 @@
     {
       "name": "readme-generator",
       "source": "./plugins/readme-generator",
-      "description": "Create cutting-edge README files with modern design, badges, and optional AI-generated logos.",
-      "version": "1.1.4"
+      "description": "Creates cutting-edge README files with modern design, badges, and optional AI-generated logos.",
+      "version": "1.2.0"
     },
     {
       "name": "repo-logo-generator",
       "source": "./plugins/repo-logo-generator",
-      "description": "Generate professional logos with native transparent backgrounds. Requires mcp-openrouter MCP server. Use when asked to 'generate a logo' or 'create repo logo'.",
-      "version": "4.4.0"
+      "description": "Generates professional logos with native transparent backgrounds. Requires mcp-openrouter MCP server. Use when asked to 'generate a logo' or 'create repo logo'.",
+      "version": "4.5.0"
     },
     {
-      "name": "claude-settings-optimizer",
-      "source": "./plugins/claude-settings-optimizer",
+      "name": "settings-optimizer",
+      "source": "./plugins/settings-optimizer",
       "description": "Optimizes Claude Code settings by analyzing permission whitelists, detecting dangerous patterns, identifying redundancies, and migrating WebFetch domains to sandbox network allowlists.",
-      "version": "1.0.1"
+      "version": "1.1.0"
     },
     {
       "name": "repo-name-generator",
       "source": "./plugins/repo-name-generator",
-      "description": "Generate creative, memorable repository names optimized for virality.",
-      "version": "1.0.1"
+      "description": "Generates creative, memorable repository names optimized for virality.",
+      "version": "1.1.0"
     },
     {
       "name": "mcp-server-creator",
@@ -36,10 +36,10 @@
       "version": "1.0.0"
     },
     {
-      "name": "claude-skill-author",
-      "source": "./plugins/claude-skill-author",
-      "description": "Guide for creating Claude Code agent skills - project-level, personal, and plugin-bundled marketplace skills.",
-      "version": "1.2.0"
+      "name": "skill-author",
+      "source": "./plugins/skill-author",
+      "description": "Guides creation and modification of Claude Code agent skills - project-level, personal, and plugin-bundled marketplace skills.",
+      "version": "1.3.0"
     }
   ]
 }

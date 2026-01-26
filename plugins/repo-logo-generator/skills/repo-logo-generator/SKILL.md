@@ -1,13 +1,13 @@
 ---
 name: repo-logo-generator
-description: Generate logos for GitHub repositories using mcp-openrouter with programmatic transparency conversion. Works with pixel art, vector designs, and complex multi-colored styles. Use when asked to "generate a logo", "create repo logo", or "make a project logo".
+description: Generates logos for GitHub repositories using mcp-openrouter with programmatic transparency conversion. Works with pixel art, vector designs, and complex multi-colored styles. Use when asked to "generate a logo", "create repo logo", or "make a project logo".
 license: MIT
 compatibility: requires mcp-openrouter and mcp-image-tools MCP servers
 argument-hint: "[style-preference]"
 disable-model-invocation: false
 user-invocable: true
 metadata:
-  version: "4.4.0"
+  version: "4.5.0"
 ---
 
 # Repo Logo Generator
