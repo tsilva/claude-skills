@@ -1,7 +1,7 @@
 {
   "name": "repo-logo-generator",
   "description": "Generates professional logos with native transparent backgrounds. Requires mcp-openrouter MCP server.",
-  "version": "4.5.0",
+  "version": "4.5.1",
   "author": {
     "name": "tsilva"
   }

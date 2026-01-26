@@ -7,7 +7,7 @@ argument-hint: "[style-preference]"
 disable-model-invocation: false
 user-invocable: true
 metadata:
-  version: "4.5.0"
+  version: "4.5.1"
 ---
 
 # Repo Logo Generator
@@ -22,10 +22,13 @@ Follow these steps exactly.
 
 ### Step 1: Load Configuration
 
-Read config files in order (merge: project > user > bundled):
-1. `./.claude/repo-logo-generator.json` (project config)
-2. `~/.claude/repo-logo-generator.json` (user config)
-3. `assets/default-config.json` (bundled defaults)
+Use the **Read tool** to check each config file in order. Merge settings (project overrides user overrides bundled):
+
+1. **Project config**: `{CWD}/.claude/repo-logo-generator.json`
+2. **User config**: `{HOME}/.claude/repo-logo-generator.json` (expand `~` to absolute path)
+3. **Bundled defaults**: `assets/default-config.json` (relative to skill directory)
+
+**Important**: Use absolute paths with the Read tool. Do NOT use Glob for these lookups - hidden directories (`.claude/`) and tilde paths require direct Read with expanded paths. If a config file doesn't exist, skip it and continue to the next.
 
 **Config Parameters:**
 
