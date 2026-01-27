@@ -7,7 +7,7 @@ argument-hint: "[style-preference]"
 disable-model-invocation: false
 user-invocable: true
 metadata:
-  version: "4.5.1"
+  version: "4.5.2"
 ---
 
 # Repo Logo Generator
@@ -48,7 +48,20 @@ Use the **Read tool** to check each config file in order. Merge settings (projec
 | `compress` | `true` | Enable PNG compression |
 | `compressQuality` | `80` | Compression quality |
 
-### Step 2: Gather Context (Always Runs)
+### Step 2: Resolve Output Path
+
+Resolve `config.outputPath` to an absolute path for use by all MCP tools:
+
+1. If `outputPath` contains `{PROJECT_NAME}`, substitute it first
+2. If the result is a relative path (doesn't start with `/`), prepend CWD
+3. Store as `resolvedOutputPath` (e.g., `/Users/name/my-project/logo.png`)
+
+**Example resolutions:**
+- `logo.png` → `{CWD}/logo.png`
+- `assets/logo.png` → `{CWD}/assets/logo.png`
+- `/absolute/path/logo.png` → `/absolute/path/logo.png`
+
+### Step 3: Gather Context (Always Runs)
 
 Gather these values for template variable substitution:
 
@@ -78,7 +91,7 @@ Gather these values for template variable substitution:
 
 Set `visualMetaphor: "none"` in config to omit the metaphor entirely.
 
-### Step 3: Build Prompt
+### Step 4: Build Prompt
 
 **If `config.promptTemplate` is set:** Use it as the prompt template.
 
@@ -94,30 +107,31 @@ Pure {KEY_COLOR} background only. Do not use similar tones in the design.
 1. Substitute ALL template variables in the prompt
 2. Append `config.additionalInstructions` if non-empty
 
-### Step 4: Generate Image
+### Step 5: Generate Image
 
 Use `mcp__openrouter__generate_image`:
 - `model`: config.model
-- `prompt`: constructed prompt from Step 3
-- `output_path`: `/tmp/claude/logo_raw.png`
+- `prompt`: constructed prompt from Step 4
+- `output_path`: `resolvedOutputPath` (absolute path from Step 2)
 - `aspect_ratio`: `"1:1"`
 - `size`: config.size
 
-### Step 5: Apply Chromakey Transparency
+### Step 6: Apply Chromakey Transparency
 
 Use `mcp__image-tools__chromakey_to_transparent`:
-- `input_path`: `/tmp/claude/logo_raw.png`
-- `output_path`: config.outputPath (with variable substitution)
+- `input_path`: `resolvedOutputPath`
+- `output_path`: `resolvedOutputPath` (overwrites in-place)
 - `key_color`: config.keyColor
 - `tolerance`: config.tolerance
 
-### Step 6: Compress (if enabled)
+### Step 7: Compress (if enabled)
 
 If `config.compress` is true, use `mcp__image-tools__compress_png`:
-- `input_path`: config.outputPath
+- `input_path`: `resolvedOutputPath`
+- `output_path`: `resolvedOutputPath` (overwrites in-place)
 - `quality`: config.compressQuality
 
-### Step 7: Verify Output
+### Step 8: Verify Output
 
 Confirm the output file exists and is a valid PNG with transparency.
 
@@ -182,3 +196,13 @@ Confirm the output file exists and is a valid PNG with transparency.
 - Avoid magenta tones when using `#FF00FF` keyColor
 - When `includeRepoName: false` (default), logos have no text for small-size clarity
 - Always complete the chromakey step for transparency
+
+## Tool Path Requirements
+
+All MCP tools require **absolute paths**. The `resolvedOutputPath` from Step 2 ensures compatibility:
+
+| Tool | Path Parameters |
+|------|-----------------|
+| `mcp__openrouter__generate_image` | `output_path`: absolute |
+| `mcp__image-tools__chromakey_to_transparent` | `input_path`, `output_path`: both absolute |
+| `mcp__image-tools__compress_png` | `input_path`, `output_path`: both absolute |

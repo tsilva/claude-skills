@@ -15,7 +15,7 @@
       "name": "repo-logo-generator",
       "source": "./plugins/repo-logo-generator",
       "description": "Generates professional logos with native transparent backgrounds. Requires mcp-openrouter MCP server. Use when asked to 'generate a logo' or 'create repo logo'.",
-      "version": "4.5.1"
+      "version": "4.5.2"
     },
     {
       "name": "settings-optimizer",
