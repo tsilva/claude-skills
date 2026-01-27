@@ -6,7 +6,7 @@ argument-hint: "[project|plugin] [skill-name]"
 user-invocable: true
 metadata:
   author: tsilva
-  version: "1.3.2"
+  version: "1.3.3"
 ---
 
 # Skill Author Guide
@@ -135,9 +135,37 @@ python plugins/skill-author/skills/skill-author/scripts/validate_skill.py plugin
 | `license` | Use `MIT` for this repo |
 | `compatibility` | Max 500 chars. Requirements (e.g., "python 3.8+") |
 | `metadata` | Key-value mapping (author, version) |
-| `argument-hint` | Shown in autocomplete (e.g., `[file-path]`) |
+| `argument-hint` | **Recommended for user-invocable skills.** Shown in autocomplete. |
 | `disable-model-invocation` | `true` = only manual `/name` invocation |
 | `user-invocable` | `false` = hide from `/` menu, Claude can still auto-trigger |
+
+### Argument Hints
+
+Add `argument-hint` to user-invocable skills to show expected arguments in the slash command autocomplete menu. This improves discoverability and UX.
+
+**Format patterns:**
+- `[required]` - Required argument
+- `[optional]` - Optional argument (brackets convey optionality)
+- `[a|b|c]` - Choice between options
+- `[operation] [target]` - Multiple arguments
+
+**Examples:**
+```yaml
+argument-hint: "[create|modify|validate|optimize] [path]"  # README author
+argument-hint: "[audit|fix|status] [repo-filter]"          # Repo maintain
+argument-hint: "[project|plugin] [skill-name]"             # Skill author
+argument-hint: "[server-name]"                             # MCP author
+argument-hint: "[style-preference]"                        # Logo author
+```
+
+**When to add:**
+- Skill accepts arguments via `$ARGUMENTS`
+- Skill has multiple operations or modes
+- Skill targets a specific file/path
+
+**When to skip:**
+- Skill takes no arguments
+- Skill is not user-invocable (`user-invocable: false`)
 
 ### Slash Commands
 
@@ -276,6 +304,7 @@ python plugins/skill-author/skills/skill-author/scripts/validate_skill.py /path/
 - TOC for reference files >100 lines
 - MCP tool qualified names (server:tool format)
 - Deeply nested references (references linking to other references)
+- Missing `argument-hint` for user-invocable skills
 
 ### Exit Codes
 

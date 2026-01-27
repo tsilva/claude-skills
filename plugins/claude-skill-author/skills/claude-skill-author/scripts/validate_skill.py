@@ -813,6 +813,38 @@ def suggest_no_deeply_nested_references(
     return issues
 
 
+def suggest_argument_hint(
+    frontmatter: dict[str, Any],
+    file_path: str
+) -> list[ValidationIssue]:
+    """
+    Suggest adding argument-hint for user-invocable skills that accept arguments.
+
+    Rules:
+    - User-invocable skills should have argument-hint for autocomplete UX
+    - Shows expected arguments in slash command menu (e.g., "[create|modify] [path]")
+    - Not needed if skill takes no arguments
+    """
+    issues = []
+
+    # Check if skill is user-invocable (default is true if not specified)
+    user_invocable = frontmatter.get('user-invocable', True)
+    if user_invocable == 'false':
+        user_invocable = False
+
+    # Check if argument-hint is already present
+    has_hint = 'argument-hint' in frontmatter
+
+    if user_invocable and not has_hint:
+        issues.append(ValidationIssue(
+            Severity.SUGGESTION, file_path, "argument-hint",
+            "Consider adding 'argument-hint' to show expected arguments in autocomplete "
+            "(e.g., argument-hint: \"[create|modify] [path]\")"
+        ))
+
+    return issues
+
+
 def validate_plugin_json(plugin_json_path: Path) -> list[ValidationIssue]:
     """
     Validate plugin.json schema.
@@ -1156,6 +1188,10 @@ def validate_skill(skill_path: Path, suggest: bool = False) -> ValidationResult:
         ))
         result.issues.extend(suggest_no_deeply_nested_references(
             skill_path,
+            rel_path
+        ))
+        result.issues.extend(suggest_argument_hint(
+            frontmatter,
             rel_path
         ))
 
