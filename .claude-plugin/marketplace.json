@@ -9,7 +9,7 @@
       "name": "readme-author",
       "source": "./plugins/readme-author",
       "description": "Create, modify, validate, and optimize README.md files following GitHub best practices.",
-      "version": "2.0.0"
+      "version": "2.0.1"
     },
     {
       "name": "repo-logo-generator",

@@ -8,7 +8,7 @@ disable-model-invocation: false
 user-invocable: true
 metadata:
   author: tsilva
-  version: "2.0.0"
+  version: "2.0.1"
 ---
 
 # README Author
@@ -205,14 +205,14 @@ Invoke the **repo-logo-generator** skill to generate a logo. That skill contains
 
 For crisp display on retina/high-DPI screens, set the HTML width to **half the actual image width**:
 
-1. Get the image dimensions:
-   ```bash
-   sips -g pixelWidth logo.png 2>/dev/null | grep pixelWidth | awk '{print $2}'
-   ```
+1. Get the image dimensions using `mcp__image-tools__get_image_metadata`:
+   - `image_path`: absolute path to the logo file
 
-2. Divide by 2 for the display width (e.g., 512px image → `width="256"`)
+2. Extract the width from the returned metadata
 
-3. Use the calculated width in the HTML img tag
+3. Divide by 2 for the display width (e.g., 1024px image → `width="512"`)
+
+4. Use the calculated width in the HTML img tag
 
 This ensures the logo renders at native resolution on 2x displays while maintaining appropriate size on standard displays.
 
