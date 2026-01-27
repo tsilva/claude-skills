@@ -3,9 +3,10 @@ name: skill-author
 description: Guides creation and modification of Claude Code agent skills. Covers project-level skills (.claude/skills/), personal skills (~/.claude/skills/), and plugin-bundled marketplace skills. Use when creating a skill, updating an existing skill, converting a project skill to a plugin, or when asked about skill authoring.
 license: MIT
 argument-hint: "[project|plugin] [skill-name]"
+user-invocable: true
 metadata:
   author: tsilva
-  version: "1.3.0"
+  version: "1.3.1"
 ---
 
 # Skill Author Guide

@@ -1,7 +1,7 @@
 {
   "name": "mcp-server-creator",
   "description": "Creates MCP servers using FastMCP with production-ready patterns. Use when asked to create an MCP server, build MCP tools, or integrate external APIs with Claude Code.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "tsilva"
   }

@@ -4,9 +4,10 @@ description: Optimizes Claude Code settings by analyzing permission whitelists, 
 license: MIT
 compatibility: python 3.8+
 argument-hint: "[analyze|clean|auto-fix]"
+user-invocable: true
 metadata:
   author: tsilva
-  version: "1.1.0"
+  version: "1.1.1"
 ---
 
 # Claude Settings Optimizer

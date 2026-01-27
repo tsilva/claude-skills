@@ -4,9 +4,10 @@ description: Creates MCP servers using FastMCP with production-ready patterns. U
 license: MIT
 compatibility: python 3.10+, requires uv
 argument-hint: "[server-name]"
+user-invocable: true
 metadata:
   author: tsilva
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # MCP Server Creator
