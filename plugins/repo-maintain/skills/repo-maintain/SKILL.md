@@ -5,7 +5,7 @@ argument-hint: "[audit|fix|status] [repo-filter]"
 license: MIT
 metadata:
   author: tsilva
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # Repo Maintain
@@ -104,8 +104,9 @@ Process repos in order. For each repo with failures:
    - If missing: create from `assets/gitignore-template.txt`
    - If incomplete: append missing patterns
 9. **Description sync**:
-   - Extract tagline from README (first non-header, non-badge line)
+   - Use `scripts/extract_tagline.py` for robust tagline extraction
    - Run: `gh repo edit --description "tagline"`
+   - Or bulk sync: `uv run scripts/sync_descriptions.py --repos-dir "$(pwd)"`
 10. **Python fixes**:
     - Generate pyproject.toml if missing
     - Fix errors shown by uv
@@ -149,6 +150,41 @@ Template at `assets/gitignore-template.txt` contains:
 - Build artifacts (__pycache__, node_modules, dist)
 - OS files (.DS_Store)
 - IDE files (.idea, .vscode)
+
+## Tagline Extraction
+
+The `scripts/extract_tagline.py` extracts README taglines for GitHub description sync:
+
+```bash
+uv run scripts/extract_tagline.py /path/to/README.md
+```
+
+Handles complex README structures:
+- YAML frontmatter (`---` blocks)
+- Centered divs with logos, titles, badges
+- Bold formatting (`**tagline**` → `tagline`)
+- Badge lines (`[![`, `![`)
+- Link-only lines
+- Emoji preservation
+- GitHub 350 char limit
+
+## Bulk Description Sync
+
+The `scripts/sync_descriptions.py` syncs descriptions for multiple repos:
+
+```bash
+# Preview changes (dry run)
+uv run scripts/sync_descriptions.py --repos-dir /path/to/repos --dry-run
+
+# Apply changes
+uv run scripts/sync_descriptions.py --repos-dir /path/to/repos
+
+# Filter by repo name
+uv run scripts/sync_descriptions.py --repos-dir /path/to/repos --filter "my-project"
+
+# JSON output
+uv run scripts/sync_descriptions.py --repos-dir /path/to/repos --json
+```
 
 ## PII Scanner
 

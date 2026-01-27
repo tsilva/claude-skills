@@ -19,10 +19,11 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-# Import PII scanner from same directory
+# Import modules from same directory
 SCRIPT_DIR = Path(__file__).parent
 sys.path.insert(0, str(SCRIPT_DIR))
 from pii_scanner import scan_repo as pii_scan_repo
+from extract_tagline import extract_tagline
 
 
 def check_dependencies() -> dict:
@@ -323,56 +324,29 @@ def check_description_synced(repo_path: Path) -> dict:
             "auto_fix": "gh repo edit --description",
         }
 
-    # Extract tagline from README (first non-header, non-badge line)
-    try:
-        content = readme_path.read_text(encoding="utf-8", errors="ignore")
-        lines = content.splitlines()
+    # Extract tagline from README using robust extraction
+    readme_tagline = extract_tagline(readme_path)
 
-        readme_tagline = ""
-        for line in lines:
-            line = line.strip()
-            # Skip headers, badges, images, empty lines
-            if not line:
-                continue
-            if line.startswith("#"):
-                continue
-            if line.startswith("![") or line.startswith("[!["):
-                continue
-            if line.startswith("<"):  # HTML tags
-                continue
-            # Found the tagline
-            readme_tagline = line
-            break
-
-        # Compare descriptions
-        if not readme_tagline:
-            return {
-                "check": "DESCRIPTION_SYNCED",
-                "passed": False,
-                "message": "Could not extract tagline from README",
-                "gh_description": gh_description,
-                "auto_fix": "add tagline to README",
-            }
-
-        # Simple comparison (could be smarter)
-        synced = gh_description.lower().strip() == readme_tagline.lower().strip()
-
-        return {
-            "check": "DESCRIPTION_SYNCED",
-            "passed": synced,
-            "message": "Description synced" if synced else "GitHub description differs from README tagline",
-            "gh_description": gh_description,
-            "readme_tagline": readme_tagline[:200],
-            "auto_fix": "gh repo edit --description",
-        }
-
-    except Exception as e:
+    if not readme_tagline:
         return {
             "check": "DESCRIPTION_SYNCED",
             "passed": False,
-            "message": f"Error reading README: {e}",
-            "auto_fix": "gh repo edit --description",
+            "message": "Could not extract tagline from README",
+            "gh_description": gh_description,
+            "auto_fix": "add tagline to README",
         }
+
+    # Compare descriptions (case-insensitive)
+    synced = gh_description.lower().strip() == readme_tagline.lower().strip()
+
+    return {
+        "check": "DESCRIPTION_SYNCED",
+        "passed": synced,
+        "message": "Description synced" if synced else "GitHub description differs from README tagline",
+        "gh_description": gh_description,
+        "readme_tagline": readme_tagline[:200],
+        "auto_fix": "gh repo edit --description",
+    }
 
 
 def check_pii_clean(repo_path: Path) -> dict:
