@@ -52,7 +52,7 @@ Create, modify, validate, and optimize README.md files following GitHub best pra
 **Features:**
 - Smart project analysis (auto-detects language, framework, package manager)
 - Modern README structure with centered hero, badges, and visual hierarchy
-- Logo generation integration with repo-logo-generator skill
+- Logo generation integration with logo-generator skill
 - Best practices for GitHub READMEs (accessibility, mobile-friendly, scannable)
 
 ## Skill Authoring

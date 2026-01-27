@@ -218,7 +218,7 @@ def validate_plugin(plugin_name: str) -> list[str]:
     if staged_version and committed_version:
         if not version_greater(staged_version, committed_version):
             errors.append(f"[{plugin_name}] Version not bumped: {committed_version} -> {staged_version} (new version must be greater)")
-            errors.append(f"  Run: python plugins/claude-skill-author/skills/claude-skill-author/scripts/bump-version.py {plugin_name} --type patch")
+            errors.append(f"  Run: python plugins/skill-author/skills/skill-author/scripts/bump-version.py {plugin_name} --type patch")
 
     return errors
 

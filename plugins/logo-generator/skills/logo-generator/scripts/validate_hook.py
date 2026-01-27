@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Internal validation hook for repo-logo-generator.
+Internal validation hook for logo-generator.
 
 Validates the bundled default-config.json against the expected schema.
 This ensures config changes don't break existing user workflows.
@@ -87,7 +87,7 @@ def validate_default_config(skill_path: Path) -> list[dict]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Internal validation hook for repo-logo-generator"
+        description="Internal validation hook for logo-generator"
     )
     parser.add_argument("skill_path", type=Path, help="Path to skill directory")
     parser.add_argument("--suggest", action="store_true", help="Include suggestions")

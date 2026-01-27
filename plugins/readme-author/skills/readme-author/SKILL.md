@@ -8,7 +8,7 @@ disable-model-invocation: false
 user-invocable: true
 metadata:
   author: tsilva
-  version: "2.0.1"
+  version: "2.0.2"
 ---
 
 # README Author
@@ -199,7 +199,7 @@ Look for `logo.png` at the repo root. If found, use it and skip to README genera
 
 ### Step 2: Generate Logo (if missing)
 
-Invoke the **repo-logo-generator** skill to generate a logo. That skill contains the prompt templates, visual metaphors, and technical requirements for logo generation.
+Invoke the **logo-generator** skill to generate a logo. That skill contains the prompt templates, visual metaphors, and technical requirements for logo generation.
 
 ### Step 3: Determine Logo Display Size
 
@@ -463,7 +463,7 @@ Avoid these mistakes:
 2. **Detect project type** - CLI, library, AI/ML, web app, API
 3. **Extract metadata** - name, description, version, author, license
 4. **Check for existing logo** - look for `logo.png` at repo root
-5. **Generate logo if missing** - use repo-logo-generator skill
+5. **Generate logo if missing** - use logo-generator skill
 6. **Calculate display width** - use half the actual image pixel width (for retina displays)
 7. **Generate README.md** - following Hook → Prove → Enable → Extend structure
 

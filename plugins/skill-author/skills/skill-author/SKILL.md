@@ -6,7 +6,7 @@ argument-hint: "[project|plugin] [skill-name]"
 user-invocable: true
 metadata:
   author: tsilva
-  version: "1.3.1"
+  version: "1.3.2"
 ---
 
 # Skill Author Guide
@@ -189,10 +189,10 @@ A skill should only know WHAT another skill does, not HOW.
 
 ```
 # CORRECT - Reference public interface
-"Invoke repo-logo-generator to generate a logo"
+"Invoke logo-generator to generate a logo"
 
 # WRONG - Reference internal implementation
-"Check ~/.claude/repo-logo-generator.json for config"
+"Check ~/.claude/logo-generator.json for config"
 ```
 
 Never:

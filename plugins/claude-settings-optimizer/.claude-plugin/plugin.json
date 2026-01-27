@@ -1,8 +1,0 @@
-{
-  "name": "claude-settings-optimizer",
-  "description": "Optimizes Claude Code settings by analyzing permission whitelists, detecting dangerous patterns, identifying redundancies, and migrating WebFetch domains to sandbox network allowlists.",
-  "version": "1.0.1",
-  "author": {
-    "name": "tsilva"
-  }
-}

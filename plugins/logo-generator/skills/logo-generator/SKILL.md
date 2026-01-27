@@ -1,20 +1,30 @@
 ---
-name: repo-logo-generator
-description: Generates logos for GitHub repositories using mcp-openrouter with programmatic transparency conversion. Works with pixel art, vector designs, and complex multi-colored styles. Use when asked to "generate a logo", "create repo logo", or "make a project logo".
+name: logo-generator
+description: Generates professional logos with programmatic transparency conversion. Works with pixel art, vector designs, and complex multi-colored styles. Use when asked to "generate a logo", "create logo", or "make a project logo".
 license: MIT
 compatibility: requires mcp-openrouter and mcp-image-tools MCP servers
 argument-hint: "[style-preference]"
 disable-model-invocation: false
 user-invocable: true
 metadata:
-  version: "4.6.0"
+  version: "5.0.0"
 ---
 
-# Repo Logo Generator
+# Logo Generator
 
 Generate professional logos with transparent backgrounds using:
 1. **mcp-openrouter** - generates logo with solid chromakey background
 2. **mcp-image-tools** - converts background to transparent with smooth edges
+
+## Context Detection
+
+Before generating, determine the context:
+
+1. **Check for git repository**: Look for `.git` directory or use git status
+2. **If in a repo**: Proceed with project analysis (README, package files, etc.)
+3. **If not in a repo**: Ask user what the logo is for (project name, purpose, style preferences)
+
+This allows the skill to work for any logo generation task while defaulting to repo-aware behavior when appropriate.
 
 ## Execution Workflow
 
@@ -24,8 +34,8 @@ Follow these steps exactly.
 
 Use the **Read tool** to check each config file in order. Merge settings (project overrides user overrides bundled):
 
-1. **Project config**: `{CWD}/.claude/repo-logo-generator.json`
-2. **User config**: `{HOME}/.claude/repo-logo-generator.json` (expand `~` to absolute path)
+1. **Project config**: `{CWD}/.claude/logo-generator.json`
+2. **User config**: `{HOME}/.claude/logo-generator.json` (expand `~` to absolute path)
 3. **Bundled defaults**: `assets/default-config.json` (relative to skill directory)
 
 **Important**: Use absolute paths with the Read tool. Do NOT use Glob for these lookups - hidden directories (`.claude/`) and tilde paths require direct Read with expanded paths. If a config file doesn't exist, skip it and continue to the next.

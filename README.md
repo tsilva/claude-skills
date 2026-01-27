@@ -29,9 +29,9 @@
 | Skill | Description | Version | Slash Command |
 |-------|-------------|---------|---------------|
 | [README Generator](#readme-generator) | Create cutting-edge README files with badges and visual hierarchy | 1.1.1 | `/readme-generator` |
-| [Repo Logo Generator](#repo-logo-generator) | Generate logos with native transparent backgrounds (requires mcp-openrouter) | 4.0.0 | `/repo-logo-generator` |
+| [Repo Logo Generator](#logo-generator) | Generate logos with native transparent backgrounds (requires mcp-openrouter) | 4.0.0 | `/logo-generator` |
 | [Settings Optimizer](#claude-settings-optimizer) | Audit and optimize Claude Code permission whitelists | 1.0.0 | `/claude-settings-optimizer` |
-| [Repo Name Generator](#repo-name-generator) | Generate creative, memorable repository names | 1.0.0 | `/repo-name-generator` |
+| [Repo Name Generator](#name-generator) | Generate creative, memorable repository names | 1.0.0 | `/name-generator` |
 
 ## Installation
 
@@ -43,7 +43,7 @@
 
 # Or install individual skills directly
 /skills-discovery readme-generator
-/skills-discovery repo-logo-generator
+/skills-discovery logo-generator
 /skills-discovery claude-settings-optimizer
 ```
 
@@ -64,8 +64,8 @@ All skills are available as slash commands in Claude Code. Simply type `/` to se
 ```bash
 /readme-generator              # Generate a README for the current project
 /readme-generator ./my-project # Generate README for a specific path
-/repo-logo-generator           # Generate a logo for your repository
-/repo-logo-generator minimalist # Generate with a specific style preference
+/logo-generator           # Generate a logo for your repository
+/logo-generator minimalist # Generate with a specific style preference
 /settings-cleaner analyze      # Analyze permission whitelists
 /settings-cleaner clean        # Interactive cleanup with confirmations
 /settings-cleaner auto-fix     # Auto-remove redundant permissions
@@ -73,7 +73,7 @@ All skills are available as slash commands in Claude Code. Simply type `/` to se
 
 You can also ask Claude to use these skills naturally:
 - "Create a README for this project" → triggers `/readme-generator`
-- "Generate a logo for my repo" → triggers `/repo-logo-generator`
+- "Generate a logo for my repo" → triggers `/logo-generator`
 - "Clean up my settings" → triggers `/settings-cleaner`
 
 ### Logo Generation
@@ -83,7 +83,7 @@ Logo generation uses the [mcp-openrouter](https://github.com/tsilva/mcp-openrout
 1. **Generate image** via `mcp__openrouter__generate_image` with green background
 2. **Apply chromakey** via the bundled script to convert green to transparent
 
-Simply use `/repo-logo-generator` and Claude handles the workflow automatically.
+Simply use `/logo-generator` and Claude handles the workflow automatically.
 
 ---
 
@@ -110,7 +110,7 @@ Create READMEs that hook readers in 5 seconds, prove value in 30 seconds, and en
 
 - **Smart analysis** - Auto-detects project type, language, framework
 - **Modern design** - Centered hero, badge collections, visual hierarchy
-- **Logo integration** - Works with repo-logo-generator skill
+- **Logo integration** - Works with logo-generator skill
 - **Best practices** - Follows GitHub README conventions
 
 [Full documentation](plugins/readme-generator/skills/readme-generator/SKILL.md)
@@ -147,7 +147,7 @@ Generate professional logos with transparent backgrounds using chromakey technol
 
 Requires the [mcp-openrouter](https://github.com/tsilva/mcp-openrouter) MCP server to be configured.
 
-[Full documentation](plugins/repo-logo-generator/skills/repo-logo-generator/SKILL.md)
+[Full documentation](plugins/logo-generator/skills/logo-generator/SKILL.md)
 
 ---
 
@@ -208,9 +208,9 @@ Simply ask:
 claude-skills/
 ├── plugins/
 │   ├── readme-generator/        # README Generator skill (v1.1.1)
-│   ├── repo-logo-generator/     # Logo Generator skill (v4.0.0)
+│   ├── logo-generator/     # Logo Generator skill (v4.0.0)
 │   ├── claude-settings-optimizer/ # Settings Optimizer skill (v1.0.0)
-│   ├── repo-name-generator/     # Repo Name Generator skill (v1.0.0)
+│   ├── name-generator/     # Repo Name Generator skill (v1.0.0)
 │   └── claude-skill-author/     # Skill authoring tools (validation, version bump)
 ├── .claude-plugin/
 │   └── marketplace.json         # Plugin registry

@@ -1,25 +1,33 @@
 ---
-name: repo-name-generator
-description: Generates creative, memorable repository names optimized for virality. Analyzes project content to suggest names that are catchy, searchable, and shareable. Use when asked to "name this repo", "suggest repo names", "what should I call this project", or "generate project name".
+name: name-generator
+description: Generates creative, memorable names optimized for virality. Analyzes project content to suggest names that are catchy, searchable, and shareable. Use when asked to "name this project", "suggest names", "what should I call this", or "generate project name".
 license: MIT
 compatibility: Any environment
 metadata:
   author: tsilva
-  version: "1.1.0"
+  version: "2.0.0"
 argument-hint: "[project-path]"
 disable-model-invocation: false
 user-invocable: true
 ---
 
-# Repo Name Generator
+# Name Generator
 
-Generate 6 creative, memorable repository names optimized for virality.
+Generate 6 creative, memorable names optimized for virality.
+
+## Context Detection
+
+Before generating names, determine the context:
+
+1. **Check for git repository**: Look for `.git` directory or use git status
+2. **If in a repo**: Analyze codebase to generate repository names
+3. **If not in a repo**: Ask user what they're naming (project, product, tool, etc.)
 
 ## Quick Start
 
 ```
-/repo-name-generator           # Analyze current directory
-/repo-name-generator ./path    # Analyze specific path
+/name-generator           # Analyze current directory
+/name-generator ./path    # Analyze specific path
 ```
 
 ## Workflow
