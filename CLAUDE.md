@@ -22,6 +22,11 @@ claude-skills/
 │               ├── scripts/     # Executable code (optional)
 │               ├── references/  # Documentation loaded on-demand (optional)
 │               └── assets/      # Static resources like templates, icons (optional)
+├── shared/                      # Cross-skill utilities
+│   ├── detect_project.py        # Project type detection
+│   ├── load_config.py           # Config loading and merging
+│   ├── select_operation.py      # Operation selection logic
+│   └── substitute_template.py   # Template variable substitution
 ├── CLAUDE.md                    # This file
 └── README.md                    # Repository documentation
 ```
@@ -127,6 +132,84 @@ except ImportError:
 ```
 
 This allows the script to function even when optional packages are unavailable.
+
+## Shared Utilities
+
+The `shared/` directory contains deterministic utilities that replace LLM decision-making for algorithmic tasks.
+
+### detect_project.py
+
+Detects project type from file presence.
+
+```bash
+uv run shared/detect_project.py --path /path/to/repo
+```
+
+**Output:**
+```json
+{"type": "python", "confidence": "high", "files": ["pyproject.toml"]}
+```
+
+**Supported types:** nodejs, python, rust, go, java, dotnet, ruby, php, cpp, c, unknown
+
+### load_config.py
+
+Loads and merges multi-level JSON configs with precedence.
+
+```bash
+uv run shared/load_config.py \
+  --defaults "assets/defaults.json" \
+  --user "~/.claude/config.json" \
+  --project ".claude/config.json"
+```
+
+**Features:**
+- Deep merging (project > user > defaults)
+- Environment variable expansion (`$HOME`, `${VAR}`)
+- Graceful handling of missing files
+
+### select_operation.py
+
+Determines skill operation from arguments and file state.
+
+```bash
+uv run shared/select_operation.py \
+  --skill project-readme-author \
+  --args "validate this readme" \
+  --check-files "README.md"
+```
+
+**Output:**
+```json
+{"operation": "validate", "reason": "Explicit keyword found", "source": "argument_keyword"}
+```
+
+**Supported skills:** readme, project-readme-author, repo-maintain, claude-skill-author, project-logo-author
+
+### substitute_template.py
+
+Replaces `{VARIABLE}` placeholders in templates.
+
+```bash
+uv run shared/substitute_template.py \
+  --template "assets/template.txt" \
+  --vars '{"PROJECT_NAME": "my-app", "TYPE": "python"}'
+```
+
+**Features:**
+- Reports unsubstituted variables as warnings
+- Case-sensitive matching (uppercase only)
+
+### Self-Testing
+
+All utilities support `--test` for self-testing:
+
+```bash
+uv run shared/detect_project.py --test
+uv run shared/load_config.py --test
+uv run shared/select_operation.py --test
+uv run shared/substitute_template.py --test
+```
 
 ## Conventions
 

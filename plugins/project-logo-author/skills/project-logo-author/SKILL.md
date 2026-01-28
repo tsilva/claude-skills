@@ -7,7 +7,7 @@ argument-hint: "[style-preference]"
 disable-model-invocation: false
 user-invocable: true
 metadata:
-  version: "5.0.0"
+  version: "5.0.1"
 ---
 
 # Logo Generator
@@ -32,13 +32,35 @@ Follow these steps exactly.
 
 ### Step 1: Load Configuration
 
-Use the **Read tool** to check each config file in order. Merge settings (project overrides user overrides bundled):
+Use the deterministic config loader for consistent merging:
 
+```bash
+uv run shared/load_config.py \
+  --defaults "/path/to/skills/project-logo-author/assets/default-config.json" \
+  --user "~/.claude/project-logo-author.json" \
+  --project ".claude/project-logo-author.json"
+```
+
+The script handles:
+- Missing files gracefully (skips and continues)
+- Deep merging (project overrides user overrides defaults)
+- Environment variable expansion (`$HOME`, `$CWD`)
+
+Returns merged JSON config:
+```json
+{
+  "style": "minimalist",
+  "keyColor": "#00FF00",
+  "_meta": {"sources": ["defaults", "user"]}
+}
+```
+
+**Fallback (if script unavailable):** Use the Read tool to check each config file in order:
 1. **Project config**: `{CWD}/.claude/project-logo-author.json`
-2. **User config**: `{HOME}/.claude/project-logo-author.json` (expand `~` to absolute path)
-3. **Bundled defaults**: `assets/default-config.json` (relative to skill directory)
+2. **User config**: `{HOME}/.claude/project-logo-author.json`
+3. **Bundled defaults**: `assets/default-config.json`
 
-**Important**: Use absolute paths with the Read tool. Do NOT use Glob for these lookups - hidden directories (`.claude/`) and tilde paths require direct Read with expanded paths. If a config file doesn't exist, skip it and continue to the next.
+Use absolute paths. Skip files that don't exist.
 
 **Config Parameters:**
 

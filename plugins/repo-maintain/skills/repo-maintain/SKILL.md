@@ -5,7 +5,7 @@ argument-hint: "[audit|fix|status] [repo-filter]"
 license: MIT
 metadata:
   author: tsilva
-  version: "1.3.0"
+  version: "1.3.1"
 ---
 
 # Repo Maintain
@@ -37,6 +37,18 @@ If any are missing, inform user with specific installation steps.
 
 ### Operation Detection
 
+Use the deterministic operation selector for consistent behavior:
+
+```bash
+uv run shared/select_operation.py --skill repo-maintain --args "$ARGUMENTS" --check-files ""
+```
+
+The script returns JSON with the selected operation and reasoning:
+```json
+{"operation": "audit", "reason": "No explicit operation keyword", "source": "file_state"}
+```
+
+**Fallback rules (if script unavailable):**
 1. Check `$ARGUMENTS` for explicit operation keyword
 2. If no keyword: check for existing report at `~/.claude/repo-maintain-audit.json`
    - Report exists → `status`
@@ -78,7 +90,39 @@ If any are missing, inform user with specific installation steps.
 
 ## Fix Workflow
 
-Process repos in order. For each repo with failures:
+### Step 1: Apply Safe Fixes Automatically
+
+Before manual intervention, run the safe fix applier to handle trivial fixes:
+
+```bash
+uv run scripts/apply_safe_fixes.py --audit-report ~/.claude/repo-maintain-audit.json
+```
+
+**Safe fixes (auto-applied):**
+- `GITIGNORE_EXISTS` - Copy template gitignore
+- `LICENSE_EXISTS` - Copy MIT license with year/author
+- `CLAUDE_MD_EXISTS` - Create minimal CLAUDE.md
+- `CLAUDE_SETTINGS_SANDBOX` - Create/update settings.json with sandbox enabled
+
+**Unsafe fixes (returned for Claude):**
+- `README_EXISTS` - Requires content generation
+- `LOGO_EXISTS` - Requires image generation
+- `README_CURRENT` - Requires content analysis
+- `DESCRIPTION_SYNCED` - Requires API calls
+- `PII_CLEAN` - Requires manual review
+
+The script returns JSON showing what was applied and what remains:
+```json
+{
+  "applied": [{"repo": "my-project", "check": "LICENSE_EXISTS", "message": "Created LICENSE"}],
+  "remaining": [{"repo": "my-project", "check": "README_EXISTS", "auto_fix": "project-readme-author create"}],
+  "summary": {"applied_count": 3, "remaining_count": 5}
+}
+```
+
+### Step 2: Process Remaining Fixes
+
+Process repos in order. For each repo with remaining failures:
 
 ### Fix Order (dependencies matter)
 

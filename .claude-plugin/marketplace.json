@@ -9,13 +9,13 @@
       "name": "project-readme-author",
       "source": "./plugins/project-readme-author",
       "description": "Create, modify, validate, and optimize README.md files following GitHub best practices.",
-      "version": "2.0.2"
+      "version": "2.0.3"
     },
     {
       "name": "project-logo-author",
       "source": "./plugins/project-logo-author",
       "description": "Generates professional logos with native transparent backgrounds. Requires mcp-openrouter MCP server. Use when asked to 'generate a logo' or 'create logo'.",
-      "version": "5.0.0"
+      "version": "5.0.1"
     },
     {
       "name": "claude-settings-author",
@@ -45,7 +45,7 @@
       "name": "repo-maintain",
       "source": "./plugins/repo-maintain",
       "description": "Audit and remediate repos for standardization compliance. Use when maintaining repos, checking README/logo/gitignore compliance.",
-      "version": "1.3.0"
+      "version": "1.3.1"
     }
   ]
 }

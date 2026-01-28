@@ -8,7 +8,7 @@ disable-model-invocation: false
 user-invocable: true
 metadata:
   author: tsilva
-  version: "2.0.2"
+  version: "2.0.3"
 ---
 
 # README Author
@@ -26,10 +26,21 @@ Create READMEs that hook readers in 5 seconds, prove value in 30 seconds, and en
 
 ### Operation Detection
 
-1. **Check `$ARGUMENTS`** for explicit operation (e.g., `/project-readme-author validate`)
-2. **Check if README.md exists** at the target path
-3. **Analyze user intent** from keywords in their request
-4. **Default behavior**: `create` if no README exists, `modify` if README exists
+Use the deterministic operation selector for consistent behavior:
+
+```bash
+uv run shared/select_operation.py --skill project-readme-author --args "$ARGUMENTS" --check-files "README.md"
+```
+
+The script returns JSON with the selected operation and reasoning:
+```json
+{"operation": "modify", "reason": "README.md exists, no explicit operation", "source": "file_state"}
+```
+
+**Fallback rules (if script unavailable):**
+1. Check `$ARGUMENTS` for explicit operation keywords
+2. Check if README.md exists at target path
+3. Default: `create` if no README, `modify` if README exists
 
 ---
 
@@ -459,13 +470,17 @@ Avoid these mistakes:
 
 ### Create Workflow
 
-1. **Analyze project** - scan for package.json, Cargo.toml, pyproject.toml, go.mod, etc.
-2. **Detect project type** - CLI, library, AI/ML, web app, API
-3. **Extract metadata** - name, description, version, author, license
-4. **Check for existing logo** - look for `logo.png` at repo root
-5. **Generate logo if missing** - use project-logo-author skill
-6. **Calculate display width** - use half the actual image pixel width (for retina displays)
-7. **Generate README.md** - following Hook → Prove → Enable → Extend structure
+1. **Detect project type** - use deterministic detection:
+   ```bash
+   uv run shared/detect_project.py --path "$(pwd)"
+   ```
+   Returns: `{"type": "python", "confidence": "high", "files": ["pyproject.toml"]}`
+
+2. **Extract metadata** - name, description, version, author, license from detected files
+3. **Check for existing logo** - look for `logo.png` at repo root
+4. **Generate logo if missing** - use project-logo-author skill
+5. **Calculate display width** - use half the actual image pixel width (for retina displays)
+6. **Generate README.md** - following Hook → Prove → Enable → Extend structure
 
 ### Modify Workflow
 
