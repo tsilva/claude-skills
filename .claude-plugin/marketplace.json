@@ -45,7 +45,7 @@
       "name": "repo-maintain",
       "source": "./plugins/repo-maintain",
       "description": "Audit and remediate repos for standardization compliance. Use when maintaining repos, checking README/logo/gitignore compliance.",
-      "version": "1.4.1"
+      "version": "1.4.2"
     },
     {
       "name": "todo-aggregator",

@@ -25,10 +25,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-# Import shared utilities
-SCRIPT_DIR = Path(__file__).parent
-SHARED_DIR = SCRIPT_DIR.parent.parent.parent.parent.parent / "shared"
-sys.path.insert(0, str(SHARED_DIR))
+# Import local utilities (bundled with plugin for portability)
 from extract_tagline import extract_tagline
 from repo_utils import find_repos
 

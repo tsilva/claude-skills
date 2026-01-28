@@ -67,6 +67,8 @@ Create, modify, validate, and optimize README.md files following GitHub best pra
 
 For creating or modifying skills, use `/claude-skill-author` which contains the authoritative specification, best practices, validation, version management, and workflows.
 
+**IMPORTANT:** Always invoke `/claude-skill-author` for ANY change to ANY file within a plugin directory (`plugins/*/`). This includes small fixes, script tweaks, and documentation updates. The skill contains mandatory version management workflow that must be followed.
+
 ## Dependency Management Best Practices
 
 Following official Agent Skills specification and Anthropic recommendations.
