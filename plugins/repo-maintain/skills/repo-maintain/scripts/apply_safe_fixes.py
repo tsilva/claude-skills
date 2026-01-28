@@ -27,12 +27,11 @@ Output:
 
 import argparse
 import json
-import os
 import shutil
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 # Get the directory where this script is located
 SCRIPT_DIR = Path(__file__).parent.resolve()
@@ -199,7 +198,7 @@ FIX_FUNCTIONS = {
 def apply_fixes(
     audit_report: Dict,
     dry_run: bool = False,
-    repo_filter: str = None
+    repo_filter: Optional[str] = None
 ) -> Dict:
     """
     Apply safe fixes from audit report.

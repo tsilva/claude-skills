@@ -6,7 +6,7 @@ argument-hint: "[project|plugin] [skill-name]"
 user-invocable: true
 metadata:
   author: tsilva
-  version: "1.3.3"
+  version: "1.3.4"
 ---
 
 # Skill Author Guide

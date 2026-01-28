@@ -191,12 +191,6 @@ def validate_name(
             f"'name' exceeds 64 characters ({len(name)} chars)"
         ))
 
-    if len(name) < 1:
-        issues.append(ValidationIssue(
-            Severity.ERROR, file_path, "name",
-            "'name' must be at least 1 character"
-        ))
-
     if not re.match(r'^[a-z0-9-]+$', name):
         issues.append(ValidationIssue(
             Severity.ERROR, file_path, "name",

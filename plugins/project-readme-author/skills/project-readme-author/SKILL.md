@@ -8,7 +8,7 @@ disable-model-invocation: false
 user-invocable: true
 metadata:
   author: tsilva
-  version: "2.0.3"
+  version: "2.1.0"
 ---
 
 # README Author
@@ -58,6 +58,9 @@ Use when updating an existing README while preserving its structure.
 2. **Update dynamic content** - Versions, badge URLs, install commands
 3. **Respect markers** - Content within `<!-- custom -->...<!-- /custom -->` is never touched
 4. **Preserve section order** - Don't reorder sections unless explicitly requested
+5. **Preserve manually added notes** - Any note, warning, tip, or comment that appears hand-written and factually relevant must be kept
+6. **Default to preservation** - When content relevance is unclear, preserve it and use AskUserQuestion to confirm
+7. **Never assume obsolescence** - Only remove content when explicitly asked or when factually incorrect
 
 ### Merge Strategy
 
@@ -68,7 +71,9 @@ Use when updating an existing README while preserving its structure.
 | Badge URLs | Refresh if broken |
 | Code examples | Update if outdated |
 | New sections | Add at appropriate location |
-| Deprecated sections | Flag for user review |
+| Deprecated sections | Ask user via AskUserQuestion before removing |
+| Manual notes/comments | Preserve unless proven factually false |
+| Custom additions | Always preserve, use AskUserQuestion if unsure about relevance |
 
 ### Detection of Manual Edits
 
@@ -77,8 +82,10 @@ Look for these signals that content is hand-crafted:
 - Non-standard section names
 - Prose that doesn't match generated patterns
 - Comments like `<!-- keep this -->`
+- Notes, warnings, tips, or callouts that appear hand-written
+- Contextual explanations specific to the project
 
-When in doubt, preserve existing content and ask the user.
+**When in doubt, preserve existing content and use the AskUserQuestion tool to confirm before removing anything.**
 
 ## Validate Operation
 
@@ -156,6 +163,7 @@ These improvements are safe to apply automatically:
 - Add table of contents if >500 words
 - Standardize badge style (all flat, all flat-square, etc.)
 - Fix heading hierarchy (no skipped levels)
+- Add emojis to section headers and feature lists (enhances readability)
 
 ### Requires Approval
 
@@ -163,7 +171,7 @@ These changes need user confirmation:
 - Add new sections (Features, FAQ, etc.)
 - Rewrite tagline
 - Change badge selection
-- Add/remove emojis
+- Remove emojis (preserve user's emoji choices)
 - Restructure content order
 
 ### Optimization Output
@@ -379,16 +387,18 @@ graph LR
 
 ### Emoji Strategy
 
-Strategic emojis boost engagement:
+Emojis significantly boost engagement and scannability. Use them liberally throughout:
 
-| Location | Examples | Purpose |
-|----------|----------|---------|
-| Section headers | 🚀 Quick Start, ⚙️ Config, 📦 Install | Visual navigation |
-| Feature bullets | ✨ New, ⚡ Fast, 🔒 Secure | Scannable benefits |
-| Status indicators | ✅ Done, ⏳ WIP, ❌ Deprecated | Quick comprehension |
-| CTAs | ⭐ Star us!, 🤝 Contribute | Engagement boost |
+| Location | Examples | Guideline |
+|----------|----------|-----------|
+| Section headers | 🚀 Quick Start, ⚙️ Config, 📦 Install | Every major section should have an emoji |
+| Feature bullets | ✨ New, ⚡ Fast, 🔒 Secure, 🎯 Precise | 2-4 emojis per feature list |
+| Status indicators | ✅ Done, ⏳ WIP, ❌ Deprecated | Use consistently for all status items |
+| Warnings/notes | ⚠️ Warning, 💡 Tip, 📝 Note, 🔥 Important | Every callout benefits from an emoji |
+| CTAs | ⭐ Star us!, 🤝 Contribute, 📖 Read docs | All CTAs should have emojis |
+| Benefits | 🎉 Easy setup, 💪 Powerful, 🛡️ Secure | Highlight key benefits with emojis |
 
-**Rules**: 1-2 per section max. Never in code blocks. Consistent style throughout.
+**Rules**: 2-4 per section is ideal. Never in code blocks. Consistent style throughout. When in doubt, add an emoji.
 
 ### Anti-Pattern
 
@@ -487,9 +497,10 @@ Avoid these mistakes:
 1. **Read existing README** - parse structure and content
 2. **Identify sections** - map to standard structure
 3. **Detect custom content** - look for markers and non-standard prose
-4. **Apply requested changes** - update only what was asked
-5. **Preserve custom content** - keep user-written sections intact
-6. **Validate result** - ensure no broken links or formatting
+4. **Confirm uncertain deletions** - when content relevance is unclear, use AskUserQuestion to confirm with user before removing
+5. **Apply requested changes** - update only what was asked
+6. **Preserve custom content** - keep user-written sections intact
+7. **Validate result** - ensure no broken links or formatting
 
 ### Validate Workflow
 

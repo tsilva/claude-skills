@@ -30,8 +30,13 @@ SCRIPT_DIR = Path(__file__).parent
 sys.path.insert(0, str(SCRIPT_DIR))
 from extract_tagline import extract_tagline
 
+# Import shared utilities
+SHARED_DIR = SCRIPT_DIR.parent.parent.parent.parent.parent / "shared"
+sys.path.insert(0, str(SHARED_DIR))
+from repo_utils import find_repos
 
-def find_repos(repos_dir: Path) -> list[Path]:
+
+def check_gh_cli() -> bool:
     """Find all git repositories in directory."""
     repos = []
     repos_dir = Path(repos_dir).resolve()

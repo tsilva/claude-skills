@@ -56,7 +56,7 @@ def is_skip_line(line: str) -> bool:
         return True
 
     # Badge images ([![ or just ![)
-    if stripped.startswith("[![") or stripped.startswith("!["):
+    if stripped.startswith("!["):
         return True
 
     # Blockquotes (commonly used for notices/warnings)

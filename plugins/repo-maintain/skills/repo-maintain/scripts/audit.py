@@ -25,6 +25,11 @@ sys.path.insert(0, str(SCRIPT_DIR))
 from pii_scanner import scan_repo as pii_scan_repo
 from extract_tagline import extract_tagline
 
+# Import shared utilities
+SHARED_DIR = SCRIPT_DIR.parent.parent.parent.parent.parent / "shared"
+sys.path.insert(0, str(SHARED_DIR))
+from repo_utils import find_repos
+
 
 def check_dependencies() -> dict:
     """Check required external dependencies."""
@@ -84,21 +89,6 @@ def detect_github_user(repos_dir: Path) -> str | None:
         except Exception:
             continue
     return None
-
-
-def find_repos(repos_dir: Path) -> list[Path]:
-    """Find all git repositories in directory."""
-    repos = []
-    repos_dir = Path(repos_dir).resolve()
-
-    if not repos_dir.exists():
-        return repos
-
-    for item in repos_dir.iterdir():
-        if item.is_dir() and (item / ".git").exists():
-            repos.append(item)
-
-    return sorted(repos, key=lambda p: p.name.lower())
 
 
 def check_readme_exists(repo_path: Path) -> dict:
@@ -445,8 +435,6 @@ def check_readme_has_license(repo_path: Path) -> dict:
 
 def check_claude_settings_sandbox(repo_path: Path) -> dict:
     """Check if repo has Claude settings with sandbox.enabled = true."""
-    import json
-
     claude_dir = repo_path / ".claude"
     settings_files = [
         claude_dir / "settings.json",
