@@ -444,45 +444,39 @@ def check_readme_has_license(repo_path: Path) -> dict:
 
 
 def check_claude_settings_sandbox(repo_path: Path) -> dict:
-    """Check if repo has Claude settings with sandbox configuration."""
+    """Check if repo has Claude settings with sandbox.enabled = true."""
+    import json
+
     claude_dir = repo_path / ".claude"
     settings_files = [
         claude_dir / "settings.json",
         claude_dir / "settings.local.json",
     ]
 
-    # Also check CLAUDE.md for sandbox mention
-    claude_md = repo_path / "CLAUDE.md"
+    sandbox_enabled = False
+    has_settings_file = False
 
-    has_settings = any(f.exists() for f in settings_files)
-    has_sandbox_mention = False
-
-    if claude_md.exists():
-        try:
-            content = claude_md.read_text(encoding="utf-8", errors="ignore").lower()
-            has_sandbox_mention = "sandbox" in content
-        except Exception:
-            pass
-
-    # Check settings files for sandbox config
+    # Check settings files for sandbox.enabled = true
     for settings_file in settings_files:
         if settings_file.exists():
+            has_settings_file = True
             try:
-                content = settings_file.read_text(encoding="utf-8", errors="ignore").lower()
-                if "sandbox" in content or "permissions" in content:
-                    has_sandbox_mention = True
-            except Exception:
+                content = settings_file.read_text(encoding="utf-8", errors="ignore")
+                data = json.loads(content)
+                # Check if sandbox.enabled is explicitly true
+                if isinstance(data.get("sandbox"), dict) and data["sandbox"].get("enabled") is True:
+                    sandbox_enabled = True
+                    break
+            except (json.JSONDecodeError, Exception):
                 pass
-
-    passed = has_settings or has_sandbox_mention
 
     return {
         "check": "CLAUDE_SETTINGS_SANDBOX",
-        "passed": passed,
-        "message": "Claude settings with sandbox config found" if passed else "Missing Claude sandbox settings",
-        "has_settings_file": has_settings,
-        "has_sandbox_mention": has_sandbox_mention,
-        "auto_fix": "create .claude/settings.local.json and update CLAUDE.md",
+        "passed": sandbox_enabled,
+        "message": "Claude sandbox enabled (sandbox.enabled: true)" if sandbox_enabled else "Sandbox not enabled - need sandbox.enabled: true in settings",
+        "has_settings_file": has_settings_file,
+        "sandbox_enabled": sandbox_enabled,
+        "auto_fix": "run: uv run scripts/fix_sandbox.py --repos-dir <parent_dir>",
     }
 
 

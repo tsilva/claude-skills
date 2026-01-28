@@ -5,7 +5,7 @@ argument-hint: "[audit|fix|status] [repo-filter]"
 license: MIT
 metadata:
   author: tsilva
-  version: "1.2.0"
+  version: "1.3.0"
 ---
 
 # Repo Maintain
@@ -83,15 +83,19 @@ Process repos in order. For each repo with failures:
 ### Fix Order (dependencies matter)
 
 1. **CLAUDE.md** - Run `/init` in repo directory
-2. **Claude Settings** - Create `.claude/settings.local.json` if missing:
+2. **Claude Settings** - Create `.claude/settings.local.json` with sandbox enabled:
    ```json
    {
-     "permissions": { "allow": [], "deny": [] },
-     "hooks": {},
-     "env": {}
+     "sandbox": {
+       "enabled": true
+     },
+     "permissions": {
+       "allow": [],
+       "deny": []
+     }
    }
    ```
-   Add sandbox mention to CLAUDE.md if not present
+   Or bulk fix: `uv run scripts/fix_sandbox.py --repos-dir "$(pwd)"`
 3. **LICENSE** - Copy from `assets/LICENSE`, replace `[year]` with current year, `[fullname]` with GitHub user
 4. **Logo** - Invoke `project-logo-author`
 5. **Logo checks** (if logo exists):
