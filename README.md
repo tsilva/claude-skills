@@ -1,165 +1,67 @@
 <div align="center">
-  <img src="logo.png" alt="claudeskillz" width="512"/>
-
-  # claudeskillz
-
-  [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-  [![Claude Code](https://img.shields.io/badge/Claude_Code-Plugin-blueviolet)](https://claude.ai/code)
-  [![Skills](https://img.shields.io/badge/Skills-5-green)](plugins/)
+  <img src="https://raw.githubusercontent.com/tsilva/claudeskillz/main/logo.png" alt="claudeskillz" width="512" />
 
   **🔧 Modular skills that supercharge Claude Code with specialized capabilities ⚡**
-
-  [Installation](#-installation) · [Available Skills](#-available-skills) · [Creating Skills](#-creating-your-own-skills)
 </div>
 
----
+claudeskillz is a Claude Code plugin repository for installing a curated set of agent skills. Each plugin contains one skill, its metadata, and any scripts, references, or assets the skill needs.
 
-## 📋 Table of Contents
+Use it to add reusable README, logo, spec extraction, and terminal-output styling workflows to Claude Code, or as a reference for maintaining your own skill plugins.
 
-- [Installation](#-installation)
-- [Available Skills](#-available-skills)
-  - [bash-output-styler](#bash-output-styler)
-  - [project-logo-author](#project-logo-author)
-  - [project-readme-author](#project-readme-author)
-  - [project-spec-extractor](#project-spec-extractor)
-  - [python-output-styler](#python-output-styler)
-- [Creating Your Own Skills](#-creating-your-own-skills)
-- [Repository Structure](#-repository-structure)
-- [License](#-license)
+## Install
 
----
-
-## 🚀 Installation
-
-Add this repository to your Claude Code plugins:
+Install the plugin collection in Claude Code:
 
 ```bash
 claude plugins:add tsilva/claudeskillz
 ```
 
-Or install individual skills by navigating to `Settings → Plugins → Add from URL` and using:
+Or add the repository URL through `Settings -> Plugins -> Add from URL`:
 
-```
+```text
 https://github.com/tsilva/claudeskillz
 ```
 
----
+After installation, invoke a skill from Claude Code with its slash command, such as `/project-readme-author`.
 
-## 🧩 Available Skills
+For local development:
 
-### bash-output-styler
-**v2.0.0** · Applies gorgeous terminal styling to bash scripts using gum with ANSI fallback
-
-Style all user-facing shell script output with a bundled `style.sh` library that provides headers, spinners, tables, progress bars, and color-coded messages with graceful degradation.
-
-```
-/bash-output-styler [script-path]
+```bash
+git clone https://github.com/tsilva/claudeskillz.git
+cd claudeskillz
+uv sync --extra dev
+uv run pytest
 ```
 
----
+## Available Skills
 
-### project-logo-author
-**v5.1.0** · Generates professional logos with transparent backgrounds
+- `project-readme-author` v2.6.1: creates, modifies, validates, and optimizes README files.
+- `project-logo-author` v6.0.0: generates project logos with transparent backgrounds using `repologogen`.
+- `project-spec-extractor` v1.0.0: extracts a codebase into a pure requirements specification.
+- `bash-output-styler` v2.0.0: applies reusable terminal styling to bash scripts with `gum` and ANSI fallback.
+- `python-output-styler` v1.0.0: applies reusable terminal styling to Python scripts with Rich and plain-text fallback.
 
-Creates distinctive project logos using AI image generation. Requires the `mcp-openrouter` MCP server.
+## Commands
 
-```
-/project-logo-author
-```
-
----
-
-### project-readme-author
-**v2.5.1** · Create and optimize README files
-
-Create, modify, validate, and optimize README.md files following GitHub best practices with modern visual hierarchy.
-
-```
-/project-readme-author create|modify|validate|optimize
+```bash
+claude plugins:add tsilva/claudeskillz                         # install the plugin collection
+uv run pytest                                                  # run the shared utility tests
+uv run shared/validate_skill.py plugins/<plugin>/skills/<skill> # validate one skill package
+uv run shared/bump-version.py <plugin> --type patch            # bump plugin, skill, and marketplace versions
 ```
 
----
+## Notes
 
-### project-spec-extractor
-**v1.0.0** · Analyzes a codebase and generates a pure requirements specification
+- Plugin metadata lives in `.claude-plugin/marketplace.json` and `plugins/*/.claude-plugin/plugin.json`.
+- Skill instructions live in `plugins/*/skills/*/SKILL.md`.
+- Any change inside `plugins/*/` needs a version bump across `SKILL.md`, `plugin.json`, and `marketplace.json`.
+- Shared utilities are dependency-light Python scripts designed to run with `uv`.
+- The pre-commit hook validates staged plugin version bumps before commit.
 
-Extract what a project does into a clean SPEC.md — no implementation details, just behaviors, features, and acceptance criteria. Use for rebuilding projects from scratch, porting to different stacks, or living documentation.
+## Architecture
 
-```
-/project-spec-extractor [--tech-agnostic] [path]
-```
+![claudeskillz architecture diagram](./architecture.png)
 
----
+## License
 
-### python-output-styler
-**v1.0.0** · Applies gorgeous terminal styling to Python scripts using Rich with plain-text fallback
-
-Style all user-facing Python script output with a bundled `style.py` module that provides headers, spinners, tables, progress bars, and color-coded messages with graceful degradation.
-
-```
-/python-output-styler [script-path]
-```
-
----
-
-## 🛠 Creating Your Own Skills
-
-Use the `plugin-dev` plugin to create new skills following the official specification:
-
-```
-/plugin-dev:skill-development
-```
-
-### Skill Structure
-
-```
-plugins/
-└── my-skill/
-    ├── .claude-plugin/
-    │   └── plugin.json      # Plugin metadata
-    └── skills/
-        └── my-skill/
-            ├── SKILL.md     # Skill instructions (required)
-            ├── scripts/     # Executable code (optional)
-            ├── references/  # Documentation (optional)
-            └── assets/      # Static resources (optional)
-```
-
-### Design Principles
-
-- **One plugin per skill** - Self-contained with independent versioning
-- **Minimal dependencies** - Scripts use UV with inline dependency declarations
-- **Absolute paths** - All file operations use absolute paths
-- **MCP integration** - Skills can leverage MCP servers for external APIs
-
----
-
-## 📁 Repository Structure
-
-```
-claudeskillz/
-├── .claude-plugin/
-│   └── marketplace.json     # Lists all available plugins
-├── plugins/
-│   ├── bash-output-styler/
-│   ├── project-logo-author/
-│   ├── project-readme-author/
-│   ├── project-spec-extractor/
-│   └── python-output-styler/
-├── shared/                  # Cross-skill utilities
-├── CLAUDE.md                # Project instructions for Claude
-├── README.md                # This file
-└── logo.png                 # Repository logo
-```
-
----
-
-## 📄 License
-
-MIT License - see [LICENSE](LICENSE) for details.
-
----
-
-<div align="center">
-  <sub>Built with 🤖 Claude Code</sub>
-</div>
+[MIT](LICENSE)
