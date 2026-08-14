@@ -2,7 +2,7 @@
 > [!WARNING]
 > **Deprecated**
 >
-> this seemed important when skills were launched but nowadays i just create skills on the fly mostly, with most of them being project-scoped, and there is too much churn on the global ones to be worth sharing, there are already too many published skills so this repo wasnt making any difference anymroe
+> This repository seemed important when shared skills first launched. Today, I create most skills as needed and scope them to individual projects. Global skills change too quickly to justify maintaining them here, and there are already so many published skills that this repository is no longer making a meaningful difference.
 <!-- archive-repo:deprecation-notice:end -->
 
 <div align="center">
