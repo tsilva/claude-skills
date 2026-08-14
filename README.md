@@ -1,3 +1,10 @@
+<!-- archive-repo:deprecation-notice:start -->
+> [!WARNING]
+> **Deprecated**
+>
+> this seemed important when skills were launched but nowadays i just create skills on the fly mostly, with most of them being project-scoped, and there is too much churn on the global ones to be worth sharing, there are already too many published skills so this repo wasnt making any difference anymroe
+<!-- archive-repo:deprecation-notice:end -->
+
 <div align="center">
   <img src="https://raw.githubusercontent.com/tsilva/claudeskillz/main/logo.png" alt="claudeskillz" width="512" />
 
